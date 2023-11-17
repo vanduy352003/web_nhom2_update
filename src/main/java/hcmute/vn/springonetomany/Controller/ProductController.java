@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -137,8 +141,9 @@ public class ProductController {
         product.setPhotos(fileName);
         Product savedProduct = productService.getNewProduct(product);
 
-        String uploadDir = "/product_photos/" + savedProduct.getId();
+        String uploadDir = "product_photos/" + savedProduct.getId();
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+
         return "redirect:/admin/products";
     }
 }
