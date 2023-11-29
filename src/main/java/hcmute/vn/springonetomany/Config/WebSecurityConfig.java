@@ -38,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/lib/**", "/mail/**", "/scss/**");
+                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/lib/**", "/mail/**", "/scss/**", "/product_photos/**");
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -48,9 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/products", "/login", "/logout", "/register", "/error", "/process_register").permitAll()
+                .antMatchers("/", "/home", "/products", "/login", "/logout", "/register", "/error", "/process_register").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
-                .antMatchers("/", "/home", "/products").hasAnyAuthority("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login")

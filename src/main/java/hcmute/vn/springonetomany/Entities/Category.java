@@ -1,6 +1,8 @@
 package hcmute.vn.springonetomany.Entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
@@ -11,6 +13,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "category")
 public class Category {
     @Id
@@ -25,6 +29,10 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private Set<Product> products = new LinkedHashSet<>();
 
+    @Nationalized
+    @Column(name = "photos", length = 64)
+    private String photos;
+
     @Override
     public String toString() {
         return "Category{" +
@@ -33,8 +41,6 @@ public class Category {
                 '}';
     }
 
-    public Category() {
-    }
 
 //    public Category(Integer id) {
 //        this.id = id;

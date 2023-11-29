@@ -14,7 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -23,12 +25,22 @@ public class HomeController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping({"**/home", "/", "/admin"})
+    @GetMapping({"**/home", "/"})
     public String viewHomePage(Model model) {
         List<Category> listCategories = categoryService.listAll();
         List<Product> productList = productService.findAll();
 
+        List<Category> sortedCategories = listCategories.stream()
+                .sorted(Comparator.comparing((Category category) -> category.getProducts().size()).reversed())
+                .toList().subList(0, 6);
+        List<Product> sortedProducts = productList.stream()
+                .sorted(Comparator.comparing((Product product) -> product.getPrice().floatValue()).reversed())
+                .toList().subList(0, 4);
+
         model.addAttribute("listCategories", listCategories);
+        model.addAttribute("sortedCategories", sortedCategories);
+
+        model.addAttribute("sortedProducts", sortedProducts);
         model.addAttribute("productList", productList);
 
         return "index";

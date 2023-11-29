@@ -24,7 +24,7 @@
 				     id="navbar-vertical">
 					<div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
 						<th:block th:each="category : ${listCategories}">
-							<a th:href="@{'/products/category/' + ${category.getId()} + '/1'}" class="nav-item nav-link"
+							<a th:href="@{/products/category/{cateId}(cateId=${category.getId()},page=1)}" class="nav-item nav-link"
 							   th:text="${category.getName()}"></a>
 						</th:block>
 					</div>
@@ -147,11 +147,11 @@
 	<!-- Categories Start -->
 	<div class="container-fluid pt-5">
 		<div class="row px-xl-5 pb-3">
-			<th:block th:each="category : ${listCategories}">
+			<th:block th:each="category : ${sortedCategories}">
 				<div class="col-lg-4 col-md-6 pb-1">
 					<div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-						<p class="text-right" th:text="${category.getProducts().size()}"></p>
-						<a th:href="@{'/products/category/' + ${category.id} + '/1' }" class="cat-img position-relative overflow-hidden mb-3">
+						<p class="text-right" th:text="${category.getProducts().size()} + ' sản phẩm'"></p>
+						<a th:href="@{/products/category/{cateId}(cateId=${category.getId()},page=1)}" class="cat-img position-relative overflow-hidden mb-3">
 							<img class="img-fluid" th:src="@{/img/cat-2.jpg}" alt="">
 						</a>
 						<h5 class="font-weight-semi-bold m-0" th:text="${category.getName()}"></h5>
@@ -197,7 +197,7 @@
 			<h2 class="section-title px-5"><span class="px-2">Trandy Products</span></h2>
 		</div>
 		<div class="row px-xl-5 pb-3">
-			<th:block th:each="product : ${productList}">
+			<th:block th:each="product : ${sortedProducts}">
 				<div class="col-lg-3 col-md-6 col-sm-12 pb-1">
 					<div class="card product-item border-0 mb-4">
 						<div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 350px">

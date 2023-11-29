@@ -1,14 +1,22 @@
 package hcmute.vn.springonetomany.Entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Nationalized;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "product")
 public class Product {
     @Id
@@ -31,8 +39,19 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    public Product() {
-    }
+    @Lob
+    @Nationalized
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "sell_amount")
+    private Integer sellAmount = 0;
+
+    @Column(name = "inventory")
+    private Integer inventory;
+
+    @CreationTimestamp
+    private Date createdAt;
 
     @Transient
     public String getPhotosImagePath() {

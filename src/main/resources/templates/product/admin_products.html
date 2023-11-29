@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/admin_layout}"
+      xmlns:tr="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Admin products</title>
+</head>
+<body layout:fragment="content">
+	<!-- Cart Start -->
+	<div class="container-fluid pt-5">
+		<div class="pb-4 ml-4">
+			<a th:href="@{/admin/products/new}" sec:authorize="hasAuthority('ADMIN')"
+			   class="btn-primary text-decoration-none rounded-pill text-uppercase p-2">Add product</a>
+		</div>
+
+		<div class="row px-xl-5">
+			<div class="table-responsive mb-5">
+				<table class="table table-bordered text-center mb-0">
+					<thead class="bg-secondary text-dark">
+						<tr>
+							<th>Photo</th>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Price</th>
+							<th>Sell amount</th>
+							<th>Inventory</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody class="align-middle">
+						<tr th:block th:each="product : ${listProduct}">
+							<td class="align-middle">
+								<img th:src="@{${product.photosImagePath}}" alt="" style="width: 70px;">
+							</td>
+							<td class="align-middle" th:text="${product.id}"></td>
+							<td class="align-middle" th:text="${product.name}"></td>
+							<td class="align-middle" th:text="'$' + ${product.price}"></td>
+							<td class="align-middle" th:text="${product.sellAmount}"></td>
+							<td class="align-middle" th:text="${product.inventory}"></td>
+							<td class="align-middle">
+								<a  class="btn btn-sm btn-primary p-2" th:href="@{'/admin/products/edit/' + ${product.id}}"
+								         sec:authorize="hasAuthority('ADMIN')"><i class="fa fa-edit"></i></a>
+								<a class="btn btn-sm btn-primary p-2" th:href="@{'/admin/products/delete/' + ${product.id}}"
+								        sec:authorize="hasAuthority('ADMIN')"><i class="fa fa-times"></i></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- Cart End -->
+</body>
+</html>
