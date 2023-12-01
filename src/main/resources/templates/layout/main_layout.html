@@ -68,30 +68,7 @@
 	</div>
 	<!-- Topbar End -->
 
-	<!--	<div class="d-flex justify-content-center align-items-center mr-auto py-0">-->
-	<!--		<a th:href="@{/home}" class="nav-item nav-link active">Home</a>-->
-	<!--		<a th:href="@{/products}" class="nav-item nav-link">Products</a>-->
-	<!--		<a href="detail.html" class="nav-item nav-link">Shop Detail</a>-->
-	<!--		<div class="nav-item dropdown">-->
-	<!--			<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>-->
-	<!--			<div class="dropdown-menu rounded-0 m-0">-->
-	<!--				<a href="cart.html" class="dropdown-item">Shopping Cart</a>-->
-	<!--				<a href="checkout.html" class="dropdown-item">Checkout</a>-->
-	<!--			</div>-->
-	<!--		</div>-->
-	<!--		<a href="contact.html" class="nav-item nav-link">Contact</a>-->
-	<!--		<div class="ml-auto justify-content-end">-->
-	<!--			<div class="d-flex align-items-center" sec:authorize="isAuthenticated()">-->
-	<!--				<p class="m-0">Welcome <span sec:authentication="principal.authorities"></span></p>-->
-	<!--				<form th:action="@{/logout}" method="post" class="nav-item nav-link">-->
-	<!--					<button type="submit" class="btn-outline-primary bg-transparent rounded-pill p-2">Logout</button>-->
-	<!--					&lt;!&ndash;									<a th:href="@{/logout}" class="nav-item nav-link bold">Logout</a>&ndash;&gt;-->
-	<!--				</form>-->
-	<!--			</div>-->
-	<!--			<a th:href="@{/login}" sec:authorize="isAnonymous()" class="nav-item nav-link">Login</a>-->
-	<!--			<a th:href="@{/register}" sec:authorize="isAnonymous()" class="nav-item nav-link">Register</a>-->
-	<!--		</div>-->
-	<!--	</div>-->
+
 	<div class="ml-lg-5">
 		<nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
 			<a href="" class="text-decoration-none d-block d-lg-none">
@@ -116,13 +93,27 @@
 					<a href="contact.html" class="nav-item nav-link">Contact</a>
 					<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-item nav-link">Trang quản trị</a>
 				</div>
-				<div class="navbar-nav py-0 mr-lg-5">
+				<div class="navbar-nav py-0 px-3 mr-5">
 					<div class="d-flex align-items-center" sec:authorize="isAuthenticated()">
-						<p class="m-0">Welcome <span sec:authentication="principal.authorities"></span></p>
-						<form th:action="@{/logout}" method="post" class="nav-item nav-link">
-							<button type="submit" class="btn-outline-primary bg-transparent rounded-pill p-2">Logout
-							</button>
-						</form>
+						<div class="nav-item dropdown d-flex justify-content-center align-items-center">
+							<img th:src="${session.user.photosImagePath}" class="rounded-circle mx-2" alt="User's photo" width="50" height="50">
+
+							<a class="nav-link dropdown-toggle" data-toggle="dropdown" th:text="${session.user.getFullName()}"></a>
+							<div class="dropdown-menu rounded-sm m-0">
+								<a th:href="@{/account}" class="dropdown-item">Tài khoản</a>
+								<div>
+									<form th:action="@{/logout}" method="post">
+										<button type="submit" class="dropdown-item text-danger">Đăng xuất</button>
+									</form>
+								</div>
+							</div>
+						</div>
+<!--						<a th:href="@{/account}" class="m-0" th:text="${session.user.getFullName()}"></a>-->
+
+<!--						<form th:action="@{/logout}" method="post" class="nav-item nav-link">-->
+<!--							<button type="submit" class="btn-outline-primary bg-transparent rounded-pill p-2">Logout-->
+<!--							</button>-->
+<!--						</form>-->
 					</div>
 					<a th:href="@{/login}" sec:authorize="isAnonymous()" class="nav-item nav-link">Login</a>
 					<a th:href="@{/register}" sec:authorize="isAnonymous()" class="nav-item nav-link">Register</a>

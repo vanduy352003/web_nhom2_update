@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout/admin_layout}"
-      xmlns:tr="http://www.thymeleaf.org">
+>
 <head>
 	<meta charset="UTF-8">
 	<title>Admin products</title>
@@ -12,10 +12,6 @@
 <body layout:fragment="content">
 	<!-- Cart Start -->
 	<div class="container-fluid pt-5">
-		<div class="pb-4 ml-4">
-			<a th:href="@{/admin/products/new}" sec:authorize="hasAuthority('ADMIN')"
-			   class="btn-primary text-decoration-none rounded-pill text-uppercase p-2">Add product</a>
-		</div>
 
 		<div class="row px-xl-5">
 			<div class="table-responsive mb-5">
@@ -24,27 +20,34 @@
 						<tr>
 							<th>Photo</th>
 							<th>ID</th>
+							<th>Email</th>
 							<th>Name</th>
-							<th>Price</th>
-							<th>Sell amount</th>
-							<th>Inventory</th>
-							<th>Actions</th>
+							<th>Birth date</th>
+							<th>Country</th>
+							<th>Gender</th>
+							<th>Phone</th>
+							<th>Roles</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody class="align-middle">
-						<tr th:block th:each="product : ${listProduct}">
+						<tr th:block th:each="user : ${listUser}">
 							<td class="align-middle">
-								<img th:src="@{${product.photosImagePath}}" alt="" style="width: 70px;">
+								<img th:src="@{${user.photosImagePath}}" alt="User photo" style="width: 70px;">
 							</td>
-							<td class="align-middle" th:text="${product.id}"></td>
-							<td class="align-middle" th:text="${product.name}"></td>
-							<td class="align-middle" th:text="${product.getPriceFormatted()}"></td>
-							<td class="align-middle" th:text="${product.sellAmount}"></td>
-							<td class="align-middle" th:text="${product.inventory}"></td>
+							<td class="align-middle" th:text="${user.id}"></td>
+							<td class="align-middle" th:text="${user.getEmail()}"></td>
+							<td class="align-middle" th:text="${user.getFullName()}"></td>
+							<td class="align-middle" th:text="${#dates.format(user.birthDate, 'dd-MM-yyyy')}"></td>
+							<td class="align-middle" th:text="${user.country}"></td>
+							<td class="align-middle" th:text="${user.gender}"></td>
+							<td class="align-middle" th:text="${user.phone}"></td>
+							<td class="align-middle" th:text="${user.roles}"></td>
+
 							<td class="align-middle">
-								<a  class="btn btn-sm btn-primary p-2" th:href="@{'/admin/products/edit/' + ${product.id}}"
+								<a  class="btn btn-sm btn-primary p-2" th:href="@{'/admin/users/edit/' + ${user.id}}"
 								         sec:authorize="hasAuthority('ADMIN')"><i class="fa fa-edit"></i></a>
-								<a class="btn btn-sm btn-primary p-2" th:href="@{'/admin/products/delete/' + ${product.id}}"
+								<a class="btn btn-sm btn-primary p-2" th:href="@{'/admin/users/delete/' + ${user.id}}"
 								        sec:authorize="hasAuthority('ADMIN')"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>

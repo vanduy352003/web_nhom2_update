@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +61,14 @@ public class AdminProductController {
     }
 
     @PostMapping("/save")
-    private String saveProduct(Product product, @RequestParam(value = "image") MultipartFile multipartFile, @RequestParam(value = "id", required = false) Integer id) throws Exception {
+    private String saveProduct(@Valid Product product,
+                               BindingResult result,
+                               @RequestParam(value = "image") MultipartFile multipartFile,
+                               @RequestParam(value = "id", required = false) Integer id) throws Exception {
+        if (result.hasErrors()) {
+            return "product/product_form";
+        }
+
         String fileName = id == null || (multipartFile != null && !multipartFile.isEmpty())
                 ? StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()))
                 : productService.findById(id).getPhotos();

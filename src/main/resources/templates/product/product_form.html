@@ -27,12 +27,14 @@
 			<div class="form-group row">
 				<input type="hidden" th:value="${product.id}" th:field="*{id}">
 				<label class="form-label">Name: </label>
-				<input type="text" th:field="*{name}" class="form-control" required/>
+				<input type="text" th:field="*{name}" class="form-control"/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 			</div>
 
 			<div class="form-group row">
 				<label class="form-label">Price: </label>
-				<input type="number" th:field="*{price}" class="form-control" required/>
+				<input type="number" th:field="*{price}" th:value="${product.getPriceFormatted()}" class="form-control"/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
 			</div>
 
 			<div class="form-group row">
@@ -42,7 +44,8 @@
 
 			<div class="form-group row">
 				<label class="form-label">Inventory: </label>
-				<input type="number" th:field="*{inventory}" class="form-control" required/>
+				<input type="number" th:field="*{inventory}" class="form-control"/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('inventory')}" th:errors="*{inventory}"></div>
 			</div>
 
 			<div class="form-group row">

@@ -5,8 +5,11 @@ import hcmute.vn.springonetomany.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
 
 @Controller
 public class LoginController {
@@ -26,7 +29,10 @@ public class LoginController {
     }
 
     @PostMapping("/process_register")
-    public String processRegister(User user) {
+    public String processRegister(@Valid User user, BindingResult result) {
+        if (result.hasErrors()) {
+            return "signup_form";
+        }
         try {
             userService.registerDefaultUser(user);
         } catch (Exception e) {
