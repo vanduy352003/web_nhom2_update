@@ -39,10 +39,10 @@ public class HomeController {
 
         List<Category> sortedCategories = listCategories.stream()
                 .sorted(Comparator.comparing((Category category) -> category.getProducts().size()).reversed())
-                .toList().subList(0, 6);
+                .toList().subList(0, Math.min(listCategories.size(), 6));
         List<Product> sortedProducts = productList.stream()
                 .sorted(Comparator.comparing((Product product) -> product.getPrice().floatValue()).reversed())
-                .toList().subList(0, 4);
+                .toList().subList(0, Math.min(productList.size(), 4));
 
         if (loggedUser != null) {
             User user = userService.findUserByEmail(loggedUser.getUsername());

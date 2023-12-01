@@ -76,6 +76,8 @@ public class Product {
     }
 
     public String getPriceFormatted() {
+        if (id == null || price == null) return null;
+
         Locale locale = new Locale.Builder().setLanguage("vi").setRegion("VN").build();
         NumberFormat format = NumberFormat.getCurrencyInstance(locale);
 //        format.setGroupingUsed(false);
