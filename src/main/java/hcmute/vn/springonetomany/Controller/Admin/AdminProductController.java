@@ -75,8 +75,10 @@ public class AdminProductController {
 
         product.setPhotos(fileName);
         Product savedProduct = productService.getNewProduct(product);
+
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadDir = "product_photos/" + savedProduct.getId();
+            FileUploadUtil.deleteAllFiles(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
         return "redirect:/admin/products";
