@@ -60,7 +60,7 @@ public class AdminProductController {
 
     @PostMapping("/save")
     private String saveProduct(Product product, @RequestParam(value = "image") MultipartFile multipartFile, @RequestParam(value = "id", required = false) Integer id) throws Exception {
-        String fileName = id == null || (multipartFile != null && !multipartFile.isEmpty())
+    	String fileName = id == null || (multipartFile != null && !multipartFile.isEmpty())
                 ? StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()))
                 : productService.findById(id).getPhotos();
 

@@ -37,6 +37,14 @@ public class User {
 	)
 	private Set<Role> roles = new HashSet<>();
 
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "users_vouchers",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "voucher_id")
+	)
+	private Set<Voucher> vouchers = new HashSet<>();
+	
 	public void addRole(Role role) {
 		this.roles.add(role);
 	}
