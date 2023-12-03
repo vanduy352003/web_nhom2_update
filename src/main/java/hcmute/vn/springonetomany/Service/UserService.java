@@ -5,6 +5,9 @@ import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
 import hcmute.vn.springonetomany.Repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,8 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    int PAGE_SIZE = 2;
+
     public void registerDefaultUser(User user) {
         Role roleUser = roleRepo.findByName("User");
         user.addRole(roleUser);
@@ -32,6 +37,11 @@ public class UserService {
 
     public List<User> listAll() {
         return userRepo.findAll();
+    }
+
+    public Page<User> findPage(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, PAGE_SIZE);
+        return userRepo.findAll(pageable);
     }
 
     public User getUserById(Long id) {

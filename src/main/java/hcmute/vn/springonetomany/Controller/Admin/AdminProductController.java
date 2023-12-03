@@ -6,6 +6,7 @@ import hcmute.vn.springonetomany.Service.CategoryService;
 import hcmute.vn.springonetomany.Service.ProductService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,9 +28,17 @@ public class AdminProductController {
     private CategoryService categoryService;
 
     @GetMapping("")
-    public String showProductsPage(Model model) {
-        List<Product> listProduct = productService.findAll();
+    public String showProductsPage(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
+//        List<Product> listProduct = productService.findAll();
+        Page<Product> listProduct = productService.findPage(page);
+        int totalPages = listProduct.getTotalPages();
+        long totalItems = listProduct.getTotalElements();
+
         model.addAttribute("listProduct", listProduct);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
+
         return "product/admin_products";
     }
 

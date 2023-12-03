@@ -16,7 +16,7 @@ public class ProductService {
     int PAGE_SIZE = 2;
 
     @Autowired
-    IProductRepository productRepository;
+    private IProductRepository productRepository;
 
     public List<Product> findAll() {
 

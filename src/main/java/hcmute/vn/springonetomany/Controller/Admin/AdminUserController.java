@@ -6,6 +6,7 @@ import hcmute.vn.springonetomany.Repository.IRoleRepository;
 import hcmute.vn.springonetomany.Service.UserService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -28,10 +29,16 @@ public class AdminUserController {
     IRoleRepository roleRepository;
 
     @GetMapping("")
-    public String showUsersPage(Model model) {
-        List<User> listUser = userService.listAll();
+    public String showUsersPage(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
+//        List<User> listUser = userService.listAll();
+        Page<User> listUser = userService.findPage(page);
+        int totalPages = listUser.getTotalPages();
+        long totalItems = listUser.getTotalElements();
 
-        model.addAttribute("listUser", listUser);
+        model.addAttribute("listUser", listUser.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
         return "user/admin_users";
     }
 
@@ -76,6 +83,7 @@ public class AdminUserController {
         User savedUser = userService.updateUser(user);
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadDir = "user_photos/" + savedUser.getId();
+            FileUploadUtil.deleteAllFiles(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
         return "redirect:/admin/users";
