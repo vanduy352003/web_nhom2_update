@@ -94,9 +94,11 @@
 				<div class="navbar-nav py-0 mr-5 px-3">
 					<div class="d-flex align-items-center" sec:authorize="isAuthenticated()">
 						<div class="nav-item dropdown d-flex justify-content-center align-items-center">
-							<img th:src="${session.user.photosImagePath}" class="rounded-circle mx-2" alt="User's photo" width="50" height="50">
+							<img th:src="${session.user.photosImagePath}" class="rounded-circle mx-2" alt="User's photo"
+							     width="50" height="50">
 
-							<a class="nav-link dropdown-toggle" data-toggle="dropdown" th:text="${session.user.getFullName()}"></a>
+							<a class="nav-link dropdown-toggle" data-toggle="dropdown"
+							   th:text="${session.user.getFullName()}"></a>
 							<div class="dropdown-menu rounded-sm m-0">
 								<a th:href="@{/account}" class="dropdown-item">Tài khoản</a>
 								<div>
@@ -106,6 +108,7 @@
 								</div>
 							</div>
 						</div>
+					</div>
 					<a th:href="@{/login}" sec:authorize="isAnonymous()" class="nav-item nav-link">Login</a>
 					<a th:href="@{/register}" sec:authorize="isAnonymous()" class="nav-item nav-link">Register</a>
 				</div>

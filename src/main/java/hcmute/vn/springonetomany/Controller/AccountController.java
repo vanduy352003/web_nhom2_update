@@ -73,9 +73,9 @@ public class AccountController {
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadDir = "user_photos/" + savedUser.getId();
+            FileUploadUtil.deleteAllFiles(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
-
 
         redirectAttributes.addFlashAttribute("message", "Cập nhật tài khoản thành công");
         return "redirect:/home";
