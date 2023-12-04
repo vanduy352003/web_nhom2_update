@@ -5,11 +5,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-<<<<<<< HEAD
 		<version>2.7.5</version>
-=======
-		<version>2.5.15</version>
->>>>>>> refs/heads/QuanLiUser
+
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>hcmute.vn</groupId>

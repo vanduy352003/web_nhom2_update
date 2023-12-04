@@ -46,8 +46,9 @@ public class VoucherController {
 	public String reedemVoucher(@AuthenticationPrincipal CustomUserDetails loggedUser, @PathVariable("id") int id, Model model) throws Exception {
 		Voucher voucher = voucherService.findById(id);
 		String email = loggedUser.getUsername();
-//		User user = userService.f
-		//user.getVouchers().add(voucher);
+		User user = userService.findUserByEmail(email);
+		user.getVouchers().add(voucher);
+		userService.save(user);
 		return "redirect:/vouchers";
 	}
 	
