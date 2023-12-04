@@ -6,11 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Nationalized;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -24,10 +27,12 @@ public class Product {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @NotBlank(message = "Tên sản phẩm không được bỏ trống")
     @Nationalized
     @Column(name = "name")
     private String name;
 
+    @Positive(message = "Giá sản phẩm phải lớn hơn không")
     @Column(name = "price")
     private Double price;
 
@@ -44,9 +49,12 @@ public class Product {
     @Column(name = "description")
     private String description;
 
+    @PositiveOrZero(message = "Số lượng bán phải lớn hơn 0")
     @Column(name = "sell_amount")
     private Integer sellAmount = 0;
 
+    @PositiveOrZero(message = "Số lượng tồn kho không là số âm")
+    @Positive
     @Column(name = "inventory")
     private Integer inventory;
 
@@ -65,5 +73,15 @@ public class Product {
         this.name = name;
         this.price = price;
         this.category = category;
+    }
+
+    public String getPriceFormatted() {
+        if (id == null || price == null) return null;
+
+        Locale locale = new Locale.Builder().setLanguage("vi").setRegion("VN").build();
+        NumberFormat format = NumberFormat.getCurrencyInstance(locale);
+//        format.setGroupingUsed(false);
+        String formattedPrice = format.format(this.price);
+        return formattedPrice.replace(".", ",");
     }
 }

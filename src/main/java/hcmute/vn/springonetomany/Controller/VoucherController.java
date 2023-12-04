@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import hcmute.vn.springonetomany.Custom.CustomUserDetails;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Entities.Voucher;
 import hcmute.vn.springonetomany.Service.UserService;
@@ -41,9 +43,10 @@ public class VoucherController {
     }
 	
 	@GetMapping("/vouchers/redeem/{id}")
-	public String reedemVoucher(@PathVariable("id") int id, Model model) throws Exception {
+	public String reedemVoucher(@AuthenticationPrincipal CustomUserDetails loggedUser, @PathVariable("id") int id, Model model) throws Exception {
 		Voucher voucher = voucherService.findById(id);
-		//User user = userService.getByEmail
+		String email = loggedUser.getUsername();
+//		User user = userService.f
 		//user.getVouchers().add(voucher);
 		return "redirect:/vouchers";
 	}

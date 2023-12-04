@@ -33,6 +33,7 @@ public class Category {
     @Column(name = "photos", length = 64)
     private String photos;
 
+
     @Override
     public String toString() {
         return "Category{" +

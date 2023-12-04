@@ -6,12 +6,15 @@ import hcmute.vn.springonetomany.Service.CategoryService;
 import hcmute.vn.springonetomany.Service.ProductService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -25,9 +28,17 @@ public class AdminProductController {
     private CategoryService categoryService;
 
     @GetMapping("")
-    public String showProductsPage(Model model) {
-        List<Product> listProduct = productService.findAll();
+    public String showProductsPage(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
+//        List<Product> listProduct = productService.findAll();
+        Page<Product> listProduct = productService.findPage(page);
+        int totalPages = listProduct.getTotalPages();
+        long totalItems = listProduct.getTotalElements();
+
         model.addAttribute("listProduct", listProduct);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
+
         return "product/admin_products";
     }
 
@@ -59,15 +70,24 @@ public class AdminProductController {
     }
 
     @PostMapping("/save")
-    private String saveProduct(Product product, @RequestParam(value = "image") MultipartFile multipartFile, @RequestParam(value = "id", required = false) Integer id) throws Exception {
+    private String saveProduct(@Valid Product product,
+                               BindingResult result,
+                               @RequestParam(value = "image") MultipartFile multipartFile,
+                               @RequestParam(value = "id", required = false) Integer id) throws Exception {
+        if (result.hasErrors()) {
+            return "product/product_form";
+        }
+
     	String fileName = id == null || (multipartFile != null && !multipartFile.isEmpty())
                 ? StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()))
                 : productService.findById(id).getPhotos();
 
         product.setPhotos(fileName);
         Product savedProduct = productService.getNewProduct(product);
+
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadDir = "product_photos/" + savedProduct.getId();
+            FileUploadUtil.deleteAllFiles(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
         return "redirect:/admin/products";
