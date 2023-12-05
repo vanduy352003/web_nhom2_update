@@ -90,7 +90,7 @@
 							<a href="checkout.html" class="dropdown-item">Checkout</a>
 						</div>
 					</div>
-					<a href="contact.html" class="nav-item nav-link">Contact</a>
+					<a th:href="@{/contact}" class="nav-item nav-link">Contact</a>
 					<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-item nav-link">Trang quản trị</a>
 				</div>
 				<div class="navbar-nav py-0 px-3 mr-5">
