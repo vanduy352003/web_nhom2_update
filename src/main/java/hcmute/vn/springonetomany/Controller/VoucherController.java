@@ -47,7 +47,7 @@ public class VoucherController {
 		Voucher voucher = voucherService.findById(id);
 		String email = loggedUser.getUsername();
 		User user = userService.findUserByEmail(email);
-		user.getVouchers().add(voucher);
+		voucher.getUsers().add(user);
 		userService.save(user);
 		return "redirect:/vouchers";
 	}

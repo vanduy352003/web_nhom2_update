@@ -29,7 +29,7 @@ public class AdminVoucherController {
 	@GetMapping("")
 	public String showVouchersPage(Model model) {
 		List<Voucher> listVoucher = voucherService.findAll();
-		model.addAttribute("listVoucher", listVoucher);
+		model.addAttribute("listvoucher", listVoucher);
 		return "voucher/admin_voucher";
 	}
 
