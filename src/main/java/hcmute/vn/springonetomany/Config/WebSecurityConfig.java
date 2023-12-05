@@ -2,6 +2,9 @@ package hcmute.vn.springonetomany.Config;
 
 import hcmute.vn.springonetomany.Custom.CustomAuthenticationSuccessHandler;
 import hcmute.vn.springonetomany.Custom.CustomUserDetailService;
+import hcmute.vn.springonetomany.Custom.Oauth2.CustomOAuth2UserService;
+import hcmute.vn.springonetomany.Custom.Oauth2.OAuthLoginSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -60,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login?error=true")
                 .permitAll()
                 .and()
+                .oauth2Login().loginPage("/login").userInfoEndpoint().userService(oauth2UserService).and().successHandler(oauthLoginSuccessHandler).and()
                 .logout().logoutSuccessUrl("/?logout=true")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
@@ -67,4 +71,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable();
     }
+    @Autowired
+    private CustomOAuth2UserService oauth2UserService;
+
+    @Autowired
+    private OAuthLoginSuccessHandler oauthLoginSuccessHandler;
 }

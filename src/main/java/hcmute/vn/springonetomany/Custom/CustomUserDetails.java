@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails, CustomUser {
 	@Serial
 	private static final long serialVersionUID = 1L;
 	private final User user;
@@ -67,4 +67,8 @@ public class CustomUserDetails implements UserDetails {
 		return user.getFirstName() + " " + user.getLastName();
 	}
 
+	@Override
+	public String getEmail() {
+		return user.getEmail();
+	}
 }

@@ -1,5 +1,6 @@
 package hcmute.vn.springonetomany.Entities;
 
+import hcmute.vn.springonetomany.Enum.AuthProvider;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Nationalized;
@@ -28,14 +29,14 @@ public class User {
 	@Column(nullable = false, unique = true, length = 45)
 	private String email;
 
-	@Column(nullable = false, length = 64)
+	@Column(nullable = true, length = 64)
 	private String password;
 	
-	@NotBlank(message = "Không được bỏ trống")
+	@NotNull(message = "Không được bỏ trống")
 	@Column(name = "first_name", nullable = false, length = 20)
 	private String firstName;
 	
-	@NotBlank(message = "Không dược bỏ trống")
+	@NotNull(message = "Không dược bỏ trống")
 	@Column(name = "last_name", nullable = false, length = 20)
 	private String lastName;
 	
@@ -59,10 +60,6 @@ public class User {
     @Column(name = "gender", length = 5)
     private String gender;
 
-    @Nationalized
-    @Column(name = "google_auth", length = 50)
-    private String googleAuth;
-
 	@Size(min = 4, max = 12, message = "Số điện thoại phải từ 4 đến 12 kí tự")
     @Column(name = "phone", length = 15)
     private String phone;
@@ -71,8 +68,16 @@ public class User {
     @Column(name = "photos", length = 100)
     private String photos;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "auth_provider")
+	private AuthProvider authProvider;
+
 	@CreationTimestamp
+	@Transient
     private Date createdAt;
+
+	@OneToOne(mappedBy = "user")
+	private Cart cart;
 
 	public void addRole(Role role) {
 		this.roles.add(role);

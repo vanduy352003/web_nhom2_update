@@ -1,5 +1,6 @@
 package hcmute.vn.springonetomany.Controller.Admin;
 
+import hcmute.vn.springonetomany.Custom.CustomUser;
 import hcmute.vn.springonetomany.Custom.CustomUserDetails;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Service.ProductService;
@@ -18,11 +19,10 @@ public class AdminHomeController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("")
-    private String showAdminPage(@AuthenticationPrincipal CustomUserDetails loggedUser, HttpSession session) {
+    private String showAdminPage(@AuthenticationPrincipal CustomUser loggedUser, HttpSession session) {
         if (loggedUser != null) {
-            User user = userService.findUserByEmail(loggedUser.getUsername());
+            User user = userService.findUserByEmail(loggedUser.getEmail());
             session.setAttribute("user", user);
         }
         return "admin/admin_page";

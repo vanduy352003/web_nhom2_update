@@ -2,6 +2,7 @@ package hcmute.vn.springonetomany.Service;
 
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
+import hcmute.vn.springonetomany.Enum.AuthProvider;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
 import hcmute.vn.springonetomany.Repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,10 @@ public class UserService {
         userRepo.save(user);
     }
 
+    public void saveOauth2(User user) {
+        userRepo.save(user);
+    }
+
     public User getNewUser(User user) {
         encodePassword(user);
         return userRepo.save(user);
@@ -107,5 +112,10 @@ public class UserService {
     public boolean checkPassword(String email, String password) {
         User user = userRepo.findByEmail(email);
         return  user.getPassword().equals(password);
+    }
+
+    public void updateAuthenticationType(String username, String oauth2ClientName) {
+        AuthProvider authType = AuthProvider.valueOf(oauth2ClientName.toUpperCase());
+        userRepo.updateAuthenticationProvider(username, authType);
     }
 }

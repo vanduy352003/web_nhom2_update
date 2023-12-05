@@ -1,5 +1,6 @@
 package hcmute.vn.springonetomany.Controller;
 
+import hcmute.vn.springonetomany.Custom.CustomUser;
 import hcmute.vn.springonetomany.Custom.CustomUserDetails;
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
@@ -38,8 +39,8 @@ public class AccountController {
     IRoleRepository roleRepository;
 
     @GetMapping("")
-    public String viewUserDetail(@AuthenticationPrincipal CustomUserDetails loggedUser, Model model) {
-        String email = loggedUser.getUsername();
+    public String viewUserDetail(@AuthenticationPrincipal CustomUser loggedUser, Model model) {
+        String email = loggedUser.getEmail();
         User user = userService.findUserByEmail(email);
         List<Role> listRole = roleRepository.findAll();
 
