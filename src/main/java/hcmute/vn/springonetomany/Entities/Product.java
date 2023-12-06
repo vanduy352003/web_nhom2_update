@@ -61,6 +61,10 @@ public class Product {
     @CreationTimestamp
     private Date createdAt;
 
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    private CartItem cartItems;
+
+
     @Transient
     public String getPhotosImagePath() {
         if (photos == null || id == null) return null;

@@ -1,10 +1,12 @@
 package hcmute.vn.springonetomany.Custom.Oauth2;
 
 import hcmute.vn.springonetomany.Custom.CustomUserDetails;
+import hcmute.vn.springonetomany.Entities.Cart;
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Enum.AuthProvider;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
+import hcmute.vn.springonetomany.Service.CartService;
 import hcmute.vn.springonetomany.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -60,8 +62,9 @@ public class OAuthLoginSuccessHandler implements AuthenticationSuccessHandler {
             newUser.setFirstName(firstName != null ? firstName : "");
             newUser.setLastName(lastName != null ? lastName : "");
             newUser.setPhotos(picture != null ? picture : "");
-
             userService.saveOauth2(newUser);
+
+
         }
         else {
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();

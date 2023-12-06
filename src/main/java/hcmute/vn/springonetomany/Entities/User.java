@@ -33,11 +33,11 @@ public class User {
 	private String password;
 	
 	@NotNull(message = "Không được bỏ trống")
-	@Column(name = "first_name", nullable = false, length = 20)
+	@Column(name = "first_name", nullable = false, length = 50)
 	private String firstName;
 	
 	@NotNull(message = "Không dược bỏ trống")
-	@Column(name = "last_name", nullable = false, length = 20)
+	@Column(name = "last_name", nullable = false, length = 50)
 	private String lastName;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -76,7 +76,7 @@ public class User {
 	@Transient
     private Date createdAt;
 
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Cart cart;
 
 	public void addRole(Role role) {

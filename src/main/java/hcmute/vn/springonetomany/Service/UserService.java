@@ -1,5 +1,6 @@
 package hcmute.vn.springonetomany.Service;
 
+import hcmute.vn.springonetomany.Entities.Cart;
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Enum.AuthProvider;
@@ -27,13 +28,22 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    int PAGE_SIZE = 2;
+    @Autowired
+    CartService cartService;
+
+    int PAGE_SIZE = 5;
 
     public void registerDefaultUser(User user) {
         Role roleUser = roleRepo.findByName("User");
         user.addRole(roleUser);
         encodePassword(user);
         userRepo.save(user);
+
+        //Tạo giỏ hàng cho người dùng
+        Cart cart = new Cart();
+        cart.setUser(user);
+        user.setCart(cart);
+        cartService.saveCart(cart);
     }
 
     public List<User> listAll() {
@@ -63,7 +73,13 @@ public class UserService {
     }
 
     public void saveOauth2(User user) {
+
         userRepo.save(user);
+        //Tạo giỏ hàng cho người dùng
+        Cart cart = new Cart();
+        cart.setUser(user);
+        user.setCart(cart);
+        cartService.saveCart(cart);
     }
 
     public User getNewUser(User user) {
