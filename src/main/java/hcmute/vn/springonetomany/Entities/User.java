@@ -65,7 +65,8 @@ public class User {
     private String phone;
 
     @Nationalized
-    @Column(name = "photos", length = 100)
+	@Lob
+    @Column(name = "photos")
     private String photos;
 
 	@Enumerated(EnumType.STRING)
