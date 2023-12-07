@@ -6,6 +6,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Nationalized;
@@ -26,7 +29,10 @@ public class Voucher {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+    @PositiveOrZero(message = "Số lượng voucher phải lớn hơn 0")
 	private Integer amount;
+    @NotBlank(message = "Tên voucher không được bỏ trống")
+    @Nationalized
 	private String name;
 	@CreationTimestamp
     @Column(name = "created_at")
@@ -39,6 +45,7 @@ public class Voucher {
     private Date toDate;
 	private String status;
 	private String type;
+    @Positive(message = "Giá trị voucher phải lớn hơn không")
 	private Integer value;
 	@Nationalized
     @Column(name = "photos", length = 64)

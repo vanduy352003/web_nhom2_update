@@ -1,6 +1,8 @@
 package hcmute.vn.springonetomany.Controller;
 
+import hcmute.vn.springonetomany.Custom.CustomUser;
 import hcmute.vn.springonetomany.Custom.CustomUserDetails;
+import hcmute.vn.springonetomany.Custom.Oauth2.CustomOAuth2User;
 import hcmute.vn.springonetomany.Entities.Category;
 import hcmute.vn.springonetomany.Entities.Product;
 import hcmute.vn.springonetomany.Entities.User;
@@ -10,7 +12,9 @@ import hcmute.vn.springonetomany.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +37,7 @@ public class HomeController {
     private UserService userService;
 
     @GetMapping({"/home", "/"})
-    public String viewHomePage(Model model, @AuthenticationPrincipal CustomUserDetails loggedUser, HttpSession session) {
+    public String viewHomePage(Model model, @AuthenticationPrincipal CustomUser loggedUser, HttpSession session) {
         List<Category> listCategories = categoryService.listAll();
         List<Product> productList = productService.findAll();
 
@@ -45,7 +49,8 @@ public class HomeController {
                 .toList().subList(0, Math.min(productList.size(), 4));
 
         if (loggedUser != null) {
-            User user = userService.findUserByEmail(loggedUser.getUsername());
+            User user = userService.findUserByEmail(loggedUser.getEmail());
+
             session.setAttribute("user", user);
         }
 

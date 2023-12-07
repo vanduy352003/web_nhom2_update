@@ -3,6 +3,8 @@ package hcmute.vn.springonetomany.Entities;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Entity
@@ -14,6 +16,13 @@ public class Role {
 	
 	@Column(nullable = false, length = 45)
 	private String name;
+
+	@ManyToMany(mappedBy = "roles")
+	private Set<User> users = new LinkedHashSet<>();
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
 
 	public Role() { }
 	

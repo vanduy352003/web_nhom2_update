@@ -1,7 +1,9 @@
 package hcmute.vn.springonetomany.Service;
 
+import hcmute.vn.springonetomany.Entities.Cart;
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
+import hcmute.vn.springonetomany.Enum.AuthProvider;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
 import hcmute.vn.springonetomany.Repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +28,23 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    int PAGE_SIZE = 2;
+    @Autowired
+    CartService cartService;
+
+    int PAGE_SIZE = 5;
 
     public void registerDefaultUser(User user) {
         Role roleUser = roleRepo.findByName("User");
         user.addRole(roleUser);
+        user.setAuthProvider(AuthProvider.DATABASE);
         encodePassword(user);
         userRepo.save(user);
+
+        //Tạo giỏ hàng cho người dùng
+        Cart cart = new Cart();
+        cart.setUser(user);
+        user.setCart(cart);
+        cartService.saveCart(cart);
     }
 
     public List<User> listAll() {
@@ -61,6 +73,16 @@ public class UserService {
         userRepo.save(user);
     }
 
+    public void saveOauth2(User user) {
+
+        userRepo.save(user);
+        //Tạo giỏ hàng cho người dùng
+        Cart cart = new Cart();
+        cart.setUser(user);
+        user.setCart(cart);
+        cartService.saveCart(cart);
+    }
+
     public User getNewUser(User user) {
         encodePassword(user);
         return userRepo.save(user);
@@ -78,8 +100,8 @@ public class UserService {
                 // If not empty, encode the new password
                 encodePassword(user);
             }
+            user.setAuthProvider(existingUser.getAuthProvider());
         }
-
         return userRepo.save(user);
     }
 
@@ -107,5 +129,10 @@ public class UserService {
     public boolean checkPassword(String email, String password) {
         User user = userRepo.findByEmail(email);
         return  user.getPassword().equals(password);
+    }
+
+    public void updateAuthenticationType(String username, String oauth2ClientName) {
+        AuthProvider authType = AuthProvider.valueOf(oauth2ClientName.toUpperCase());
+        userRepo.updateAuthenticationProvider(username, authType);
     }
 }

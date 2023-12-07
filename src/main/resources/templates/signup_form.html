@@ -48,7 +48,17 @@
 				<form th:action="@{/process_register}" th:object="${user}" method="post">
 					<div class="text-center mb-3">
 						<p>Sign up with:</p>
+						<a th:href="@{/oauth2/authorization/facebook}" class="btn btn-link btn-floating mx-1 border border-primary rounded-pill">
+							<i class="fab fa-facebook-f"></i>
+							Facebook
+						</a>
+
+						<a th:href="@{/oauth2/authorization/google}" class="btn btn-link btn-floating mx-1 border border-primary rounded-pill">
+							<i class="fab fa-google"></i>
+							Google
+						</a>
 					</div>
+					<p class="text-center">or:</p>
 					<div th:if="${param.existsEmail}" class="alert alert-danger">
 						Email đã tồn tại
 					</div>
