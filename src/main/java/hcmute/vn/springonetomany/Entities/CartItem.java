@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 @Getter
 @Setter
@@ -17,34 +15,15 @@ public class CartItem {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Transient
-    private Double total;
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    public String getPriceFormatted() {
-        if (id == null || this.product.getPrice() == null) return null;
-
-        Locale locale = new Locale.Builder().setLanguage("vi").setRegion("VN").build();
-        NumberFormat format = NumberFormat.getCurrencyInstance(locale);
-//        format.setGroupingUsed(false);
-        String formattedPrice = format.format(this.getTotal());
-        return formattedPrice.replace(".", ",");
-    }
-    public Double getTotal() {
-        total = this.product.getPrice() * quantity;
-        return total;
-    }
-    public void updateTotal(int newQuantity) {
-        total = this.product.getPrice() * newQuantity;
-    }
 }

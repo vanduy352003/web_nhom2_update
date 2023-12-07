@@ -13,9 +13,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.text.NumberFormat;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.Locale;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -56,14 +54,16 @@ public class Product {
     private Integer sellAmount = 0;
 
     @PositiveOrZero(message = "Số lượng tồn kho không là số âm")
+    @Positive
     @Column(name = "inventory")
     private Integer inventory;
 
     @CreationTimestamp
     private Date createdAt;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartItem> cartItems = new LinkedHashSet<>();
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    private CartItem cartItems;
+
 
     @Transient
     public String getPhotosImagePath() {

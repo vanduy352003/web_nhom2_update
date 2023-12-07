@@ -36,7 +36,6 @@ public class UserService {
     public void registerDefaultUser(User user) {
         Role roleUser = roleRepo.findByName("User");
         user.addRole(roleUser);
-        user.setAuthProvider(AuthProvider.DATABASE);
         encodePassword(user);
         userRepo.save(user);
 
@@ -100,8 +99,8 @@ public class UserService {
                 // If not empty, encode the new password
                 encodePassword(user);
             }
-            user.setAuthProvider(existingUser.getAuthProvider());
         }
+
         return userRepo.save(user);
     }
 

@@ -2,8 +2,6 @@ package hcmute.vn.springonetomany.Controller;
 
 import hcmute.vn.springonetomany.Entities.Category;
 import hcmute.vn.springonetomany.Entities.Product;
-import hcmute.vn.springonetomany.Entities.User;
-import hcmute.vn.springonetomany.Repository.IUserRepository;
 import hcmute.vn.springonetomany.Service.CategoryService;
 import hcmute.vn.springonetomany.Service.ProductService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
@@ -15,7 +13,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -23,13 +20,9 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService productService;
-    @Autowired
-    private IUserRepository userRepository;
 
     @GetMapping("/products")
-    public String getOnePage(Model model,
-                             @RequestParam(required = false, defaultValue = "1") int page,
-                             HttpSession session) {
+    public String getOnePage(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
         Page<Product> productPage = productService.findPage(page);
         List<Product> productList = productPage.getContent();
         int totalPages = productPage.getTotalPages();
@@ -39,13 +32,6 @@ public class ProductController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);
-
-
-        // Cập nhật user trong session
-        User user = (User) session.getAttribute("user");
-        user = userRepository.findById(user.getId()).orElse(null);
-        session.setAttribute("user", user);
-
         return "product/products";
     }
 

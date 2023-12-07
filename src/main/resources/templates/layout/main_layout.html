@@ -59,9 +59,9 @@
 					<i class="fas fa-heart text-primary"></i>
 					<span class="badge">0</span>
 				</a>
-				<a th:href="@{/cart}" class="btn border">
+				<a th:href="@{/cart/{cartId}(cartId=${session.user.cart.id})}" class="btn border">
 					<i class="fas fa-shopping-cart text-primary"></i>
-					<span class="badge" th:text="${session.user.getCart().getCartItems().size()}"></span>
+					<span class="badge">0</span>
 				</a>
 			</div>
 		</div>
@@ -96,9 +96,9 @@
 				<div class="navbar-nav py-0 px-3 mr-5">
 					<div class="d-flex align-items-center" sec:authorize="isAuthenticated()">
 						<div class="nav-item dropdown d-flex justify-content-center align-items-center">
-							<img th:if="${session.user.getAuthProvider().name() == 'GOOGLE'}" th:src="${session.user.getPhotos()}" class="rounded-circle mx-2" alt=""
+							<img th:if="${session.user.getAuthProvider() == 'DATABASE'}" th:src="${session.user.getPhotosImagePath()}" class="rounded-circle mx-2" alt=""
 							     width="50" height="50">
-							<img th:unless="${session.user.getAuthProvider().name() == 'GOOGLE'}" th:src="@{${session.user.getPhotosImagePath()}}" class="rounded-circle mx-2" alt=""
+							<img th:unless="${session.user.getAuthProvider() == 'DATABASE'}" th:src="${session.user.getPhotos()}" class="rounded-circle mx-2" alt=""
 							     width="50" height="50">
 
 							<a class="nav-link dropdown-toggle" data-toggle="dropdown"
