@@ -30,8 +30,8 @@ public class RatingService {
 		return ratingRepository.findAll(pageable);
 	}
 
-	public Optional<Rating> findById(Integer id) {
-		return ratingRepository.findById(id);
+	public Rating findById(Integer id) {
+		return ratingRepository.findById(id).get();
 	}
 
 	public long count() {
@@ -54,5 +54,6 @@ public class RatingService {
 	public Rating getNewRating(Rating rating) {
         return ratingRepository.save(rating);
     }
+	
 	
 }

@@ -227,13 +227,13 @@
 					</div>
 					<div class="tab-pane fade" id="tab-pane-3">
 						<div class="row">
-							<div class="col-md-6">
+							<div th:fragment="ratingFragment" id="review-content" class="col-md-6">
 								<h4 class="mb-4">
 									<span th:text="${numberOfRating}"></span> review for "<span
 										th:text="${product.name}"></span>"
 								</h4>
 								<th:block th:each="productRating : ${listRating}">
-									<div class="media mb-4">
+									<div class="rating media mb-4">
 										<img th:src="@{${productRating.getUser().photosImagePath}}" alt="Image"
 											class="img-fluid mr-3 mt-1" style="width: 45px;">
 										<div class="media-body">
@@ -258,10 +258,13 @@
 											</div>
 											
 											<p th:text="${productRating.message}"></p>
-											
 											<th:block th:each="ratingImage : ${productRating.ratingImages}">								
 												<img th:src="@{${ratingImage.photosImagePath}}" alt="" style="width: 70px;">
 											</th:block>
+											<th:block th:if="${session.user.getId() == productRating.getUser().id}">
+												<a  th:href="@{'/rating/delete?id=' + ${productRating.id} + '&productId=' + ${product.id}}">Xóa</a>
+											</th:block>
+							
 										</div>
 									</div>
 								</th:block>
@@ -299,6 +302,8 @@
 								</form>
 							</div>
 						</div>
+						<a href="#" id="load-more-link" class="btn btn-primary text-decoration-none rounded-pill text-uppercase p-2"
+							th:data-product-id="${product.id}">Load More</a>
 					</div>
 				</div>
 			</div>
@@ -416,6 +421,32 @@
 	</div>
 	<!-- Products End -->
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script>
+		$('#load-more-link').on('click', function(event) {
+			event.preventDefault();
+			var productId = $(this).data('product-id');
+			loadAjax(productId);
+		})
+		function loadAjax(productId) {
+			var amount = document.getElementsByClassName("rating").length;
+			$.ajax({
+				url : "/rating/loadAjax",
+				type : "get",
+				data : {
+					exits : amount,
+					productId : productId
+				},
+				success : function(data) {
+					$("#content").append(data);
+				},
+				error : function(xhr) {
+					
+				}
+			});
+		};
+	</script>
+	
 	<script>
 		function limitFiles(input, maxFiles) {
 			// Get the selected files

@@ -1,5 +1,6 @@
 package hcmute.vn.springonetomany.Controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,7 +9,10 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,11 +61,32 @@ public class RatingController {
 				ratingImage.setRating(savedRating);
 				RatingImage savedRatingImage = ratingImageService.getNewRatingImage(ratingImage);
 				String uploadDir = "rating_images/" + savedRating.getId() + "/" + savedRatingImage.getId();
-	            FileUploadUtil.deleteAllFiles(uploadDir);
 	            FileUploadUtil.saveFile(uploadDir, filename, multipartFile);
 	            rating.getRatingImages().add(ratingImage);
 			}
 		}
-		return "redirect:/products/detail/" + "{id}";
+		return "redirect:/products/detail/" + id;
 	}
+	
+	@GetMapping("rating/delete") 
+	public String deleteRating(@RequestParam("id") int id, @RequestParam("productId") int productId) throws IOException {
+		Rating rating = ratingService.findById(id);
+		for (RatingImage ratingImage : rating.getRatingImages()) {
+    		ratingImageService.delete(ratingImage);
+    	}
+        FileUploadUtil.deleteAllFiles("rating_images/" + rating.getId());
+        rating.getRatingImages().clear();
+        ratingService.delete(rating);
+		return "redirect:/products/detail/" + productId;
+	}
+//	@GetMapping("/rating/loadAjax")
+//	public String loadMoreRating(Model model, @RequestParam(name = "exits", defaultValue = "0") int amount, @RequestParam("productId") int productId) {
+//		
+//		//int count = ratingService.getRatingsByProduct_Id(productId, productId).getSize();
+//		List<Rating> newRatingList = ratingService.getRatingsByProduct_Id(productId, amount).getContent();
+//		model.addAttribute("listRating", newRatingList);
+//		
+//		return "redirect:/products/detail/" + productId + " :: ratingFragment";
+//		
+//	}
 }

@@ -15,4 +15,16 @@ public class RatingImageService {
 	public RatingImage getNewRatingImage(RatingImage ratingImage) {
         return ratingImageRepository.save(ratingImage);
     }
+
+	public void deleteById(Integer id) {
+		ratingImageRepository.deleteById(id);
+	}
+
+	public void delete(RatingImage entity) {
+		ratingImageRepository.delete(entity);
+	}
+	
+//	public void deleteByRating_Id(int ratingId) {
+//		ratingImageRepository.deleteByRating_Id(ratingId);
+//	}
 }
