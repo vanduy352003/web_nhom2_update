@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import hcmute.vn.springonetomany.Custom.CustomUser;
 import hcmute.vn.springonetomany.Custom.CustomUserDetails;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Entities.Voucher;
@@ -28,9 +29,13 @@ public class VoucherController {
 	private int PAGE_SIZE = 3;
 	
 	@GetMapping("/vouchers")
-    public String getOnePage(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
+    public String getOnePage(Model model, @RequestParam(required = false, defaultValue = "1") int page, @AuthenticationPrincipal CustomUser loggedUser) {
 		Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE);
-        Page<Voucher> voucherPage = voucherService.findAll(pageable);
+		Page<Voucher> voucherPage;
+		if (loggedUser != null)
+        	voucherPage = voucherService.getVoucherNotOwed(userService.findUserByEmail(loggedUser.getEmail()),pageable);
+		else 
+			voucherPage = voucherService.findAll(pageable);
         List<Voucher> voucherList = voucherPage.getContent();
         int totalPages = voucherPage.getTotalPages();
         long totalItems = voucherPage.getTotalElements();
@@ -48,7 +53,7 @@ public class VoucherController {
 		String email = loggedUser.getUsername();
 		User user = userService.findUserByEmail(email);
 		voucher.getUsers().add(user);
-		userService.save(user);
+		voucherService.save(voucher);
 		return "redirect:/vouchers";
 	}
 	

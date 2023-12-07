@@ -58,7 +58,7 @@ public class Voucher {
         return "/voucher_photos/" + id + "/" + photos;
     }
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(
 			name = "users_vouchers",
 			joinColumns = @JoinColumn(name = "voucher_id"),
@@ -66,5 +66,10 @@ public class Voucher {
 	)
 	private Set<User> users = new HashSet<>();
 	
+	
+	public void removeUser(User user) {
+		this.users.remove(user);
+		user.getVouchers().remove(this);
+	}
 	
 }

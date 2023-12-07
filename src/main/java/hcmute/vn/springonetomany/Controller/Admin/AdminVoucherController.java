@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -25,11 +28,19 @@ import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 public class AdminVoucherController {
 	@Autowired
 	private VoucherService voucherService;
-	
+	private int PAGE_SIZE = 2;
 	@GetMapping("")
-	public String showVouchersPage(Model model) {
-		List<Voucher> listVoucher = voucherService.findAll();
-		model.addAttribute("listvoucher", listVoucher);
+	public String showVouchersPage(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
+        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE);
+		Page<Voucher> listVoucher = voucherService.findAll(pageable);
+		
+		int totalPages = listVoucher.getTotalPages();
+        long totalItems = listVoucher.getTotalElements();
+
+        model.addAttribute("listvoucher", listVoucher);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
 		return "voucher/admin_voucher";
 	}
 

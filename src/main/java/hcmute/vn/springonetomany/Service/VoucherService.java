@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import hcmute.vn.springonetomany.Entities.Product;
+import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Entities.Voucher;
 import hcmute.vn.springonetomany.Repository.IVoucherRepository;
 
@@ -58,4 +59,12 @@ public class VoucherService {
 	public Voucher getNewVoucher(Voucher voucher) {
         return voucherRepo.save(voucher);
     }
+	
+	public Page<Voucher> getVoucherNotOwed(User user, Pageable pageable) {
+		return voucherRepo.getVouchersNotOwned(user, pageable);
+	}
+	
+//	public List<Voucher> getVoucherOwned(User user) {
+//		return voucherRepo.getVouchersOwned(user);
+//	}
 }

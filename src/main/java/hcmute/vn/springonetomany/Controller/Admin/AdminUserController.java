@@ -2,8 +2,10 @@ package hcmute.vn.springonetomany.Controller.Admin;
 
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
+import hcmute.vn.springonetomany.Entities.Voucher;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
 import hcmute.vn.springonetomany.Service.UserService;
+import hcmute.vn.springonetomany.Service.VoucherService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,7 +26,8 @@ import java.util.Objects;
 public class AdminUserController {
     @Autowired
     UserService userService;
-
+    @Autowired
+    VoucherService voucherService;
     @Autowired
     IRoleRepository roleRepository;
 
@@ -44,6 +47,11 @@ public class AdminUserController {
 
     @GetMapping("/delete/{id}")
     public String deleteUSer(@PathVariable("id") Long id) {
+    	User user = userService.getUserById(id);
+    	for (Voucher voucher : user.getVouchers()) {
+    		voucher.getUsers().remove(user);
+    	}
+    	
         userService.deleteUserById(id);
         return "redirect:/admin/users";
     }
