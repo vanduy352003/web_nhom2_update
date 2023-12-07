@@ -53,14 +53,14 @@
 					</div>
 				</form>
 			</div>
-			<div class="col-lg-3 col-6 text-right">
+			<div class="col-lg-3 col-6 text-right" sec:authorize="isAuthenticated()">
 				<a href="" class="btn border">
 					<i class="fas fa-heart text-primary"></i>
 					<span class="badge">0</span>
 				</a>
-				<a href="" class="btn border">
+				<a th:href="@{/cart}" class="btn border">
 					<i class="fas fa-shopping-cart text-primary"></i>
-					<span class="badge">0</span>
+					<span class="badge" th:text="${session.user.getCart().getCartItems().size()}"></span>
 				</a>
 			</div>
 		</div>
@@ -82,10 +82,10 @@
 					<a th:href="@{/admin/categories}" class="nav-item nav-link">Categories</a>
 					<a th:href="@{/admin/users}" class="nav-item nav-link">Users</a>
 
-					<div class="nav-item dropdown">
+					<div class="nav-item dropdown" sec:authorize="isAuthenticated()">
 						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
 						<div class="dropdown-menu rounded-0 m-0">
-							<a href="cart.html" class="dropdown-item">Shopping Cart</a>
+							<a th:href="@{/cart/{cartId}(cartId=${session.user.cart.id})}" class="dropdown-item">Shopping Cart</a>
 							<a href="checkout.html" class="dropdown-item">Checkout</a>
 						</div>
 					</div>
@@ -94,9 +94,9 @@
 				<div class="navbar-nav py-0 mr-5 px-3">
 					<div class="d-flex align-items-center" sec:authorize="isAuthenticated()">
 						<div class="nav-item dropdown d-flex justify-content-center align-items-center">
-							<img th:if="${session.user.getAuthProvider() == 'DATABASE'}" th:src="${session.user.getPhotosImagePath()}" class="rounded-circle mx-2" alt=""
+							<img th:if="${session.user.getAuthProvider().name() == 'GOOGLE'}" th:src="${session.user.getPhotos()}" class="rounded-circle mx-2" alt=""
 							     width="50" height="50">
-							<img th:unless="${session.user.getAuthProvider() == 'DATABASE'}" th:src="${session.user.getPhotos()}" class="rounded-circle mx-2" alt=""
+							<img th:unless="${session.user.getAuthProvider().name() == 'GOOGLE'}" th:src="@{${session.user.getPhotosImagePath()}}" class="rounded-circle mx-2" alt=""
 							     width="50" height="50">
 
 							<a class="nav-link dropdown-toggle" data-toggle="dropdown"

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
-    private ProductService productService;
 
     @GetMapping("admin/categories/new")
     public String showCategoryNewForm(Model model) {
@@ -27,6 +26,6 @@ public class CategoryController {
     public String saveCategory(Category category) {
         categoryService.save(category);
 
-        return "redirect:/admin/home";
+        return "redirect:/home";
     }
 }
