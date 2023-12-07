@@ -13,7 +13,9 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -61,6 +63,9 @@ public class Product {
     @CreationTimestamp
     private Date createdAt;
 
+    @OneToMany(mappedBy = "product")
+    private Set<Rating> ratings;
+    
     @Transient
     public String getPhotosImagePath() {
         if (photos == null || id == null) return null;
@@ -68,6 +73,16 @@ public class Product {
         return "/product_photos/" + id + "/" + photos;
     }
 
+    public Integer getRatingPoint() {
+    	if (ratings.isEmpty()) 
+    		return 0;
+    	Integer totalRatingPoints = 0;
+    	for (Rating rating : ratings) {
+    		totalRatingPoints += rating.getRatingPoint();
+    	}
+    	return Math.round((float)totalRatingPoints/ratings.size());
+    }
+    
     public Product(Integer id, String name, Double price, Category category) {
         this.id = id;
         this.name = name;
