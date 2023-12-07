@@ -20,13 +20,14 @@ import java.util.List;
 
 
 @Controller
+@RequestMapping("/products")
 public class ProductController {
     @Autowired
     private ProductService productService;
     @Autowired
     private IUserRepository userRepository;
 
-    @GetMapping("/products")
+    @GetMapping("")
     public String getOnePage(Model model,
                              @RequestParam(required = false, defaultValue = "1") int page,
                              HttpSession session) {
@@ -40,11 +41,12 @@ public class ProductController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);
 
-
-        // Cập nhật user trong session
-        User user = (User) session.getAttribute("user");
-        user = userRepository.findById(user.getId()).orElse(null);
-        session.setAttribute("user", user);
+        if (session.getAttribute("user") != null) {
+            // Cập nhật user trong session
+            User user = (User) session.getAttribute("user");
+            user = userRepository.findById(user.getId()).orElse(null);
+            session.setAttribute("user", user);
+        }
 
         return "product/products";
     }
@@ -70,7 +72,7 @@ public class ProductController {
         return "product/products";
     }
 
-    @GetMapping({"/products/category/{id}"})
+    @GetMapping({"/category/{id}"})
     public String showProductsByCategoryId(@PathVariable("id") int id, @RequestParam int page, Model model) throws Exception {
         Page<Product> productPage = productService.getProductsByCategory_Id(id, page);
         List<Product> productList = productPage.getContent();
@@ -84,7 +86,7 @@ public class ProductController {
         return "product/products";
     }
 
-    @GetMapping("/products/detail/{id}")
+    @GetMapping("/detail/{id}")
     public String showProductDetail(@PathVariable("id") int id, Model model) {
         try {
             Product product = productService.findById(id);
