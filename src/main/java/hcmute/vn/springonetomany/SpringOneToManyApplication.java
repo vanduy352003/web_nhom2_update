@@ -12,5 +12,5 @@ public class SpringOneToManyApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringOneToManyApplication.class, args);
 	}
-
+ 
 }
