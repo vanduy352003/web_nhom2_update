@@ -48,6 +48,6 @@ public class ContactController {
 		emailService.sendMail(fullname, email, subject, content, multipartfile);
 		
 		
-		return "contact/contact_message";
+		return "redirect:/contact?status=success";
 	}
 }

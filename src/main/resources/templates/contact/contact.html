@@ -5,30 +5,9 @@
 <head>
 	<meta charset="utf-8">
 	<title>Contact page</title>
-	<meta content="width=device-width, initial-scale=1.0" name="viewport">
-	<meta content="Free HTML Templates" name="keywords">
-	<meta content="Free HTML Templates" name="description">
-
-	<!-- Favicon -->
-	<link href="img/favicon.ico" rel="icon">
-
-	<!-- Google Web Fonts -->
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
-		rel="stylesheet">
-
-	<!-- Font Awesome -->
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-
-	<!-- Libraries Stylesheet -->
-	<link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-	<!-- Customized Bootstrap Stylesheet -->
-	<link href="css/style.css" rel="stylesheet">
 </head>
 
 <body layout:fragment="content">
-
 	<!-- Page Header Start -->
 	<div class="container-fluid bg-secondary mb-5">
 		<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
@@ -44,6 +23,9 @@
 
 
 	<!-- Contact Start -->
+	<div th:if="${param.status}" class="alert alert-success" id="successAlert">
+		Bạn đã gửi thành công
+	</div>
 	<div class="container-fluid pt-5">
 		<div class="text-center mb-4">
 			<h2 class="section-title px-5"><span class="px-2">Contact For Any Queries</span></h2>
@@ -107,34 +89,34 @@
 					<p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+028 3896 8641</p>
 				</div>
 			</div>
-			<div class="container">
-				<div class="row justify-content-center">
-					<div class="col-md-7">
-							<iframe class="embed-responsive-item" style="border: none; overflow: hidden;"
-								src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F61553910715598%2F&amp;tabs=timeline%2C%20events%2C%20messages&amp;width=500&amp;height=400&amp;small_header=false&amp;adapt_container_width=false&amp;hide_cover=true&amp;show_facepile=true&amp;appId"
-								width="500" height="400" frameborder="0" scrolling="no"
-								allowfullscreen="allowfullscreen"></iframe>
-					</div>
-				</div>
-			</div>
+
+
 		</div>
 	</div>
 	</div>
 	<!-- Contact End -->
+	<div class="d-flex align-items-center" style="justify-content: space-around;">
+		<div class="ml-5">
+			<iframe style="border: none; overflow: hidden;"
+				src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F61553910715598%2F&amp;tabs=timeline%2C%20events%2C%20messages&amp;width=500&amp;height=400&amp;small_header=false&amp;adapt_container_width=false&amp;hide_cover=true&amp;show_facepile=true&amp;appId"
+				width="500" height="400" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe>
+		</div>
+		<iframe
+			src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.485467534978!2d106.77191309999999!3d10.8506324!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752763f23816ab%3A0x282f711441b6916f!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBTxrAgcGjhuqFtIEvhu7kgdGh14bqtdCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2s!4v1702019911066!5m2!1svi!2s"
+			width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+			referrerpolicy="no-referrer-when-downgrade"></iframe>
 
+	</div>
 
-	<!-- JavaScript Libraries -->
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-	<script src="lib/easing/easing.min.js"></script>
-	<script src="lib/owlcarousel/owl.carousel.min.js"></script>
-
-	<!-- Contact Javascript File -->
-	<script src="mail/jqBootstrapValidation.min.js"></script>
-	<script src="mail/contact.js"></script>
-
-	<!-- Template Javascript -->
-	<script src="js/main.js"></script>
+	<script>
+		// Sử dụng hàm setTimeout để tắt thông báo sau 3 giây
+		setTimeout(function () {
+			var successAlert = document.getElementById('successAlert');
+			if (successAlert) {
+				successAlert.style.display = 'none';
+			}
+		}, 3000); // 3000 milliseconds = 3 giây
+	</script>
 </body>
 
 </html>
