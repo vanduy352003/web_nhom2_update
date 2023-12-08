@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-      layout:decorate="~{layout/main_layout}"
->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{layout/main_layout}">
+
 <head>
 	<title>Product detail</title>
 </head>
@@ -167,7 +164,8 @@
 				<div class="nav nav-tabs justify-content-center border-secondary mb-4">
 					<a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
 					<a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Information</a>
-					<a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Reviews (<span th:text="${numberOfRating}"></span>)</a>
+					<a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Reviews (<span
+							th:text="${numberOfRating}"></span>)</a>
 				</div>
 				<div class="tab-content">
 					<div class="tab-pane fade show active" id="tab-pane-1">
@@ -262,10 +260,12 @@
 
 											<p th:text="${productRating.message}"></p>
 											<th:block th:each="ratingImage : ${productRating.ratingImages}">
-												<img th:src="@{${ratingImage.photosImagePath}}" alt="" style="width: 70px;">
+												<img th:src="@{${ratingImage.photosImagePath}}" alt=""
+													style="width: 70px;">
 											</th:block>
 											<th:block th:if="${session.user.getId() == productRating.getUser().id}">
-												<a  th:href="@{'/rating/delete?id=' + ${productRating.id} + '&productId=' + ${product.id}}">Xóa</a>
+												<a
+													th:href="@{'/rating/delete?id=' + ${productRating.id} + '&productId=' + ${product.id}}">Xóa</a>
 											</th:block>
 
 										</div>
@@ -275,24 +275,34 @@
 							<div class="col-md-6">
 								<h4 class="mb-4">Leave a review</h4>
 								<small>Your email address will not be published. Required fields are marked *</small>
-								<div class="d-flex my-3">
-									<p class="mb-0 mr-2">Your Rating * :</p>
-									<div class="text-primary" id="rating-stars">
-										<i class="far fa-star" data-index="1"></i>
-										<i class="far fa-star" data-index="2"></i>
-										<i class="far fa-star" data-index="3"></i>
-										<i class="far fa-star" data-index="4"></i>
-										<i class="far fa-star" data-index="5"></i>
-									</div>
-								</div>
 								<form th:action="@{'/rating/send/' + ${product.id}}" th:object="${rating}" method="post"
 									enctype="multipart/form-data">
 									<input type="hidden" id="selected-rating" th:field="*{ratingPoint}" value="0"
 										required>
 									<div class="form-group">
+										<label for="name">Your Name *</label>
+										<input type="text" class="form-control" id="name" readonly
+											sec:authorize="isAuthenticated()" th:value="${session.user.getFullName()}">
+									</div>
+									<div class="form-group">
+										<label for="email">Your Email *</label>
+										<input type="email" class="form-control" id="email" readonly
+											sec:authorize="isAuthenticated()" th:value="${session.user.email}">
+									</div>
+									<div class="form-group">
 										<label for="message">Your Review *</label>
 										<textarea id="message" cols="30" rows="5" class="form-control"
 											th:field="*{message}" required></textarea>
+									</div>
+									<div class="d-flex my-3">
+										<p class="mb-0 mr-2">Your Rating * :</p>
+										<div class="text-primary" id="rating-stars">
+											<i class="far fa-star" data-index="1"></i>
+											<i class="far fa-star" data-index="2"></i>
+											<i class="far fa-star" data-index="3"></i>
+											<i class="far fa-star" data-index="4"></i>
+											<i class="far fa-star" data-index="5"></i>
+										</div>
 									</div>
 									<div class="form-group">
 										<input type="file" name="ratingImage" accept="image/**"
@@ -305,7 +315,8 @@
 								</form>
 							</div>
 						</div>
-						<a href="#" id="load-more-link" class="btn btn-primary text-decoration-none rounded-pill text-uppercase p-2"
+						<a href="#" id="load-more-link"
+							class="btn btn-primary text-decoration-none rounded-pill text-uppercase p-2"
 							th:data-product-id="${product.id}">Load More</a>
 					</div>
 				</div>
@@ -316,7 +327,7 @@
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<script>
-		$('#load-more-link').on('click', function(event) {
+		$('#load-more-link').on('click', function (event) {
 			event.preventDefault();
 			var productId = $(this).data('product-id');
 			loadAjax(productId);
@@ -324,16 +335,16 @@
 		function loadAjax(productId) {
 			var amount = document.getElementsByClassName("rating").length;
 			$.ajax({
-				url : "/rating/loadAjax",
-				type : "get",
-				data : {
-					exits : amount,
-					productId : productId
+				url: "/rating/loadAjax",
+				type: "get",
+				data: {
+					exits: amount,
+					productId: productId
 				},
-				success : function(data) {
+				success: function (data) {
 					$("#content").append(data);
 				},
-				error : function(xhr) {
+				error: function (xhr) {
 
 				}
 			});
@@ -377,29 +388,29 @@
 	</script>
 
 	<script>
-        window.onload = function () {
-            const minusButton = document.querySelector('.btn-minus');
-            const plusButton = document.querySelector('.btn-plus');
-            const quantityInput = document.querySelector('input[name="quantity"]');
-            const stockEl = document.querySelector('.stock');
+		window.onload = function () {
+			const minusButton = document.querySelector('.btn-minus');
+			const plusButton = document.querySelector('.btn-plus');
+			const quantityInput = document.querySelector('input[name="quantity"]');
+			const stockEl = document.querySelector('.stock');
 
-            minusButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
-            });
+			minusButton.addEventListener('click', function (e) {
+				e.preventDefault();
+				let currentValue = parseInt(quantityInput.value);
+				if (currentValue > 1) {
+					quantityInput.value = currentValue - 1;
+				}
+			});
 
-            plusButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                let currentValue = parseInt(quantityInput.value);
-                let currentStock = parseInt(stockEl.dataset.stock);
-                if (currentValue < currentStock) {
-                    quantityInput.value = currentValue + 1;
-                }
-            });
-        };
+			plusButton.addEventListener('click', function (e) {
+				e.preventDefault();
+				let currentValue = parseInt(quantityInput.value);
+				let currentStock = parseInt(stockEl.dataset.stock);
+				if (currentValue < currentStock) {
+					quantityInput.value = currentValue + 1;
+				}
+			});
+		};
 	</script>
 </body>
 
