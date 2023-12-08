@@ -73,6 +73,8 @@
 					<small class="pt-1">(<span th:text="${numberOfRating}"></span> Reviews)</small>
 				</div>
 				<h3 class="font-weight-semi-bold mb-4" th:text="${product.getPriceFormatted()}"></h3>
+				<p class="font-weight-semi-bold mb-4 stock" th:text="'Stock: ' + ${product.getInventory()}"
+				   th:data-stock="${product.getInventory()}"></p>
 				<p class="mb-4">Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam stet sit clita
 					ea. Sanc invidunt ipsum et, labore clita lorem magna lorem ut. Erat lorem duo dolor no sea nonumy.
 					Accus labore stet, est lorem sit diam sea et justo, amet at lorem et eirmod ipsum diam et rebum kasd
@@ -375,7 +377,6 @@
 			}
 		});
 	</script>
-
 	<script>
         window.onload = function () {
             const minusButton = document.querySelector('.btn-minus');

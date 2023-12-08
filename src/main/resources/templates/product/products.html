@@ -211,8 +211,7 @@
 										<input type="hidden" name="productId" th:value="${product.getId()}">
 										<input type="hidden" name="page" th:value="${currentPage}">
 
-<!--										<input type="hidden" name="quantity" value="1">-->
-										<button type="submit" class="btn btn-sm text-dark p-0"><i
+										<button type="submit" class="btn btn-sm text-dark p-0" th:disabled="${product.getInventory() == 0}"><i
 												class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
 										</button>
 									</form>

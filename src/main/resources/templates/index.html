@@ -218,8 +218,12 @@
 								Detail</a>
 							<a th:href="@{'/addtowishlist/' + ${product.id}}" class="btn btn-sm text-dark p-0"><i
 									class="fas fa-heart text-primary mr-1"></i>Add to wishlist</a>
-							<a href="" class="btn btn-sm text-dark p-0"><i
-									class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+							<form th:action="@{/cart/add}" method="post">
+								<input type="hidden" name="productId" th:value="${product.getId()}">
+								<button type="submit" class="btn btn-sm text-dark p-0" th:disabled="${product.getInventory() == 0}"><i
+										class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+								</button>
+							</form>
 						</div>
 					</div>
 				</div>
