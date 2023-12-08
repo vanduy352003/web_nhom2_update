@@ -3,6 +3,7 @@ package hcmute.vn.springonetomany.Service;
 import hcmute.vn.springonetomany.Entities.Cart;
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
+import hcmute.vn.springonetomany.Entities.WishList;
 import hcmute.vn.springonetomany.Enum.AuthProvider;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
 import hcmute.vn.springonetomany.Repository.IUserRepository;
@@ -29,6 +30,9 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
+    WishListService wishListService;
+    
+    @Autowired
     CartService cartService;
 
     int PAGE_SIZE = 5;
@@ -45,6 +49,11 @@ public class UserService {
         cart.setUser(user);
         user.setCart(cart);
         cartService.saveCart(cart);
+        //Tạo wishlist cho người dùng
+        WishList wishList=new WishList();
+        wishList.setUser(user);
+        user.setWishList(wishList);
+        wishListService.saveWishList(wishList);
     }
 
     public List<User> listAll() {
@@ -81,6 +90,13 @@ public class UserService {
         cart.setUser(user);
         user.setCart(cart);
         cartService.saveCart(cart);
+        
+      //Tạo wishlist cho người dùng
+        WishList wishList=new WishList();
+        wishList.setUser(user);
+        user.setWishList(wishList);
+        wishListService.saveWishList(wishList);
+        
     }
 
     public User getNewUser(User user) {
