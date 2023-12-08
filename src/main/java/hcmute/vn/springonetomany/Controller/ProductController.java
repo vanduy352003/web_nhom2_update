@@ -3,8 +3,11 @@ package hcmute.vn.springonetomany.Controller;
 import hcmute.vn.springonetomany.Entities.Product;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Repository.IUserRepository;
+import hcmute.vn.springonetomany.Entities.Rating;
 import hcmute.vn.springonetomany.Service.CategoryService;
 import hcmute.vn.springonetomany.Service.ProductService;
+import hcmute.vn.springonetomany.Service.RatingService;
+import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,8 @@ public class ProductController {
     private ProductService productService;
     @Autowired
     private IUserRepository userRepository;
+    @Autowired
+    private RatingService ratingService;
 
     @GetMapping("")
     public String getOnePage(Model model,
@@ -78,7 +83,18 @@ public class ProductController {
     public String showProductDetail(@PathVariable("id") int id, Model model) {
         try {
             Product product = productService.findById(id);
+            Rating rating = new Rating();
+            int numberOfRating = 0;
+            int ratingPoint = 0;
+            if (!product.getRatings().isEmpty()) {
+            	numberOfRating = product.getRatings().size();
+                ratingPoint = product.getRatingPoint();
+            }
+            model.addAttribute("listRating", product.getRatings());
+            model.addAttribute("ratingPoint", ratingPoint);
+            model.addAttribute("numberOfRating", numberOfRating);
             model.addAttribute("product", product);
+            model.addAttribute("rating", rating);
         } catch (Exception e) {
             return "redirect:/products";
         }

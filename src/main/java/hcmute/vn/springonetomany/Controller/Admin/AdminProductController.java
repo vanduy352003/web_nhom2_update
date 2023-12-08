@@ -90,6 +90,7 @@ public class AdminProductController {
             FileUploadUtil.deleteAllFiles(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
+        
         return "redirect:/admin/products";
     }
 }
