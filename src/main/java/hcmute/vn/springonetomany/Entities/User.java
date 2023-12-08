@@ -39,6 +39,8 @@ public class User {
 	@NotNull(message = "Không dược bỏ trống")
 	@Column(name = "last_name", nullable = false, length = 50)
 	private String lastName;
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	private WishList wishList;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -46,6 +48,7 @@ public class User {
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
+	
 	private Set<Role> roles = new HashSet<>();
 
     @Column(name = "birth_date")
