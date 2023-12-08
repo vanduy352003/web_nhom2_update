@@ -51,12 +51,17 @@ public class WishListController {
 
 		// Them vao gio hang
 		wishListService.addToWishList(user.getWishList().getId(), productId);
-		return "redirect:/";
+		return "redirect:/?status=success";
 	}
 	@GetMapping("/removewishlistitem/{id}")
 	public String removeItem(@PathVariable("id") int id) {
-		wishListItemService.deleteWishListItemById(id);
-		return "redirect:/wishlist";
+		try {
+			wishListItemService.deleteWishListItemById(id);
+			return "redirect:/wishlist?status_success='success'";
+		} catch (Exception e) {
+			return "redirect:/wishlist?status_error='success'";
+		}
+		
 	}
 
 	@GetMapping("/clearwishlist")
