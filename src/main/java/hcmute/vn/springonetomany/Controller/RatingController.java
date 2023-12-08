@@ -47,11 +47,15 @@ public class RatingController {
 		if (rating.getRatingPoint() == null) {
 			rating.setRatingPoint(0);
 		}
+		Rating newRating = new Rating();
 		Product product = productService.findById(id);
-		rating.setUser(userService.findUserByEmail(loggedUser.getEmail()));
-		rating.setProduct(product);
+		newRating.setUser(userService.findUserByEmail(loggedUser.getEmail()));
+		newRating.setProduct(product);
+		newRating.setDate(rating.getDate());
+		newRating.setMessage(rating.getMessage());
+		newRating.setRatingPoint(rating.getRatingPoint());
 		
-		Rating savedRating = ratingService.getNewRating(rating);
+		Rating savedRating = ratingService.getNewRating(newRating);
 		
 		if (ratingImages != null && !ratingImages.isEmpty()) {
 			for (MultipartFile multipartFile : ratingImages) {
