@@ -88,4 +88,6 @@ public class Product {
         String formattedPrice = format.format(this.price);
         return formattedPrice.replace(".", ",");
     }
+    @OneToMany(mappedBy = "product")
+    private Set<ProductImages> productImages = new LinkedHashSet<>();
 }

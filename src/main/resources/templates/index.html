@@ -7,9 +7,16 @@
 </head>
 
 <body layout:fragment="content">
-	<div th:if="${param.status}" class="alert alert-success" id="successAlert">
-		Sản phẩm đã thêm vào giỏ hàng
+	<div th:if="${param.status}" class="alert alert-success text-center justify-content-center" id="successAlert">
+		Sản phẩm đã thêm vào danh sách yêu thích❤️
+		<div>
+			<a href="/wishlist"><button style="display: block;margin: 0 auto; background-color: rgb(255, 128, 64); color: rgb(64, 0, 64); padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+    Đến danh sách yêu thích của bạn
+</button>
+</a>
+		</div>
 	</div>
+	
 	<!-- Navbar Start -->
 	<div class="container-fluid mb-5">
 		<div class="row border-top px-xl-5">
@@ -480,7 +487,7 @@
 			if (successAlert) {
 				successAlert.style.display = 'none';
 			}
-		}, 3000); // 3000 milliseconds = 3 giây
+		}, 4500); 
 	</script>
 </body>
 
