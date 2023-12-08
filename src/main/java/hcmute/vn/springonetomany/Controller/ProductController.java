@@ -1,19 +1,15 @@
 package hcmute.vn.springonetomany.Controller;
 
-import hcmute.vn.springonetomany.Entities.Category;
 import hcmute.vn.springonetomany.Entities.Product;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Repository.IUserRepository;
 import hcmute.vn.springonetomany.Service.CategoryService;
 import hcmute.vn.springonetomany.Service.ProductService;
-import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -40,14 +36,6 @@ public class ProductController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);
-
-        if (session.getAttribute("user") != null) {
-            // Cập nhật user trong session
-            User user = (User) session.getAttribute("user");
-            user = userRepository.findById(user.getId()).orElse(null);
-            session.setAttribute("user", user);
-        }
-
         return "product/products";
     }
 
