@@ -1,17 +1,12 @@
 package hcmute.vn.springonetomany.Controller;
 
-import hcmute.vn.springonetomany.Entities.Category;
 import hcmute.vn.springonetomany.Entities.Product;
-import hcmute.vn.springonetomany.Service.CategoryService;
 import hcmute.vn.springonetomany.Service.ProductService;
-import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
