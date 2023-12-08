@@ -129,22 +129,27 @@
 						</div>
 					</form>
 				</div>
-				<div class="d-flex align-items-center mb-4 pt-2">
+				<form th:action="@{/cart/add}" class="d-flex align-items-center mb-4 pt-2" method="post">
 					<div class="input-group quantity mr-3" style="width: 130px;">
+						<input type="hidden" name="productId" th:value="${product.getId()}">
+
 						<div class="input-group-btn">
-							<button class="btn btn-primary btn-minus">
+							<button class="btn btn-primary btn-minus" th:disabled="${product.getInventory() == 0}">
 								<i class="fa fa-minus"></i>
 							</button>
 						</div>
-						<input type="text" class="form-control bg-secondary text-center" value="1">
+						<input type="text" class="form-control bg-secondary text-center" value="1" name="quantity" readonly>
 						<div class="input-group-btn">
-							<button class="btn btn-primary btn-plus">
+							<button class="btn btn-primary btn-plus" th:disabled="${product.getInventory() == 0}">
 								<i class="fa fa-plus"></i>
 							</button>
 						</div>
 					</div>
-					<button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
-				</div>
+					<button type="submit" class="btn btn-primary px-3" th:disabled="${product.getInventory() == 0}"><i
+							class="fa fa-shopping-cart mr-1"></i> Add To
+						Cart
+					</button>
+				</form>
 				<div class="d-flex pt-2">
 					<p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
 					<div class="d-inline-flex">
@@ -169,7 +174,8 @@
 				<div class="nav nav-tabs justify-content-center border-secondary mb-4">
 					<a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
 					<a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Information</a>
-					<a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Reviews (<span th:text="${numberOfRating}"></span>)</a>
+					<a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Reviews (<span
+							th:text="${numberOfRating}"></span>)</a>
 				</div>
 				<div class="tab-content">
 					<div class="tab-pane fade show active" id="tab-pane-1">
@@ -240,22 +246,22 @@
 								<th:block th:each="productRating : ${listRating}">
 									<div class="rating media mb-4">
 										<img th:src="@{${productRating.getUser().photosImagePath}}" alt="Image"
-											class="img-fluid mr-3 mt-1" style="width: 45px;">
+										     class="img-fluid mr-3 mt-1" style="width: 45px;">
 										<div class="media-body">
 											<h6><span th:text="${productRating.getUser().getFullName}"></span><small> -
-													<i><span th:text="${productRating.date}"></span></i></small></h6>
+												<i><span th:text="${productRating.date}"></span></i></small></h6>
 
 											<div class="text-primary mb-2">
 												<th:block th:if="${productRating.ratingPoint > 0}">
 													<th:block
-														th:each="starNumber : ${#numbers.sequence(1, productRating.ratingPoint)}">
+															th:each="starNumber : ${#numbers.sequence(1, productRating.ratingPoint)}">
 														<i class="fas fa-star"></i>
 													</th:block>
 												</th:block>
 												<th:block th:if="${productRating.ratingPoint != 5}">
 													<!-- Loop based on the ratingPoint value -->
 													<th:block
-														th:each="starNumber : ${#numbers.sequence(1, 5-productRating.ratingPoint)}">
+															th:each="starNumber : ${#numbers.sequence(1, 5-productRating.ratingPoint)}">
 														<!-- Display the star for each iteration -->
 														<i class="far fa-star"></i>
 													</th:block>
@@ -264,10 +270,11 @@
 
 											<p th:text="${productRating.message}"></p>
 											<th:block th:each="ratingImage : ${productRating.ratingImages}">
-												<img th:src="@{${ratingImage.photosImagePath}}" alt="" style="width: 70px;">
+												<img th:src="@{${ratingImage.photosImagePath}}" alt=""
+												     style="width: 70px;">
 											</th:block>
 											<th:block th:if="${session.user.getId() == productRating.getUser().id}">
-												<a  th:href="@{'/rating/delete?id=' + ${productRating.id} + '&productId=' + ${product.id}}">Xóa</a>
+												<a th:href="@{'/rating/delete?id=' + ${productRating.id} + '&productId=' + ${product.id}}">Xóa</a>
 											</th:block>
 
 										</div>
@@ -288,18 +295,18 @@
 									</div>
 								</div>
 								<form th:action="@{'/rating/send/' + ${product.id}}" th:object="${rating}" method="post"
-									enctype="multipart/form-data">
+								      enctype="multipart/form-data">
 									<input type="hidden" id="selected-rating" th:field="*{ratingPoint}" value="0"
-										required>
+									       required>
 									<div class="form-group">
 										<label for="message">Your Review *</label>
 										<textarea id="message" cols="30" rows="5" class="form-control"
-											th:field="*{message}" required></textarea>
+										          th:field="*{message}" required></textarea>
 									</div>
 									<div class="form-group">
 										<input type="file" name="ratingImage" accept="image/**"
-											class="form-control form-control-file" multiple
-											onchange="limitFiles(this, 3)">
+										       class="form-control form-control-file" multiple
+										       onchange="limitFiles(this, 3)">
 									</div>
 									<div class="form-group mb-0">
 										<input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
@@ -307,8 +314,9 @@
 								</form>
 							</div>
 						</div>
-						<a href="#" id="load-more-link" class="btn btn-primary text-decoration-none rounded-pill text-uppercase p-2"
-							th:data-product-id="${product.id}">Load More</a>
+						<a href="#" id="load-more-link"
+						   class="btn btn-primary text-decoration-none rounded-pill text-uppercase p-2"
+						   th:data-product-id="${product.id}">Load More</a>
 					</div>
 				</div>
 			</div>
@@ -318,64 +326,66 @@
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<script>
-		$('#load-more-link').on('click', function(event) {
-			event.preventDefault();
-			var productId = $(this).data('product-id');
-			loadAjax(productId);
-		})
-		function loadAjax(productId) {
-			var amount = document.getElementsByClassName("rating").length;
-			$.ajax({
-				url : "/rating/loadAjax",
-				type : "get",
-				data : {
-					exits : amount,
-					productId : productId
-				},
-				success : function(data) {
-					$("#content").append(data);
-				},
-				error : function(xhr) {
+        $('#load-more-link').on('click', function (event) {
+            event.preventDefault();
+            var productId = $(this).data('product-id');
+            loadAjax(productId);
+        })
 
-				}
-			});
-		}
+        function loadAjax(productId) {
+            var amount = document.getElementsByClassName("rating").length;
+            $.ajax({
+                url: "/rating/loadAjax",
+                type: "get",
+                data: {
+                    exits: amount,
+                    productId: productId
+                },
+                success: function (data) {
+                    $("#content").append(data);
+                },
+                error: function (xhr) {
+
+                }
+            });
+        }
 	</script>
 
 	<script>
-		function limitFiles(input, maxFiles) {
-			// Get the selected files
-			var files = input.files;
+        function limitFiles(input, maxFiles) {
+            // Get the selected files
+            var files = input.files;
 
-			// Check if the number of selected files exceeds the limit
-			if (files.length > maxFiles) {
-				alert('You can only select up to ' + maxFiles + ' files.');
-				input.value = ''; // Clear the selected files
-			}
-		}
-		$(document).ready(function () {
-			$('#rating-stars i').on('mouseover', function () {
-				var index = $(this).data('index');
-				highlightStars(index);
-			});
+            // Check if the number of selected files exceeds the limit
+            if (files.length > maxFiles) {
+                alert('You can only select up to ' + maxFiles + ' files.');
+                input.value = ''; // Clear the selected files
+            }
+        }
 
-			$('#rating-stars i').on('mouseout', function () {
-				var rating = $('#selected-rating').val();
-				highlightStars(rating);
-			});
+        $(document).ready(function () {
+            $('#rating-stars i').on('mouseover', function () {
+                var index = $(this).data('index');
+                highlightStars(index);
+            });
 
-			$('#rating-stars i').on('click', function () {
-				var index = $(this).data('index');
-				$('#selected-rating').val(index);
-			});
+            $('#rating-stars i').on('mouseout', function () {
+                var rating = $('#selected-rating').val();
+                highlightStars(rating);
+            });
 
-			function highlightStars(index) {
-				$('#rating-stars i').removeClass('fas').addClass('far');
-				for (var i = 1; i <= index; i++) {
-					$('#rating-stars i[data-index="' + i + '"]').removeClass('far').addClass('fas');
-				}
-			}
-		});
+            $('#rating-stars i').on('click', function () {
+                var index = $(this).data('index');
+                $('#selected-rating').val(index);
+            });
+
+            function highlightStars(index) {
+                $('#rating-stars i').removeClass('fas').addClass('far');
+                for (var i = 1; i <= index; i++) {
+                    $('#rating-stars i[data-index="' + i + '"]').removeClass('far').addClass('fas');
+                }
+            }
+        });
 	</script>
 	<script>
         window.onload = function () {
