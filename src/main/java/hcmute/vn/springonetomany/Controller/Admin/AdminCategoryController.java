@@ -24,7 +24,7 @@ import hcmute.vn.springonetomany.Service.CategoryService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 
 @Controller
-@RequestMapping("/admin/categorys")
+@RequestMapping("/admin/categories")
 public class AdminCategoryController {
 	
 	@Autowired
@@ -42,7 +42,7 @@ public class AdminCategoryController {
       model.addAttribute("totalPages", totalPages);
       model.addAttribute("totalItems", totalItems);
 
-      return "admin_categorys";
+      return "category/admin_categorys";
   }
 	
 	@GetMapping("/new")
@@ -50,13 +50,13 @@ public class AdminCategoryController {
         List<Category> listCategory = categoryService.listAll();
         model.addAttribute("category", new Category());
         model.addAttribute("listCategory", listCategory);
-        return "category_form";
+        return "category/category_form";
     }
 	
 	@GetMapping("/delete/{id}")
     public String deleteCategory(@PathVariable("id") int id) {
 		categoryService.deleteById(id);
-        return "redirect:/admin/categorys";
+        return "redirect:/admin/categories";
     }
 	
 	@GetMapping("/edit/{id}")
@@ -66,9 +66,9 @@ public class AdminCategoryController {
             List<Category> listCategory = categoryService.listAll();
             model.addAttribute("listCategory", listCategory);
             model.addAttribute("category", category);
-            return "category_form";
+            return "category/category_form";
         } catch (Exception e) {
-            return "redirect:/admin/categorys";
+            return "redirect:/admin/categories";
         }
     }
 	
@@ -78,7 +78,7 @@ public class AdminCategoryController {
                                @RequestParam(value = "image") MultipartFile multipartFile,
                                @RequestParam(value = "id", required = false) Integer id) throws Exception {
         if (result.hasErrors()) {
-            return "category_form";
+            return "category/category_form";
         }
 
         String fileName = id == null || (multipartFile != null && !multipartFile.isEmpty())
@@ -93,7 +93,7 @@ public class AdminCategoryController {
             FileUploadUtil.deleteAllFiles(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
-        return "redirect:/admin/categorys";
+        return "redirect:/admin/categories";
     }
 	
 }

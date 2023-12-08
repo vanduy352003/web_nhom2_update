@@ -23,7 +23,7 @@
 	<!-- Page Header End -->
 	
 	<main class="container-md">
-		<form th:action="@{/admin/categorys/save}" th:object="${category}" method="post" enctype="multipart/form-data">
+		<form th:action="@{/admin/categories/save}" th:object="${category}" method="post" enctype="multipart/form-data">
 			<div class="form-group row">
 				<input type="hidden" th:value="${category.id}" th:field="*{id}">
 				<label class="form-label">Name: </label>
