@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
@@ -78,6 +79,9 @@ public class User {
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Cart cart;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Order> order = new LinkedHashSet<>();
 
 	public void addRole(Role role) {
 		this.roles.add(role);

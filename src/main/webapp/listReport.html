@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{layout/main_layout}">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Insert title here</title>
+</head>
+
+<body layout:fragment="content">
+	<h1>Report</h1>
+	<div class="span-2c">
+		<h3 class="tlt">Bar Chart</h3>
+		<canvas id="bar" height="300" width="400" style="width: 400px; height: 300px;"></canvas>
+		<script>
+			var barChartData = {
+				labels: [<c: forEach var="item" items="${listProduct}">'${listProduct.productName}',</c: forEach>],
+				datasets: [
+					{
+						fillColor: "#FC8213",
+						data: [<c: forEach var="item" items="${listProduct}">${listProduct.amount},</c: forEach>]
+					}
+				]
+			};
+			new Chart(document.getElementById("bar").getContext("2d")).Bar(barChartData);
+		</script>
+	</div>
+</body>
+
+</html>

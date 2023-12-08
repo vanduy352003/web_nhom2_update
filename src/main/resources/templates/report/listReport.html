@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/admin_layout}">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Report</title>
+</head>
+
+<body layout:fragment="content">
+	<div class=" container">
+	<div class="row">
+		<div class="col-lg-10 mt-5 mb-5">
+			<table id="posts" class="table table-bordered table-responsive-sm">
+				<thead>
+					<tr>
+						<th>Product Name</th>
+						<th>Product Amount</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:block th:each="item : ${listProductReport}">
+						<td th:text="${item.id}"></td>
+						<td th:text="${item.getCount()}"></td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+	</div>
+
+</body>
+
+</html>
