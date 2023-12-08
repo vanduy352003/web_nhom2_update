@@ -77,6 +77,10 @@ public class AdminVoucherController {
     	if (id != null)
     		voucher.setCreatedAt(voucherService.findById(id).getCreatedAt());
         voucher.setPhotos(fileName);
+        if (voucher.getAmount() > 0)
+        	voucher.setStatus("1");
+        else 
+        	voucher.setStatus("0");
         Voucher savedVoucher = voucherService.getNewVoucher(voucher);
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String uploadDir = "voucher_photos/" + savedVoucher.getId();

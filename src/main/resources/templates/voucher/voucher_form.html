@@ -20,7 +20,7 @@
 	</div>
 	<!-- Page Header End -->
 	<main class="container-md">
-		<form th:action="@{/admin/vouchers/save}" th:object="${voucher}" method="post" enctype="multipart/form-data">
+		<form th:action="@{/admin/vouchers/save}" onsubmit="return validateDateRange()" th:object="${voucher}" method="post" enctype="multipart/form-data">
 			<div class="form-group row">
 				<input type="hidden" th:value="${voucher.id}" th:field="*{id}">
 				<label class="form-label">Name: </label>
@@ -70,7 +70,19 @@
 			</div>
 		</form>
 	</main>
+	<script>
+        function validateDateRange() {
+            var fromDate = document.getElementById("fromDate").value;
+            var toDate = document.getElementById("toDate").value;
 
+            if (new Date(fromDate) >= new Date(toDate)) {
+                alert("From date phải diễn ra trước to date");
+                return false; // Prevent form submission
+            }
+
+            return true; // Allow form submission
+        }
+    </script>
 </body>
 
 </html>
