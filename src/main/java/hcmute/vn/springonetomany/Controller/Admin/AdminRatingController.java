@@ -36,7 +36,7 @@ public class AdminRatingController {
 	
 	@GetMapping("")
 	public String showRatingList(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
-        Integer PAGE_SIZE = 10;
+        Integer PAGE_SIZE = 2;
 		Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE);
 		Page<Rating> listRating = ratingService.findAll(pageable);
         int totalPages = listRating.getTotalPages();

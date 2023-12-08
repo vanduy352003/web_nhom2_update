@@ -271,6 +271,32 @@
 										</div>
 									</div>
 								</th:block>
+								<!--                    Page navigation-->
+					<div class="col-12 pb-1" th:unless="${listRating.isEmpty()}">
+						<nav aria-label="Page navigation" th:with="baseUrl=${#request.getRequestURI()}">
+							<ul class="pagination justify-content-center mb-3">
+								<li class="page-item" th:classappend="${currentPage - 1 == 0 ? 'disabled' : ''}">
+									<a class="page-link"
+									   th:href="@{{baseUrl}(baseUrl=${baseUrl}, reviewPage=${#numbers.formatInteger(currentPage - 1, 0)})}">
+										<span aria-hidden="true">&laquo;</span>
+										<span class="sr-only">Previous</span>
+									</a>
+								</li>
+								<li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item"
+								    th:classappend="${i == currentPage ? 'active' : ''}">
+									<a th:href="@{{baseUrl}(baseUrl=${baseUrl}, reviewPage=${i})}"
+									   th:text="${i}" class="page-link"></a>
+								</li>
+								<li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+									<a class="page-link"
+									   th:href="@{{baseUrl}(baseUrl=${baseUrl}, reviewPage=${#numbers.formatInteger(currentPage + 1, 0)})}">
+										<span aria-hidden="true">&raquo;</span>
+										<span class="sr-only">Next</span>
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
 							</div>
 							
 							<div class="col-md-6">
@@ -316,9 +342,6 @@
 								</form>
 							</div>
 						</div>
-						<a href="#" id="load-more-link"
-							class="btn btn-primary text-decoration-none rounded-pill text-uppercase p-2"
-							th:data-product-id="${product.id}">Load More</a>
 					</div>
 				</div>
 			</div>
