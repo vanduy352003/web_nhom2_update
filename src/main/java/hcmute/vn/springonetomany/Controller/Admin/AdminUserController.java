@@ -1,8 +1,10 @@
 package hcmute.vn.springonetomany.Controller.Admin;
 
+import hcmute.vn.springonetomany.Entities.Rating;
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
+import hcmute.vn.springonetomany.Service.RatingService;
 import hcmute.vn.springonetomany.Service.UserService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,8 @@ import java.util.Objects;
 public class AdminUserController {
     @Autowired
     UserService userService;
-
+    @Autowired
+    RatingService ratingService;
     @Autowired
     IRoleRepository roleRepository;
 
@@ -44,7 +47,11 @@ public class AdminUserController {
 
     @GetMapping("/delete/{id}")
     public String deleteUSer(@PathVariable("id") Long id) {
-        userService.deleteUserById(id);
+        User user = userService.getUserById(id);
+        for (Rating rating : user.getRatings()) {
+    		ratingService.delete(rating);
+    	}
+    	userService.deleteUserById(id);
         return "redirect:/admin/users";
     }
 
