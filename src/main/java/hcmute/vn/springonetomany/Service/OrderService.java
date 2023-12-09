@@ -1,6 +1,8 @@
 package hcmute.vn.springonetomany.Service;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +50,14 @@ public class OrderService {
 	public List<ProductReport> getAmountProductByDate(LocalDate date) {
 		return orderRepository.getAmountProductByDate(date);
 	}
-    
+	
+	public List<ProductReport> getAmountProductByMonth(int year, int month){
+		return orderRepository.getAmountProductByMonth(year,month);
+	}
+	
+	public List<ProductReport> getAmountProductByYear(int year){
+		return orderRepository.getAmountProductByYear(year);
+	} 
     
 
 }
