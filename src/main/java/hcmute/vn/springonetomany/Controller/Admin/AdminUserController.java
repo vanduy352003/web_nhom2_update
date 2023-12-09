@@ -4,10 +4,12 @@ import hcmute.vn.springonetomany.Entities.Rating;
 import hcmute.vn.springonetomany.Entities.RatingImage;
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
+import hcmute.vn.springonetomany.Entities.Voucher;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
 import hcmute.vn.springonetomany.Service.RatingImageService;
 import hcmute.vn.springonetomany.Service.RatingService;
 import hcmute.vn.springonetomany.Service.UserService;
+import hcmute.vn.springonetomany.Service.VoucherService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +35,7 @@ public class AdminUserController {
     @Autowired
     RatingImageService ratingImageService;
     
+    VoucherService voucherService;
     @Autowired
     IRoleRepository roleRepository;
 
@@ -62,7 +65,11 @@ public class AdminUserController {
     		ratingService.delete(rating);
 
     	}
+        for (Voucher voucher : user.getVouchers()) {
+    		voucher.getUsers().remove(user);
+    	}
     	userService.deleteUserById(id);
+
         return "redirect:/admin/users";
     }
 

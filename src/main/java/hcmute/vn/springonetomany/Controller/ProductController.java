@@ -110,4 +110,5 @@ public class ProductController {
         }
         return "detail";
     }
+    
 }

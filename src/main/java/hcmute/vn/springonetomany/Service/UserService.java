@@ -3,6 +3,7 @@ package hcmute.vn.springonetomany.Service;
 import hcmute.vn.springonetomany.Entities.Cart;
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
+import hcmute.vn.springonetomany.Entities.WishList;
 import hcmute.vn.springonetomany.Enum.AuthProvider;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
 import hcmute.vn.springonetomany.Repository.IUserRepository;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,11 +31,15 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
+    WishListService wishListService;
+    
+    @Autowired
     CartService cartService;
 
     int PAGE_SIZE = 5;
 
     public void registerDefaultUser(User user) {
+        user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         Role roleUser = roleRepo.findByName("User");
         user.addRole(roleUser);
         user.setAuthProvider(AuthProvider.DATABASE);
@@ -45,6 +51,11 @@ public class UserService {
         cart.setUser(user);
         user.setCart(cart);
         cartService.saveCart(cart);
+        //Tạo wishlist cho người dùng
+        WishList wishList=new WishList();
+        wishList.setUser(user);
+        user.setWishList(wishList);
+        wishListService.saveWishList(wishList);
     }
 
     public List<User> listAll() {
@@ -69,18 +80,26 @@ public class UserService {
     }
 
     public void save(User user) {
+        user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         encodePassword(user);
         userRepo.save(user);
     }
 
     public void saveOauth2(User user) {
-
+        user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         userRepo.save(user);
         //Tạo giỏ hàng cho người dùng
         Cart cart = new Cart();
         cart.setUser(user);
         user.setCart(cart);
         cartService.saveCart(cart);
+        
+      //Tạo wishlist cho người dùng
+        WishList wishList=new WishList();
+        wishList.setUser(user);
+        user.setWishList(wishList);
+        wishListService.saveWishList(wishList);
+        
     }
 
     public User getNewUser(User user) {
@@ -102,6 +121,7 @@ public class UserService {
             }
             user.setAuthProvider(existingUser.getAuthProvider());
         }
+        user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return userRepo.save(user);
     }
 

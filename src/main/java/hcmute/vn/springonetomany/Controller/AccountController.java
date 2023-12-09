@@ -56,7 +56,8 @@ public class AccountController {
                                    BindingResult result,
                                    RedirectAttributes redirectAttributes,
                                    @RequestParam(value = "id", required = false) Long id,
-                                   @RequestParam(value = "image") MultipartFile multipartFile
+                                   @RequestParam(value = "gender", required = false, defaultValue = "Nam") String gender,
+                                   @RequestParam(value = "image", required = false) MultipartFile multipartFile
                                    ) throws IOException {
         if (result.hasErrors()) {
             return "user/user_form";
@@ -69,6 +70,7 @@ public class AccountController {
 
         user.setPhotos(fileName);
         user.setRoles(new HashSet<>(existedUser.getRoles()));
+        user.setGender(gender);
 
         User savedUser = userService.updateUser(user);
 

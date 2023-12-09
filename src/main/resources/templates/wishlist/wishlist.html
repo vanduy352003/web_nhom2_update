@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{layout/main_layout}">
+
+<head>
+	<title>Wishlist</title>
+</head>
+
+<body layout:fragment="content">
+	<div th:if="${param.status_success}" class="alert alert-success" id="successAlert">Xóa thành công</div>
+	<div th:if="${param.status_error}" class="alert alert-error" id="successAlert">Xóa thành công</div>
+<h4 class="d-flex align-items-center font-weight-bold justify-content-center bg-primary text-white float-left col-md-12 custom-background ">Danh sách yêu thích của bạn:</h4>
+	<div id="wishlist" class="tabcontent container-fluid pt-5">
+		<div class="row px-xl-5">
+			<div class="col table-responsive mb-5">
+				<table class="table table-bordered text-center mb-0 ">
+					<thead class="bg-secondary text-dark">
+						<tr>
+							<th>Products</th>
+							<th>Add to cart</th>
+							<th class="text-center"><a class="btn btn-sm btn-outline-danger clear"
+									th:href="@{/clearwishlist}">Clear </a></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item : ${wishlistItem}">
+							<td>
+								<div class="product-item ">
+									<!-- Find the product with matching product_id -->
+									<th:block <a class="product-thumb" href="#">
+										<img th:src="@{${item.getProduct().photosImagePath}}" alt="Product"
+											style="width: 100px; height: 100px;">
+										</a>
+										<div class="product-info text-dark">
+											<h4 class="product-title">
+												<a class="text-info"    th:href="@{'/products/detail/' + ${item.getProduct().id}}"
+													th:text="${item.getProduct().name}"></a>
+											</h4>
+											<span>
+												<em>Price:</em>
+												<span th:text="${item.getProduct().price}"></span>
+											</span>
+										</div>
+									</th:block>
+								</div>
+							</td>
+
+							<td class="text-center">
+								<button class="btn  text-uppercase" style="background-color:#fff !important;"
+									data-toggle="modal" th:attr="data-target='#exampleModalCenter'+*{item.product.id}">
+									<i class="fas fa-cart-plus" style="color: rgb(0, 255, 64); font-size: 20px"></i>
+								</button>
+								<div class="modal fade" th:id="*{'exampleModalCenter'+{item.product.id}}"
+									data-backdrop="static" data-keyboard="false" tabindex="-1"
+									aria-labelledby="staticBackdropLabel" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title text-justify font-weight-bold" id="staticBackdropLabel">Add
+													to cart</h5>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<h4 class="product-title">
+													<a class="text-danger" th:href="@{'/products/detail/' + ${item.getProduct().id}}"
+														th:text="${item.getProduct().name}"></a>
+												</h4>
+
+												<div class="card float-left text-dark">
+
+													<img th:src="@{${item.product.photosImagePath}}" alt="..."
+														style="width: 100%; height: 100%;">
+													<span>
+														<em class="mt-12">Price:</em>
+														<span th:text="${item.getProduct().price}"></span>
+													</span>
+													<span>
+														<em>Inventory:</em>
+														<span th:text="${item.getProduct().inventory}"></span>
+													</span>
+
+													<div class="card-body">
+														<form th:action="@{/cart/add}" method="post">
+															<input type="hidden" name="productId"
+																th:value="${item.product.id}">
+															<input type="hidden" name="page" th:value="${currentPage}">
+															<button type="submit"
+																class="btn btn-primary btn-lg-5 rounded-bottom">Add to
+																cart</button>
+														</form>
+													</div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+
+							</td>
+							<td class="text-center"><a class="remove-from-cart text-danger"
+									th:href="@{/removewishlistitem/{id}(id = ${item.id})}" data-toggle="tooltip"><i
+										class="fa fa-trash"></i></a></td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	</div>
+
+	</div>
+	</div>
+	</div>
+
+	</div>
+	<div class="line"></div>
+	</div>
+	</div>
+	</div>
+	<script src="js/jquery-3.1.1.min.js"></script>
+	<script src="js/bootstrap.js"></script>
+	<script type="text/javascript" src="font-awesome/js1/fontawesome.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+		integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript" src="api/ajaxFetch.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#sidebarCollapse').on('click', function () {
+				$('#sidebar').toggleClass('active');
+			});
+		});
+	</script>
+	<script>
+		function openTab(evt, Name) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(
+					" active", "");
+			}
+			document.getElementById(Name).style.display = "block";
+			evt.currentTarget.className += " active";
+		}
+
+		// Get the element with id="defaultOpen" and click on it
+		document.getElementById("defaultOpen").click();
+	</script>
+	<script type="text/javascript" src="api/ajaxFetch.js"></script>
+	<script>
+		// Sử dụng hàm setTimeout để tắt thông báo sau 3 giây
+		setTimeout(function () {
+			var successAlert = document.getElementById('successAlert');
+			if (successAlert) {
+				successAlert.style.display = 'none';
+			}
+		}, 3000); // 3000 milliseconds = 3 giây
+	</script>
+</body>
+
+</html>

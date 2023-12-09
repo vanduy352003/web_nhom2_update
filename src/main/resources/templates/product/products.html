@@ -10,7 +10,6 @@
 </head>
 
 <body layout:fragment="content">
-
 	<!-- Page Header Start -->
 	<div class="container-fluid bg-secondary mb-5">
 		<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
@@ -33,17 +32,20 @@
 				<div class="border-bottom mb-4 pb-4">
 					<h5 class="font-weight-semi-bold mb-4">Filter by price</h5>
 					<form>
-						<div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+						<div
+							class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
 							<input type="checkbox" class="custom-control-input" checked id="price-all">
 							<label class="custom-control-label" for="price-all">All Price</label>
 							<span class="badge border font-weight-normal">1000</span>
 						</div>
-						<div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+						<div
+							class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
 							<input type="checkbox" class="custom-control-input" id="price-1">
 							<label class="custom-control-label" for="price-1">$0 - $100</label>
 							<span class="badge border font-weight-normal">150</span>
 						</div>
-						<div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+						<div
+							class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
 							<input type="checkbox" class="custom-control-input" id="price-2">
 							<label class="custom-control-label" for="price-2">$100 - $200</label>
 							<span class="badge border font-weight-normal">295</span>
@@ -205,12 +207,13 @@
 									<a th:href="@{'/products/detail/' + ${product.id}}"
 									   class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View
 										Detail</a>
+									<a th:href="@{'/addtowishlist/' + ${product.id}}"
+									   class="btn btn-sm text-dark p-0"><i class="fas fa-heart text-primary mr-1"></i>Add to wishlist</a>
 									<form th:action="@{/cart/add}" method="post">
 										<input type="hidden" name="productId" th:value="${product.getId()}">
 										<input type="hidden" name="page" th:value="${currentPage}">
 
-<!--										<input type="hidden" name="quantity" value="1">-->
-										<button type="submit" class="btn btn-sm text-dark p-0"><i
+										<button type="submit" class="btn btn-sm text-dark p-0" th:disabled="${product.getInventory() == 0}"><i
 												class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
 										</button>
 									</form>

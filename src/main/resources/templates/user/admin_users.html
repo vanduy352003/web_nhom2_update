@@ -26,6 +26,7 @@
 							<th>Country</th>
 							<th>Gender</th>
 							<th>Phone</th>
+							<th>AuthProvider</th>
 							<th>Roles</th>
 							<th></th>
 						</tr>
@@ -33,7 +34,10 @@
 					<tbody class="align-middle">
 						<tr th:block th:each="user : ${listUser}">
 							<td class="align-middle">
-								<img th:src="@{${user.photosImagePath}}" alt="User photo" style="width: 70px;">
+								<img th:if="${user.getAuthProvider().name() == 'DATABASE'}" th:src="${user.getPhotosImagePath()}" class="rounded-circle mx-2" alt=""
+								     width="50" height="50">
+								<img th:unless="${user.getAuthProvider().name() == 'DATABASE'}" th:src="@{${user.getPhotos()}}" class="rounded-circle mx-2" alt=""
+								     width="50" height="50">
 							</td>
 							<td class="align-middle" th:text="${user.id}"></td>
 							<td class="align-middle" th:text="${user.getEmail()}"></td>
@@ -42,6 +46,7 @@
 							<td class="align-middle" th:text="${user.country}"></td>
 							<td class="align-middle" th:text="${user.gender}"></td>
 							<td class="align-middle" th:text="${user.phone}"></td>
+							<td class="align-middle" th:text="${user.authProvider}"></td>
 							<td class="align-middle" th:text="${user.roles}"></td>
 
 							<td class="align-middle">

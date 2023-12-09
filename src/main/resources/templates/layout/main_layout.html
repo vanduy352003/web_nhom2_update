@@ -54,10 +54,12 @@
 					</div>
 				</form>
 			</div>
+			
 			<div class="col-lg-3 col-6 text-right" sec:authorize="isAuthenticated()">
-				<a href="" class="btn border">
+				<a href="/wishlist" class="btn border">
 					<i class="fas fa-heart text-primary"></i>
-					<span class="badge">0</span>
+					<span class="badge" th:text="${session.user.getWishList().getItems().size()}"></span>
+				
 				</a>
 				<a th:href="@{/cart}" class="btn border">
 					<i class="fas fa-shopping-cart text-primary"></i>
@@ -82,6 +84,7 @@
 				<div class="navbar-nav py-0">
 					<a th:href="@{/home}" class="nav-item nav-link active">Home</a>
 					<a th:href="@{/products(page=1)}" class="nav-item nav-link">Products</a>
+					<a th:href="@{/vouchers}" class="nav-item nav-link">Vouchers</a>
 					<a href="detail.html" class="nav-item nav-link">Shop Detail</a>
 					<div class="nav-item dropdown" sec:authorize="isAuthenticated()">
 						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
@@ -90,7 +93,7 @@
 							<a href="checkout.html" class="dropdown-item">Checkout</a>
 						</div>
 					</div>
-					<a href="contact.html" class="nav-item nav-link">Contact</a>
+					<a th:href="@{/contact}" class="nav-item nav-link">Contact</a>
 					<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-item nav-link">Trang quản trị</a>
 				</div>
 				<div class="navbar-nav py-0 px-3 mr-5">
