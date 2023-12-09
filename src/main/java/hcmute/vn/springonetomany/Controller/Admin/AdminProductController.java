@@ -81,7 +81,7 @@ public class AdminProductController {
             return "product/product_form";
         }
 
-        String fileName = id == null || (multipartFile != null && !multipartFile.isEmpty())
+    	String fileName = id == null || (multipartFile != null && !multipartFile.isEmpty())
                 ? StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()))
                 : productService.findById(id).getPhotos();
 

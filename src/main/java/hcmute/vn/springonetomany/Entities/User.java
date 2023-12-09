@@ -52,6 +52,9 @@ public class User {
 	
 	private Set<Role> roles = new HashSet<>();
 
+	@ManyToMany(mappedBy = "users")
+    private Set<Voucher> vouchers = new HashSet<>();
+	
     @Column(name = "birth_date")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDate;
