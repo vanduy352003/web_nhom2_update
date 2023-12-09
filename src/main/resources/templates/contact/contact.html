@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{layout/main_layout}">
+
+<head>
+	<meta charset="utf-8">
+	<title>Contact page</title>
+</head>
+
+<body layout:fragment="content">
+	<!-- Page Header Start -->
+	<div class="container-fluid bg-secondary mb-5">
+		<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+			<h1 class="font-weight-semi-bold text-uppercase mb-3">Contact Us</h1>
+			<div class="d-inline-flex">
+				<p class="m-0"><a href="">Home</a></p>
+				<p class="m-0 px-2">-</p>
+				<p class="m-0">Contact</p>
+			</div>
+		</div>
+	</div>
+	<!-- Page Header End -->
+
+
+	<!-- Contact Start -->
+	<div th:if="${param.status}" class="alert alert-success" id="successAlert">
+		Bạn đã gửi thành công
+	</div>
+	<div class="container-fluid pt-5">
+		<div class="text-center mb-4">
+			<h2 class="section-title px-5"><span class="px-2">Contact For Any Queries</span></h2>
+		</div>
+		<div class="row px-xl-5">
+			<div class="col-lg-7 mb-5">
+				<div class="contact-form">
+					<div id="success"></div>
+					<!--novalidate="novalidate"  name="sentMessage" id="contactForm" -->
+					<form th:action="@{/contact/send}" method="post" enctype="multipart/form-data">
+						<div class="control-group">
+							<input type="text" class="form-control" id="name" name="fullname" placeholder="Your Name"
+								required="required" data-validation-required-message="Please enter your name" />
+							<p class="help-block text-danger"></p>
+						</div>
+						<div class="control-group">
+							<input type="email" class="form-control" id="email" name="email" placeholder="Your Email"
+								required="required" data-validation-required-message="Please enter your email" />
+							<p class="help-block text-danger"></p>
+						</div>
+						<div class="control-group">
+							<input type="text" class="form-control" id="subject" name="subject" placeholder="Subject"
+								required="required" data-validation-required-message="Please enter a subject" />
+							<p class="help-block text-danger"></p>
+						</div>
+						<div class="control-group">
+							<textarea class="form-control" rows="6" id="message" name="message" placeholder="Message"
+								required="required"
+								data-validation-required-message="Please enter your message"></textarea>
+							<p class="help-block text-danger"></p>
+						</div>
+						<div class="control-group">
+							<input type="file" class="form-control form-control-file" id="attachment" name="attachment"
+								max-size="1048576" />
+							<p class="help-block text-danger"></p>
+						</div>
+						<div>
+							<button class="btn btn-primary py-2 px-4" type="submit" id="sendMessageButton">Send
+								Message</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="col-lg-5 mb-5">
+				<h5 class="font-weight-semi-bold mb-3">Get In Touch</h5>
+				<p>Welcome to our contact page! Whether you have questions about our products, need help with an order,
+					or just want to say hello, we're here for you. Contact us using the form below or reach out via
+					email. Your satisfaction is our priority, and we look forward to assisting you. Happy shopping!</p>
+				<div class="d-flex flex-column mb-3">
+					<h5 class="font-weight-semi-bold mb-3">Store 1</h5>
+					<p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>01 Võ Văn Ngân, Linh Chiểu,
+						Thủ Đức, Thành phố Hồ Chí Minh</p>
+					<p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>ltweb2023nhom2@gmail.com</p>
+					<p class="mb-2"><i class="fa fa-phone-alt text-primary mr-3"></i>+028 3896 8641</p>
+				</div>
+				<div class="d-flex flex-column">
+					<h5 class="font-weight-semi-bold mb-3">Store 2</h5>
+					<p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>484 Lê Văn Việt, Tăng Nhơn Phú
+						A, Quận 9, Thành phố Hồ Chí Minh</p>
+					<p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>ltweb2023nhom2@gmail.com</p>
+					<p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+028 3896 8641</p>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+	</div>
+	<!-- Contact End -->
+	<div class="d-flex align-items-center" style="justify-content: space-around;">
+		<div class="ml-5">
+			<iframe style="border: none; overflow: hidden;"
+				src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F61553910715598%2F&amp;tabs=timeline%2C%20events%2C%20messages&amp;width=500&amp;height=400&amp;small_header=false&amp;adapt_container_width=false&amp;hide_cover=true&amp;show_facepile=true&amp;appId"
+				width="500" height="400" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe>
+		</div>
+		<iframe
+			src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.485467534978!2d106.77191309999999!3d10.8506324!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752763f23816ab%3A0x282f711441b6916f!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBTxrAgcGjhuqFtIEvhu7kgdGh14bqtdCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2s!4v1702019911066!5m2!1svi!2s"
+			width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+			referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+	</div>
+
+	<script>
+		// Sử dụng hàm setTimeout để tắt thông báo sau 3 giây
+		setTimeout(function () {
+			var successAlert = document.getElementById('successAlert');
+			if (successAlert) {
+				successAlert.style.display = 'none';
+			}
+		}, 3000); // 3000 milliseconds = 3 giây
+	</script>
+</body>
+
+</html>

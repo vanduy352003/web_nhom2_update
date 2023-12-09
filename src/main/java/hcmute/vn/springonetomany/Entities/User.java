@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
@@ -39,6 +40,8 @@ public class User {
 	@NotNull(message = "Không dược bỏ trống")
 	@Column(name = "last_name", nullable = false, length = 50)
 	private String lastName;
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	private WishList wishList;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -46,6 +49,7 @@ public class User {
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
+	
 	private Set<Role> roles = new HashSet<>();
 
 	@ManyToMany(mappedBy = "users")
@@ -68,7 +72,8 @@ public class User {
     private String phone;
 
     @Nationalized
-    @Column(name = "photos", length = 100)
+	@Lob
+    @Column(name = "photos")
     private String photos;
 
 	@Enumerated(EnumType.STRING)
@@ -82,6 +87,9 @@ public class User {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Cart cart;
 
+	@OneToMany(mappedBy = "user")
+    private Set<Rating> ratings = new LinkedHashSet<>();
+	
 	public void addRole(Role role) {
 		this.roles.add(role);
 	}

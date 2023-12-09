@@ -48,7 +48,17 @@
 				<form th:action="@{/process_register}" th:object="${user}" method="post">
 					<div class="text-center mb-3">
 						<p>Sign up with:</p>
+						<a th:href="@{/oauth2/authorization/facebook}" class="btn btn-link btn-floating mx-1 border border-primary rounded-pill">
+							<i class="fab fa-facebook-f"></i>
+							Facebook
+						</a>
+
+						<a th:href="@{/oauth2/authorization/google}" class="btn btn-link btn-floating mx-1 border border-primary rounded-pill">
+							<i class="fab fa-google"></i>
+							Google
+						</a>
 					</div>
+					<p class="text-center">or:</p>
 					<div th:if="${param.existsEmail}" class="alert alert-danger">
 						Email đã tồn tại
 					</div>
@@ -56,6 +66,21 @@
 					<div class="form-group mb-4">
 						<label class="form-label" for="registerEmail">Email</label>
 						<input type="email" id="registerEmail" class="form-control" th:field="*{email}" required/>
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+					</div>
+
+					<!-- Name input -->
+					<div class="form-group mb-4">
+						<label class="form-label" for="registerName">First name</label>
+						<input type="text" id="registerName" class="form-control" th:field="*{firstName}"/>
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+					</div>
+
+					<!-- Username input -->
+					<div class="form-group mb-4">
+						<label class="form-label" for="registerUsername">Last name</label>
+						<input type="text" id="registerUsername" class="form-control" th:field="*{lastName}"/>
+						<div class="alert alert-warning" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
 					</div>
 
 					<!-- Password input -->
@@ -63,19 +88,6 @@
 						<label class="form-label" for="registerPassword">Password</label>
 						<input type="password" id="registerPassword" class="form-control" th:field="*{password}" required minlength="2" maxlength="20"/>
 					</div>
-
-					<!-- Name input -->
-					<div class="form-group mb-4">
-						<label class="form-label" for="registerName">First name</label>
-						<input type="text" id="registerName" class="form-control" th:field="*{firstName}" required/>
-					</div>
-
-					<!-- Username input -->
-					<div class="form-group mb-4">
-						<label class="form-label" for="registerUsername">Last name</label>
-						<input type="text" id="registerUsername" class="form-control" th:field="*{lastName}" required/>
-					</div>
-
 
 					<!-- Submit button -->
 					<button type="submit" class="btn btn-primary btn-block mb-3">Sign up</button>

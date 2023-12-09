@@ -1,22 +1,14 @@
 package hcmute.vn.springonetomany.Custom.Oauth2;
 
-import hcmute.vn.springonetomany.Custom.CustomUserDetails;
-import hcmute.vn.springonetomany.Entities.Cart;
-import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Enum.AuthProvider;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
-import hcmute.vn.springonetomany.Service.CartService;
 import hcmute.vn.springonetomany.Service.UserService;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Component
 public class OAuthLoginSuccessHandler implements AuthenticationSuccessHandler {
@@ -47,13 +36,21 @@ public class OAuthLoginSuccessHandler implements AuthenticationSuccessHandler {
                 new SimpleUrlAuthenticationSuccessHandler("/home");
         SimpleUrlAuthenticationSuccessHandler adminSuccessHandler =
                 new SimpleUrlAuthenticationSuccessHandler("/admin");
+        String facebookImg = "";
+        if (clientName.equals("FACEBOOK")) {
+            Map<String, Object> picture = (Map<String, Object>) customOAuth2User.getAttribute("picture");
+            Map<String, Object> data = (Map<String, Object>) picture.get("data");
+            facebookImg = (String) data.get("url");
+        }
 
         if (existUser == null) {
             User newUser = new User();
             // Lấy thông tin người dùng
-            String lastName = customOAuth2User.getAttribute("family_name");
-            String firstName = clientName.equals("GOOGLE") ? customOAuth2User.getAttribute("given_name") : customOAuth2User.getAttribute("name");
-            String picture = customOAuth2User.getAttribute("picture");
+            String lastName = clientName.equals("GOOGLE") ? customOAuth2User.getAttribute("family_name") : customOAuth2User.getAttribute("last_name");
+            String firstName = clientName.equals("GOOGLE") ? customOAuth2User.getAttribute("given_name") : customOAuth2User.getAttribute("first_name");
+            String picture = clientName.equals("GOOGLE")
+                    ? customOAuth2User.getAttribute("picture")
+                    : facebookImg;
 
             // Set thông tin người dùng
             newUser.setEmail(email);
@@ -63,10 +60,7 @@ public class OAuthLoginSuccessHandler implements AuthenticationSuccessHandler {
             newUser.setLastName(lastName != null ? lastName : "");
             newUser.setPhotos(picture != null ? picture : "");
             userService.saveOauth2(newUser);
-
-
-        }
-        else {
+        } else {
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             for (final GrantedAuthority grantedAuthority : authorities) {
                 String authorityName = grantedAuthority.getAuthority();
