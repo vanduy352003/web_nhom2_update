@@ -83,11 +83,18 @@ public class CartController {
     @PostMapping("/update")
     public String updateCart(@RequestParam Integer cartItemId,
                              @RequestParam(required = false, defaultValue = "1") Integer quantity) {
+        if (quantity < 0) {
+            return "redirect:/cart?errorQty=true";
+        }
         CartItem cartItem = cartItemService.findById(cartItemId);
         Product product = cartItem.getProduct();
         int oldQuantity = cartItem.getQuantity();
 
         if (product.getInventory() + oldQuantity - quantity >= 0) {
+            if (quantity == 0) {
+                cartItemService.deleteCartItemById(cartItemId);
+                return "redirect:/cart";
+            }
             cartItem.setQuantity(quantity);
             cartItemService.save(cartItem);
             product.setInventory(product.getInventory() + oldQuantity - quantity);

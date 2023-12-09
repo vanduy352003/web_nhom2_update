@@ -7,9 +7,15 @@
 </head>
 
 <body layout:fragment="content">
-	<div th:if="${param.error}" class="alert alert-danger">
-		Không đủ số lượng
+	<div class="container">
+		<div th:if="${param.error}" class="alert alert-danger">
+			Không đủ số lượng
+		</div>
+		<div th:if="${param.errorQty}" class="alert alert-danger">
+			Số lượng phải lớn hơn hoặc bằng 0
+		</div>
 	</div>
+
 	<!-- Cart Start -->
 	<div class="container-fluid pt-5">
 		<div class="row px-xl-5">
