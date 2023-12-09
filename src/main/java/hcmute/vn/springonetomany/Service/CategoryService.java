@@ -35,4 +35,8 @@ public class CategoryService {
         }
         throw new Exception("Could not find category");
     }
+    public List<Category> getCategoryExceptsThisCategory(Category category)
+    {
+    	return repository.getCategoryExceptsThisCategory(category);
+    }
 }

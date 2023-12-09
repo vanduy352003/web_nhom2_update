@@ -54,7 +54,14 @@ public class AdminProductController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") int id) {
+    public String deleteProduct(@PathVariable("id") int id) throws Exception {
+    	Product product=productService.findById(id);
+    	for(ProductImages productImage: product.getProductImages())
+    	{
+    		productImagesService.delete(productImage);
+    	}
+    	FileUploadUtil.deleteAllFiles("product_images/"+ product.getId());
+    	FileUploadUtil.deleteAllFiles("product_photos/"+ product.getId());
         productService.deleteById(id);
         return "redirect:/admin/products";
     }
@@ -94,7 +101,7 @@ public class AdminProductController {
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
         
-        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+        if (!(multipartFiles == null || multipartFiles.isEmpty() || multipartFiles.stream().allMatch(MultipartFile::isEmpty))) {
         	for(ProductImages productImages:  savedProduct.getProductImages())
         	{
         		productImagesService.delete(productImages);
@@ -104,13 +111,13 @@ public class AdminProductController {
         	FileUploadUtil.deleteAllFiles(uploadDir);
         	for(MultipartFile productImages: multipartFiles)
         	{
-        		String filename = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+        		String filename = StringUtils.cleanPath(Objects.requireNonNull(productImages.getOriginalFilename()));
         		ProductImages productImage =new ProductImages();
         		productImage.setImageUrl(filename);
         		productImage.setProduct(savedProduct);
         		ProductImages savedProductImages = productImagesService.getNewProductImages(productImage);
         		String uploadDirs = uploadDir +"/" + savedProductImages.getId();
-        		FileUploadUtil.saveFile(uploadDirs, fileName, productImages);
+        		FileUploadUtil.saveFile(uploadDirs, filename, productImages);
         		product.getProductImages().add(productImage);
         		
         	}
