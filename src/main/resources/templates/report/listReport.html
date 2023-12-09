@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="en"
+	xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 	layout:decorate="~{layout/admin_layout}">
 
 <head>
@@ -26,23 +29,23 @@
 
 
 							<div class="text-center">
-								<h3 style="color:#2C3E50">Financial Reports</h3>
+								<!--<h3 style="color:#2C3E50">Financial Reports</h3>-->
 								<h4> <label for="Choose Report" style="color:#E74C3C">Choose Report</label></h4>
 								<div class="input-group"><span class="input-group-addon"><span
 											class="glyphicon glyphicon-tasks"></span></span>
-									<select class="form-control">
-										<option value="Income" selected>Product</option>
+									<select class="form-control" name="reportCategory">
+										<option value="Product" selected>Product</option>
 										<option value="Profit">Profit</option>
 									</select>
 								</div>
 								<h5><label for="Choose Report" style="color:#E74C3C"> Time :</label>
-									<input id="dailyRadio" type="radio" name="type" value="Daily">Daily
-									<input id="monthlyRadio" type="radio" name="type" value="Monthly">Monthly
-									<input id="yearlyRadio" type="radio" name="type" value="Yearly">Yearly
+									<input id="dailyRadio" type="radio" name="type" value="Daily" checked>By date
+									<input id="monthlyRadio" type="radio" name="type" value="Monthly">By month
+									<input id="yearlyRadio" type="radio" name="type" value="Yearly">By year
 								</h5>
 
 								<div class="customer">
-									<div id="dailyInputContainer" class="input-group hidden">
+									<div id="dailyInputContainer" class="input-group">
 										<span class="input-group-addon"><span
 												class="glyphicon glyphicon-calendar"></span></span>
 										<input type="date" id="dailyInput" class="form-control" placeholder="date"
@@ -67,10 +70,10 @@
 		</div>
 	</form>
 
-	<div class=" container">
+	<div id="productContainer" class=" container" th:if="${reportCategory}=='Product' or ${reportCategory}==null">
 		<div class="row">
 			<div class="col-lg-10 mt-5 mb-5">
-				<table id="posts" class="table table-bordered table-responsive-sm">
+				<table id="productTable" class="table table-bordered table-responsive-sm">
 					<thead>
 						<tr>
 							<th>Product Name</th>
@@ -80,12 +83,65 @@
 					<tbody>
 						<tr th:block th:each="item, iterStat : ${listProductReport}"
 							th:class="${iterStat.even == true ? 'text-primary' : 'text-success'}">
-							<td th:text="${item.getProductName}"></td>
+							<td th:text="${item.getProductName()}"></td>
 							<td th:text="${item.getCount()}"></td>
 						</tr>
 					</tbody>
 				</table>
 
+			</div>
+		</div>
+	</div>
+	<div id="profitContainer" class=" container" th:if="${reportCategory}=='Profit'">
+		<div class="row">
+			<div class="col-lg-10 mt-5 mb-5"  th:switch="${type}">
+				<table id="profitTable" class="table table-bordered table-responsive-sm" th:case="Daily">
+					<thead>
+						<tr>
+							<th>Product Name</th>
+							<th>Profit</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:block th:each="item, iterStat : ${listProfitReport}"
+							th:class="${iterStat.even == true ? 'text-primary' : 'text-success'}">
+							<td th:text="${item.getProductName()}"></td>
+							<td th:text="${item.getProfit()}"></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<table id="posts" class="table table-bordered table-responsive-sm" th:case="Monthly">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Profit</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:block th:each="item, iterStat : ${listProfitReport}"
+							th:class="${iterStat.even == true ? 'text-primary' : 'text-success'}">
+							<td th:text="${item.getDate()}"></td>
+							<td th:text="${item.getProfit()}"></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<table id="posts" class="table table-bordered table-responsive-sm" th:case="Yearly">
+					<thead>
+						<tr>
+							<th>Month</th>
+							<th>Profit</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:block th:each="item, iterStat : ${listProfitReport}"
+							th:class="${iterStat.even == true ? 'text-primary' : 'text-success'}">
+							<td th:text="${item.getMonth()}"></td>
+							<td th:text="${item.getProfit()}"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -112,6 +168,7 @@
 			document.getElementById(containerId).classList.remove("hidden");
 		}
 	</script>
+
 	<!--<div class="container">
 		<div class="col-lg-12 col-xl-8">
 			<div class="card m-b-30">

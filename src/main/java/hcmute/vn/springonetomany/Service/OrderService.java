@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import hcmute.vn.springonetomany.Entities.Order;
 import hcmute.vn.springonetomany.Model.ProductReport;
+import hcmute.vn.springonetomany.Model.ProfitReportByDay;
+import hcmute.vn.springonetomany.Model.ProfitReportByMonth;
+import hcmute.vn.springonetomany.Model.ProfitReportByYear;
 import hcmute.vn.springonetomany.Repository.IOrderRepository;
 
 import java.text.SimpleDateFormat;
@@ -46,7 +49,8 @@ public class OrderService {
 	public Order getById(Integer id) {
 		return orderRepository.getById(id);
 	}
-    
+	
+	//Thống kê số lượng sản phẩm bán được    
 	public List<ProductReport> getAmountProductByDate(LocalDate date) {
 		return orderRepository.getAmountProductByDate(date);
 	}
@@ -58,6 +62,31 @@ public class OrderService {
 	public List<ProductReport> getAmountProductByYear(int year){
 		return orderRepository.getAmountProductByYear(year);
 	} 
+	
+	//Thống kê doanh thu
+	public List<ProfitReportByDay> getProfitByDate(LocalDate date){
+		return orderRepository.getProfitByDate(date);
+	}
+	
+	public Optional<Integer> findSumProfitByDate(LocalDate date){
+		return orderRepository.findSumProfitByDate(date);
+	}
+	
+	public List<ProfitReportByMonth> getProfitByMonth(int year, int month){
+		return orderRepository.getProfitByMonth(year, month);
+	}
+	
+	public Optional<Integer> findSumProfitByMonth(int year, int month){
+		return orderRepository.findSumProfitByMonth(year, month);
+	}
+	
+	public List<ProfitReportByYear> getProfitByYear(int year){
+		return orderRepository.getProfitByYear(year);
+	}
+	
+	public Optional<Integer> findSumProfitByYear(int year){
+		return orderRepository.findSumProfitByYear(year);
+	}
     
 
 }
