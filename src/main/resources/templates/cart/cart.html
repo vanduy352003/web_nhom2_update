@@ -82,14 +82,11 @@
 				     id="navbar-vertical">
 					<div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
 						<th:block th:each="voucher : ${session.user.getVouchers()}">
-							<a th:href="@{/cart}" class="nav-item nav-link"
+							<a th:href="@{'/cart/useVoucher/' + ${voucher.id}}" class="nav-item nav-link"
 							   th:text="${voucher.name}"></a>
 						</th:block>
 					</div>
 				</nav>
-				<div class="mt-5" sec:authorize="hasAuthority('ADMIN')">
-					<a th:href="@{/admin/categories/new}"  class="btn-primary p-3 rounded-pill text-decoration-none">Add category</a>
-				</div>
 			</div>
 				<div class="card border-secondary mb-5">
 					<div class="card-header bg-secondary border-0">
@@ -100,15 +97,23 @@
 							<h6 class="font-weight-medium">Subtotal</h6>
 							<h6 class="font-weight-medium" th:text="${total}"></h6>
 						</div>
-						<div class="d-flex justify-content-between">
+						<div class="d-flex justify-content-between mb-3">
 							<h6 class="font-weight-medium">Shipping</h6>
 							<h6 class="font-weight-medium">0</h6>
+						</div>
+						<div th:if="${voucher != null}" class="d-flex justify-content-between">
+							<h6 class="font-weight-medium">Voucher</h6>
+							<h6 class="font-weight-medium" th:text="'-' + ${voucher.value} + ' đ'"></h6>
 						</div>
 					</div>
 					<div class="card-footer border-secondary bg-transparent">
 						<div class="d-flex justify-content-between mt-2">
 							<h5 class="font-weight-bold">Total</h5>
-							<h5 class="font-weight-bold" th:text="${total}"></h5>
+							<h5 class="font-weight-bold" th:if="${voucher == null}" th:text="${total}"></h5>
+							<th:block th:if="${voucher != null}">
+								<h5 class="font-weight-bold" th:if="${cart.total - voucher.value > 0}" th:text="${cart.total - voucher.value} + ' đ'"></h5>						
+								<h5 class="font-weight-bold" th:if="${cart.total - voucher.value <= 0}">0 đ</h5>						
+							</th:block>
 						</div>
 						<button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
 					</div>
