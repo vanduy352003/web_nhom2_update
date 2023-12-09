@@ -48,10 +48,11 @@ public class VoucherController {
     }
 	
 	@GetMapping("/vouchers/redeem/{id}")
-	public String reedemVoucher(@AuthenticationPrincipal CustomUserDetails loggedUser, @PathVariable("id") int id, Model model) throws Exception {
+	public String reedemVoucher(@AuthenticationPrincipal CustomUser loggedUser, @PathVariable("id") int id, Model model) throws Exception {
 		Voucher voucher = voucherService.findById(id);
-		String email = loggedUser.getUsername();
+		String email = loggedUser.getEmail();
 		User user = userService.findUserByEmail(email);
+
 		if (voucher.getAmount() > 0) {
 			voucher.getUsers().add(user);
 			voucher.setAmount(voucher.getAmount()- 1);
@@ -60,7 +61,7 @@ public class VoucherController {
 			voucherService.save(voucher);
 		}
 		
-		return "redirect:/vouchers";
+		return "redirect:/home";
 	}
 	
 	
