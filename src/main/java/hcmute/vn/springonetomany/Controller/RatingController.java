@@ -57,7 +57,7 @@ public class RatingController {
 		
 		Rating savedRating = ratingService.getNewRating(newRating);
 		
-		if (ratingImages != null && !ratingImages.isEmpty()) {
+		if (!(ratingImages == null || ratingImages.isEmpty() || ratingImages.stream().allMatch(MultipartFile::isEmpty))) {
 			for (MultipartFile multipartFile : ratingImages) {
 				String filename = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 				RatingImage ratingImage = new RatingImage();
