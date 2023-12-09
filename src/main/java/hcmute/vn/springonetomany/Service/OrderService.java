@@ -15,6 +15,7 @@ import hcmute.vn.springonetomany.Entities.Order;
 import hcmute.vn.springonetomany.Model.ProductReport;
 import hcmute.vn.springonetomany.Repository.IOrderRepository;
 
+import java.text.SimpleDateFormat;
 @Service
 public class OrderService {
     @Autowired
@@ -45,7 +46,6 @@ public class OrderService {
 	}
     
 	public List<ProductReport> getAmountProductByDate(LocalDate date) {
-		System.out.println(orderRepository.getAmountProductByDate(date));
 		return orderRepository.getAmountProductByDate(date);
 	}
     

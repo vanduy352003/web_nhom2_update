@@ -23,10 +23,10 @@ public class AdminReportController {
 	@GetMapping("")
 	public String reportProduct(Model model) {
 //      List<Product> listProduct = productService.findAll();
-		LocalDate date = java.time.LocalDate.now();
+		LocalDate date = LocalDate.now();
 		List<ProductReport> listProductReport = orderService.getAmountProductByDate(date);
 		model.addAttribute("listProductReport", listProductReport);
-
+		
 		return "report/listReport";
 	}
 
