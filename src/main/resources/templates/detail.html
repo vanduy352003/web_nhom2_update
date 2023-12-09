@@ -41,7 +41,7 @@
 							<img class="w-100 h-100" src="img/product-3.jpg" alt="Image">
 						</div>
 						<div class="carousel-item">
-							<img class="w-100 h-100" src="img/product-4.jpg" alt="Image">
+							<img class="w-100 h-100" src="/product_photos/1042/slider_balenciagia.jpg" alt="Image">
 						</div>
 					</div>
 					<a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
@@ -68,10 +68,7 @@
 				<h3 class="font-weight-semi-bold mb-4" th:text="'Price: ' + ${product.getPriceFormatted()}"></h3>
 				<p class="font-weight-semi-bold mb-4 stock" th:text="'Stock: ' + ${product.getInventory()}"
 				   th:data-stock="${product.getInventory()}"></p>
-				<p class="mb-4">Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam stet sit clita
-					ea. Sanc invidunt ipsum et, labore clita lorem magna lorem ut. Erat lorem duo dolor no sea nonumy.
-					Accus labore stet, est lorem sit diam sea et justo, amet at lorem et eirmod ipsum diam et rebum kasd
-					rebum.</p>
+				<p class="mb-4" th:text="${product.getDescription()}">...</p>
 				<div class="d-flex mb-3">
 					<p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
 					<form>

@@ -10,7 +10,7 @@
 <body layout:fragment="content">
 	<div th:if="${param.status_success}" class="alert alert-success" id="successAlert">Xóa thành công</div>
 	<div th:if="${param.status_error}" class="alert alert-error" id="successAlert">Xóa thành công</div>
-
+<h4 class="d-flex align-items-center font-weight-bold justify-content-center bg-primary text-white float-left col-md-12 custom-background ">Danh sách yêu thích của bạn:</h4>
 	<div id="wishlist" class="tabcontent container-fluid pt-5">
 		<div class="row px-xl-5">
 			<div class="col table-responsive mb-5">
@@ -32,9 +32,9 @@
 										<img th:src="@{${item.getProduct().photosImagePath}}" alt="Product"
 											style="width: 100px; height: 100px;">
 										</a>
-										<div class="product-info">
+										<div class="product-info text-dark">
 											<h4 class="product-title">
-												<a th:href="@{'/products/detail/' + ${item.getProduct().id}}"
+												<a class="text-info"    th:href="@{'/products/detail/' + ${item.getProduct().id}}"
 													th:text="${item.getProduct().name}"></a>
 											</h4>
 											<span>
@@ -65,12 +65,12 @@
 												</button>
 											</div>
 											<div class="modal-body">
-												<h5 class="product-title ">
-													<a th:href="@{'/products/detail/' + ${item.getProduct().id}}"
+												<h4 class="product-title">
+													<a class="text-danger" th:href="@{'/products/detail/' + ${item.getProduct().id}}"
 														th:text="${item.getProduct().name}"></a>
-												</h5>
+												</h4>
 
-												<div class="card float-left">
+												<div class="card float-left text-dark">
 
 													<img th:src="@{${item.product.photosImagePath}}" alt="..."
 														style="width: 100%; height: 100%;">
@@ -101,7 +101,7 @@
 								</div>
 
 							</td>
-							<td class="text-center "><a class="remove-from-cart"
+							<td class="text-center"><a class="remove-from-cart text-danger"
 									th:href="@{/removewishlistitem/{id}(id = ${item.id})}" data-toggle="tooltip"><i
 										class="fa fa-trash"></i></a></td>
 						</tr>

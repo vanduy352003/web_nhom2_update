@@ -10,13 +10,14 @@
 	<div th:if="${param.status}" class="alert alert-success text-center justify-content-center" id="successAlert">
 		Sản phẩm đã thêm vào danh sách yêu thích❤️
 		<div>
-			<a href="/wishlist"><button style="display: block;margin: 0 auto; background-color: rgb(255, 128, 64); color: rgb(64, 0, 64); padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
-    Đến danh sách yêu thích của bạn
-</button>
-</a>
+			<a href="/wishlist"><button
+					style="display: block;margin: 0 auto; background-color: rgb(255, 128, 64); color: rgb(64, 0, 64); padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+					Đến danh sách yêu thích của bạn
+				</button>
+			</a>
 		</div>
 	</div>
-	
+
 	<!-- Navbar Start -->
 	<div class="container-fluid mb-5">
 		<div class="row border-top px-xl-5">
@@ -225,8 +226,15 @@
 								Detail</a>
 							<a th:href="@{'/addtowishlist/' + ${product.id}}" class="btn btn-sm text-dark p-0"><i
 									class="fas fa-heart text-primary mr-1"></i>Add to wishlist</a>
-							<a href="" class="btn btn-sm text-dark p-0"><i
-									class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+							<form th:action="@{/cart/add}" method="post">
+								<input type="hidden" name="productId" th:value="${product.getId()}">
+								<input type="hidden" name="page" th:value="${currentPage}">
+
+								<!--										<input type="hidden" name="quantity" value="1">-->
+								<button type="submit" class="btn btn-sm text-dark p-0"><i
+										class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+								</button>
+							</form>
 						</div>
 					</div>
 				</div>
