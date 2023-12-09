@@ -10,103 +10,107 @@
 <body layout:fragment="content">
 	<div th:if="${param.status_success}" class="alert alert-success" id="successAlert">Xóa thành công</div>
 	<div th:if="${param.status_error}" class="alert alert-error" id="successAlert">Xóa thành công</div>
+<h4 class="d-flex align-items-center font-weight-bold justify-content-center bg-primary text-white float-left col-md-12 custom-background ">Danh sách yêu thích của bạn:</h4>
+	<div id="wishlist" class="tabcontent container-fluid pt-5">
+		<div class="row px-xl-5">
+			<div class="col table-responsive mb-5">
+				<table class="table table-bordered text-center mb-0 ">
+					<thead class="bg-secondary text-dark">
+						<tr>
+							<th>Products</th>
+							<th>Add to cart</th>
+							<th class="text-center"><a class="btn btn-sm btn-outline-danger clear"
+									th:href="@{/clearwishlist}">Clear </a></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item : ${wishlistItem}">
+							<td>
+								<div class="product-item ">
+									<!-- Find the product with matching product_id -->
+									<th:block <a class="product-thumb" href="#">
+										<img th:src="@{${item.getProduct().photosImagePath}}" alt="Product"
+											style="width: 100px; height: 100px;">
+										</a>
+										<div class="product-info text-dark">
+											<h4 class="product-title">
+												<a class="text-info"    th:href="@{'/products/detail/' + ${item.getProduct().id}}"
+													th:text="${item.getProduct().name}"></a>
+											</h4>
+											<span>
+												<em>Price:</em>
+												<span th:text="${item.getProduct().price}"></span>
+											</span>
+										</div>
+									</th:block>
+								</div>
+							</td>
 
-	<div id="wishlist" class="tabcontent">
-		<div class="col-12">
-			<div class="row">
-				<div class="cart-button table-responsive shopping-cart" style="background-color: #fff">
-					<table class="table">
-						<thead>
-							<tr>
-								<th>Product</th>
-
-								<th class="text-center">Add to cart</th>
-
-								<th class="text-center"><a class="btn btn-sm btn-outline-danger clear"
-										th:href="@{/clearwishlist}">Clear </a></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="item : ${wishlistItem}">
-								<td>
-									<div class="product-item">
-										<!-- Find the product with matching product_id -->
-										<th:block <a class="product-thumb" href="#">
-											<img th:src="@{${item.getProduct().photosImagePath}}" alt="Product"
-												style="width: 100px; height: 100px;">
-											</a>
-											<div class="product-info">
+							<td class="text-center">
+								<button class="btn  text-uppercase" style="background-color:#fff !important;"
+									data-toggle="modal" th:attr="data-target='#exampleModalCenter'+*{item.product.id}">
+									<i class="fas fa-cart-plus" style="color: rgb(0, 255, 64); font-size: 20px"></i>
+								</button>
+								<div class="modal fade" th:id="*{'exampleModalCenter'+{item.product.id}}"
+									data-backdrop="static" data-keyboard="false" tabindex="-1"
+									aria-labelledby="staticBackdropLabel" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title text-justify font-weight-bold" id="staticBackdropLabel">Add
+													to cart</h5>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
 												<h4 class="product-title">
-													<a th:href="@{'/products/detail/' + ${item.getProduct().id}}"
+													<a class="text-danger" th:href="@{'/products/detail/' + ${item.getProduct().id}}"
 														th:text="${item.getProduct().name}"></a>
 												</h4>
-												<span>
-													<em>Price:</em>
-													<span th:text="${item.getProduct().price}"></span>
-												</span>
-											</div>
-										</th:block>
-									</div>
-								</td>
 
-								<td class="text-center">
-									<button class="btn  text-uppercase" style="background-color:#fff !important;"
-										data-toggle="modal"
-										th:attr="data-target='#exampleModalCenter'+*{item.product.id}">
-										<i class="fas fa-cart-plus" style="color: rgb(0, 255, 64); font-size: 20px"></i>
-									</button>
-									<div class="modal fade" th:id="*{'exampleModalCenter'+{item.product.id}}"
-										data-backdrop="static" data-keyboard="false" tabindex="-1"
-										aria-labelledby="staticBackdropLabel" aria-hidden="true">
-										<div class="modal-dialog modal-dialog-centered">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title" id="staticBackdropLabel">Add
-														to cart</h5>
-													<button type="button" class="close" data-dismiss="modal"
-														aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-												</div>
-												<div class="modal-body">
+												<div class="card float-left text-dark">
 
-													<div class="card">
-														<img th:src="@{${item.product.photosImagePath}}" alt="..."
-															style="width: 100%; height: 100%;">
-														<div class="card-body">
-															<form th:action="@{/cart/add}" method="post">
-																<input type="hidden" name="productId"
-																	th:value="${item.product.id}">
-																<input type="hidden" name="page"
-																	th:value="${currentPage}">
+													<img th:src="@{${item.product.photosImagePath}}" alt="..."
+														style="width: 100%; height: 100%;">
+													<span>
+														<em class="mt-12">Price:</em>
+														<span th:text="${item.getProduct().price}"></span>
+													</span>
+													<span>
+														<em>Inventory:</em>
+														<span th:text="${item.getProduct().inventory}"></span>
+													</span>
 
-																<!--										<input type="hidden" name="quantity" value="1">-->
-																<button type="submit"
-																	class="btn btn-sm text-dark p-0"><i
-																		class="fas fa-shopping-cart text-primary mr-1"></i>Add
-																	To Cart
-																</button>
-															</form>
-														</div>
+													<div class="card-body">
+														<form th:action="@{/cart/add}" method="post">
+															<input type="hidden" name="productId"
+																th:value="${item.product.id}">
+															<input type="hidden" name="page" th:value="${currentPage}">
+															<button type="submit"
+																class="btn btn-primary btn-lg-5 rounded-bottom">Add to
+																cart</button>
+														</form>
 													</div>
 												</div>
-
 											</div>
+
 										</div>
 									</div>
+								</div>
 
-								</td>
-								<td class="text-center"><a class="remove-from-cart"
-										th:href="@{/removewishlistitem/{id}(id = ${item.id})}" data-toggle="tooltip"><i
-											class="fa fa-trash"></i></a></td>
-							</tr>
+							</td>
+							<td class="text-center"><a class="remove-from-cart text-danger"
+									th:href="@{/removewishlistitem/{id}(id = ${item.id})}" data-toggle="tooltip"><i
+										class="fa fa-trash"></i></a></td>
+						</tr>
 
-						</tbody>
-					</table>
-				</div>
-
+					</tbody>
+				</table>
 			</div>
 		</div>
+	</div>
 
 	</div>
 
