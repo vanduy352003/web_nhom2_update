@@ -242,8 +242,12 @@
 								</h4>
 								<th:block th:each="productRating : ${listRating}">
 									<div class="rating media mb-4">
-										<img th:src="@{${productRating.getUser().photosImagePath}}" alt="Image"
-										     class="img-fluid mr-3 mt-1" style="width: 45px;">
+<!--										<img th:src="@{${productRating.getUser().photosImagePath}}" alt="Image"-->
+<!--										     class="img-fluid mr-3 mt-1" style="width: 45px;">-->
+										<img th:if="${productRating.user.getAuthProvider().name() == 'DATABASE'}" th:src="${productRating.user.getPhotosImagePath()}" class="rounded-circle mx-2 mr-3 mt-1" alt=""
+										     width="50" height="50">
+										<img th:unless="${productRating.user.getAuthProvider().name() == 'DATABASE'}" th:src="@{${productRating.user.getPhotos()}}" class="rounded-circle mx-2 mr-3 mt-1" alt=""
+										     width="50" height="50">
 										<div class="media-body">
 											<h6><span th:text="${productRating.getUser().getFullName}"></span><small> -
 												<i><span th:text="${productRating.date}"></span></i></small></h6>

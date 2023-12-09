@@ -78,7 +78,6 @@ public class User {
 	private AuthProvider authProvider;
 
 	@CreationTimestamp
-	@Transient
     private Date createdAt;
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

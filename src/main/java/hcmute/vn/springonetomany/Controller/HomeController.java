@@ -43,10 +43,13 @@ public class HomeController {
 
         List<Category> sortedCategories = listCategories.stream()
                 .sorted(Comparator.comparing((Category category) -> category.getProducts().size()).reversed())
-                .toList().subList(0, Math.min(listCategories.size(), 6));
+                .toList();
         List<Product> sortedProducts = productList.stream()
                 .sorted(Comparator.comparing((Product product) -> product.getPrice().floatValue()).reversed())
                 .toList().subList(0, Math.min(productList.size(), 4));
+        List<Product> sortedProductsByCreatedTime = productList.stream()
+                .sorted(Comparator.comparing((Product product) -> product.getCreatedAt().getTime()).reversed())
+                .toList();
 
         if (loggedUser != null) {
             User user = userService.findUserByEmail(loggedUser.getEmail());
@@ -54,11 +57,11 @@ public class HomeController {
             session.setAttribute("user", user);
         }
 
-        model.addAttribute("listCategories", listCategories);
-        model.addAttribute("sortedCategories", sortedCategories);
+        model.addAttribute("listCategories", sortedCategories);
+        model.addAttribute("sortedCategories", sortedCategories.subList(0, Math.min(listCategories.size(), 6)));
 
         model.addAttribute("sortedProducts", sortedProducts);
-        model.addAttribute("productList", productList);
+        model.addAttribute("sortedProductsByCreatedTime", sortedProductsByCreatedTime.subList(0, Math.min(productList.size(), 6)));
         return "index";
     }
 }

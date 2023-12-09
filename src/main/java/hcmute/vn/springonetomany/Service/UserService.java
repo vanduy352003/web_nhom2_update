@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +39,7 @@ public class UserService {
     int PAGE_SIZE = 5;
 
     public void registerDefaultUser(User user) {
+        user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         Role roleUser = roleRepo.findByName("User");
         user.addRole(roleUser);
         user.setAuthProvider(AuthProvider.DATABASE);
@@ -78,12 +80,13 @@ public class UserService {
     }
 
     public void save(User user) {
+        user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         encodePassword(user);
         userRepo.save(user);
     }
 
     public void saveOauth2(User user) {
-
+        user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         userRepo.save(user);
         //Tạo giỏ hàng cho người dùng
         Cart cart = new Cart();
@@ -118,6 +121,7 @@ public class UserService {
             }
             user.setAuthProvider(existingUser.getAuthProvider());
         }
+        user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return userRepo.save(user);
     }
 
