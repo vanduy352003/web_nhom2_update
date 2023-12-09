@@ -10,6 +10,8 @@ import hcmute.vn.springonetomany.Service.RatingService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -80,9 +82,13 @@ public class ProductController {
     }
 
     @GetMapping("/detail/{id}")
-    public String showProductDetail(@PathVariable("id") int id, Model model) {
+    public String showProductDetail(@PathVariable("id") int id, @RequestParam(name = "reviewPage", defaultValue = "1") int reviewPage, Model model) {
         try {
             Product product = productService.findById(id);
+            Page<Rating> ratingPage = ratingService.getRatingsByProduct_Id(id, reviewPage);
+            List<Rating> listRating = ratingPage.getContent();
+            int totalPages = ratingPage.getTotalPages();
+            long totalItems = ratingPage.getTotalElements();
             Rating rating = new Rating();
             int numberOfRating = 0;
             int ratingPoint = 0;
@@ -90,11 +96,15 @@ public class ProductController {
             	numberOfRating = product.getRatings().size();
                 ratingPoint = product.getRatingPoint();
             }
-            model.addAttribute("listRating", product.getRatings());
+            model.addAttribute("listRating", listRating);
             model.addAttribute("ratingPoint", ratingPoint);
             model.addAttribute("numberOfRating", numberOfRating);
             model.addAttribute("product", product);
             model.addAttribute("rating", rating);
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("totalItems", totalItems);
+            model.addAttribute("currentPage", reviewPage);
+            
         } catch (Exception e) {
             return "redirect:/products";
         }

@@ -1,5 +1,6 @@
 package hcmute.vn.springonetomany.Controller.Admin;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,7 +37,7 @@ public class AdminRatingController {
 	
 	@GetMapping("")
 	public String showRatingList(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
-        Integer PAGE_SIZE = 10;
+        Integer PAGE_SIZE = 2;
 		Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE);
 		Page<Rating> listRating = ratingService.findAll(pageable);
         int totalPages = listRating.getTotalPages();
@@ -50,11 +51,13 @@ public class AdminRatingController {
 	}
 	
 	@GetMapping("/delete/{id}")
-	public String deleteRating(@PathVariable("id") int id) {
+	public String deleteRating(@PathVariable("id") int id) throws IOException {
 		Rating rating = ratingService.findById(id);
 		for (RatingImage ratingImage : rating.getRatingImages()) {
     		ratingImageService.delete(ratingImage);
     	}
+ 		FileUploadUtil.deleteAllFiles("rating_images/" + rating.getId());
+        rating.getRatingImages().clear();
 		ratingService.delete(rating);
 		return "redirect:/admin/ratings";
 	}

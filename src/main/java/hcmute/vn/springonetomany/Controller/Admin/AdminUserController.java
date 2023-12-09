@@ -1,9 +1,13 @@
 package hcmute.vn.springonetomany.Controller.Admin;
 
+import hcmute.vn.springonetomany.Entities.Rating;
+import hcmute.vn.springonetomany.Entities.RatingImage;
 import hcmute.vn.springonetomany.Entities.Role;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Entities.Voucher;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
+import hcmute.vn.springonetomany.Service.RatingImageService;
+import hcmute.vn.springonetomany.Service.RatingService;
 import hcmute.vn.springonetomany.Service.UserService;
 import hcmute.vn.springonetomany.Service.VoucherService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
@@ -27,6 +31,10 @@ public class AdminUserController {
     @Autowired
     UserService userService;
     @Autowired
+    RatingService ratingService;
+    @Autowired
+    RatingImageService ratingImageService;
+    
     VoucherService voucherService;
     @Autowired
     IRoleRepository roleRepository;
@@ -46,13 +54,22 @@ public class AdminUserController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteUSer(@PathVariable("id") Long id) {
-    	User user = userService.getUserById(id);
-    	for (Voucher voucher : user.getVouchers()) {
+    public String deleteUSer(@PathVariable("id") Long id) throws IOException {
+        User user = userService.getUserById(id);
+        for (Rating rating : user.getRatings()) {
+    		for (RatingImage ratingImage : rating.getRatingImages()) {
+        		ratingImageService.delete(ratingImage);
+        	}
+        	FileUploadUtil.deleteAllFiles("rating_images/" + rating.getId());
+            rating.getRatingImages().clear();
+    		ratingService.delete(rating);
+
+    	}
+        for (Voucher voucher : user.getVouchers()) {
     		voucher.getUsers().remove(user);
     	}
-    	
-        userService.deleteUserById(id);
+    	userService.deleteUserById(id);
+
         return "redirect:/admin/users";
     }
 

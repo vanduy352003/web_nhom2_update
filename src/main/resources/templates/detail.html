@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-      layout:decorate="~{layout/main_layout}"
->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{layout/main_layout}">
+
 <head>
 	<title>Product detail</title>
 </head>
@@ -272,33 +269,71 @@
 											<p th:text="${productRating.message}"></p>
 											<th:block th:each="ratingImage : ${productRating.ratingImages}">
 												<img th:src="@{${ratingImage.photosImagePath}}" alt=""
-												     style="width: 70px;">
+													style="width: 70px;">
+
 											</th:block>
-											<th:block th:if="${session.user.getId() == productRating.getUser().id}">
+											<th:block sec:authorize="isAuthenticated()" th:if="${session.user.getId() == productRating.getUser().id}">
 												<a th:href="@{'/rating/delete?id=' + ${productRating.id} + '&productId=' + ${product.id}}">Xóa</a>
 											</th:block>
 
 										</div>
 									</div>
 								</th:block>
+								<!--                    Page navigation-->
+					<div class="col-12 pb-1" th:unless="${listRating.isEmpty()}">
+						<nav aria-label="Page navigation" th:with="baseUrl=${#request.getRequestURI()}">
+							<ul class="pagination justify-content-center mb-3">
+								<li class="page-item" th:classappend="${currentPage - 1 == 0 ? 'disabled' : ''}">
+									<a class="page-link"
+									   th:href="@{{baseUrl}(baseUrl=${baseUrl}, reviewPage=${#numbers.formatInteger(currentPage - 1, 0)})}">
+										<span aria-hidden="true">&laquo;</span>
+										<span class="sr-only">Previous</span>
+									</a>
+								</li>
+								<li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item"
+								    th:classappend="${i == currentPage ? 'active' : ''}">
+									<a th:href="@{{baseUrl}(baseUrl=${baseUrl}, reviewPage=${i})}"
+									   th:text="${i}" class="page-link"></a>
+								</li>
+								<li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+									<a class="page-link"
+									   th:href="@{{baseUrl}(baseUrl=${baseUrl}, reviewPage=${#numbers.formatInteger(currentPage + 1, 0)})}">
+										<span aria-hidden="true">&raquo;</span>
+										<span class="sr-only">Next</span>
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
 							</div>
+							
 							<div class="col-md-6">
 								<h4 class="mb-4">Leave a review</h4>
 								<small>Your email address will not be published. Required fields are marked *</small>
 								<div class="d-flex my-3">
-									<p class="mb-0 mr-2">Your Rating * :</p>
-									<div class="text-primary" id="rating-stars">
-										<i class="far fa-star" data-index="1"></i>
-										<i class="far fa-star" data-index="2"></i>
-										<i class="far fa-star" data-index="3"></i>
-										<i class="far fa-star" data-index="4"></i>
-										<i class="far fa-star" data-index="5"></i>
+										<p class="mb-0 mr-2">Your Rating * :</p>
+										<div class="text-primary" id="rating-stars">
+											<i class="far fa-star" data-index="1"></i>
+											<i class="far fa-star" data-index="2"></i>
+											<i class="far fa-star" data-index="3"></i>
+											<i class="far fa-star" data-index="4"></i>
+											<i class="far fa-star" data-index="5"></i>
+										</div>
 									</div>
-								</div>
 								<form th:action="@{'/rating/send/' + ${product.id}}" th:object="${rating}" method="post"
 								      enctype="multipart/form-data">
 									<input type="hidden" id="selected-rating" th:field="*{ratingPoint}" value="0"
 									       required>
+									<div class="form-group">
+										<label for="name">Your Name *</label>
+										<input type="text" class="form-control" id="username" readonly
+											sec:authorize="isAuthenticated()" th:value="${session.user.getFullName()}">
+									</div>
+									<div class="form-group">
+										<label for="email">Your Email *</label>
+										<input type="email" class="form-control" id="useremail" readonly
+											sec:authorize="isAuthenticated()" th:value="${session.user.email}">
+									</div>
 									<div class="form-group">
 										<label for="message">Your Review *</label>
 										<textarea id="message" cols="30" rows="5" class="form-control"
@@ -315,9 +350,6 @@
 								</form>
 							</div>
 						</div>
-						<a href="#" id="load-more-link"
-						   class="btn btn-primary text-decoration-none rounded-pill text-uppercase p-2"
-						   th:data-product-id="${product.id}">Load More</a>
 					</div>
 				</div>
 			</div>
@@ -326,32 +358,6 @@
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-	<script>
-        $('#load-more-link').on('click', function (event) {
-            event.preventDefault();
-            var productId = $(this).data('product-id');
-            loadAjax(productId);
-        })
-
-        function loadAjax(productId) {
-            var amount = document.getElementsByClassName("rating").length;
-            $.ajax({
-                url: "/rating/loadAjax",
-                type: "get",
-                data: {
-                    exits: amount,
-                    productId: productId
-                },
-                success: function (data) {
-                    $("#content").append(data);
-                },
-                error: function (xhr) {
-
-                }
-            });
-        }
-	</script>
-
 	<script>
         function limitFiles(input, maxFiles) {
             // Get the selected files
@@ -389,29 +395,29 @@
         });
 	</script>
 	<script>
-        window.onload = function () {
-            const minusButton = document.querySelector('.btn-minus');
-            const plusButton = document.querySelector('.btn-plus');
-            const quantityInput = document.querySelector('input[name="quantity"]');
-            const stockEl = document.querySelector('.stock');
+		window.onload = function () {
+			const minusButton = document.querySelector('.btn-minus');
+			const plusButton = document.querySelector('.btn-plus');
+			const quantityInput = document.querySelector('input[name="quantity"]');
+			const stockEl = document.querySelector('.stock');
 
-            minusButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
-            });
+			minusButton.addEventListener('click', function (e) {
+				e.preventDefault();
+				let currentValue = parseInt(quantityInput.value);
+				if (currentValue > 1) {
+					quantityInput.value = currentValue - 1;
+				}
+			});
 
-            plusButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                let currentValue = parseInt(quantityInput.value);
-                let currentStock = parseInt(stockEl.dataset.stock);
-                if (currentValue < currentStock) {
-                    quantityInput.value = currentValue + 1;
-                }
-            });
-        };
+			plusButton.addEventListener('click', function (e) {
+				e.preventDefault();
+				let currentValue = parseInt(quantityInput.value);
+				let currentStock = parseInt(stockEl.dataset.stock);
+				if (currentValue < currentStock) {
+					quantityInput.value = currentValue + 1;
+				}
+			});
+		};
 	</script>
 </body>
 
