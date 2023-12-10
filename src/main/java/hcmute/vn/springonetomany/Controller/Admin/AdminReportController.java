@@ -1,10 +1,8 @@
 package hcmute.vn.springonetomany.Controller.Admin;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,12 +43,16 @@ public class AdminReportController {
 			@RequestParam(name = "type", required = false) Optional<String> typeOptional,
 			@RequestParam(name = "month", required = false) Optional<String> monthStringOptional,
 			@RequestParam(name = "year", required = false) Optional<String> yearStringOptional,
-			@RequestParam(name = "reportCategory", required = false) Optional<String> reportCategoryOptional) {
+			@RequestParam(name = "reportCategory", required = false) Optional<String> reportCategoryOptional,
+			@RequestParam(name = "page") Optional<Integer> page){
 		LocalDate date = dateOptional.orElse(LocalDate.now());
 		String type = typeOptional.orElse("Daily");
 		String monthString = monthStringOptional.orElse("2023-12"); 
 		String yearString = yearStringOptional.orElse("1900");
 		String reportCategory = reportCategoryOptional.orElse("Product");
+		int count = 0;
+		int currentPage = page.orElse(1);
+		int pageSize = 6;
 		if (monthString == "") {
 			monthString = "1900-01";
 		}
@@ -68,6 +70,7 @@ public class AdminReportController {
 		if (reportCategory.contains("Product")) {
 			if (type.contains("Daily")) {
 				List<ProductReport> listProductReport = orderService.getAmountProductByDate(date);
+				count = listProductReport.size();
 				model.addAttribute("listProductReport", listProductReport);
 			} else {
 				if (type.contains("Monthly")) {
@@ -76,11 +79,13 @@ public class AdminReportController {
 					int month = yearMonth.getMonthValue();
 					List<ProductReport> listProductReport = orderService.getAmountProductByMonth(yearFromYearMonth,
 							month);
+					count = listProductReport.size();
 					model.addAttribute("listProductReport", listProductReport);
 				} else {
 					if (type.contains("Yearly")) {
 						int year = Integer.parseInt(yearString);
 						List<ProductReport> listProductReport = orderService.getAmountProductByYear(year);
+						count = listProductReport.size();
 						model.addAttribute("listProductReport", listProductReport);
 					}
 				}
@@ -90,6 +95,7 @@ public class AdminReportController {
 			Integer sumProfit = 0;
 			if (type.contains("Daily")) {
 				List<ProfitReportByDay> listProfitReportByDate = orderService.getProfitByDate(date);
+				count = listProfitReportByDate.size();
 				model.addAttribute("listProfitReport", listProfitReportByDate);
 				Optional<Integer> findSumProfitByDate = orderService.findSumProfitByDate(date);
 				if (findSumProfitByDate.isPresent()) {
@@ -103,6 +109,7 @@ public class AdminReportController {
 					int month = yearMonth.getMonthValue();
 					List<ProfitReportByMonth> listProfitReportByMonth = orderService.getProfitByMonth(yearFromYearMonth,
 							month);
+					count = listProfitReportByMonth.size();
 					model.addAttribute("listProfitReport", listProfitReportByMonth);
 					Optional<Integer> findSumProfitByMonth = orderService.findSumProfitByMonth(yearFromYearMonth,
 							month);
@@ -112,8 +119,9 @@ public class AdminReportController {
 					}
 				} else {
 					if (type.contains("Yearly")) {
-						int year = Integer.parseInt(yearString);
+						int year = Integer.parseInt(yearString);						
 						List<ProfitReportByYear> listProfitReportByYear = orderService.getProfitByYear(year);
+						count = listProfitReportByYear.size();
 						model.addAttribute("listProfitReport", listProfitReportByYear);
 						Optional<Integer> findSumProfitByYear = orderService.findSumProfitByYear(year);
 						if (findSumProfitByYear.isPresent()) {

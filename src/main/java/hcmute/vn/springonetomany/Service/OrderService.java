@@ -1,9 +1,6 @@
 package hcmute.vn.springonetomany.Service;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.YearMonth;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +16,6 @@ import hcmute.vn.springonetomany.Model.ProfitReportByDay;
 import hcmute.vn.springonetomany.Model.ProfitReportByMonth;
 import hcmute.vn.springonetomany.Model.ProfitReportByYear;
 import hcmute.vn.springonetomany.Repository.IOrderRepository;
-
-import java.text.SimpleDateFormat;
 @Service
 public class OrderService {
     @Autowired
@@ -86,6 +81,32 @@ public class OrderService {
 	
 	public Optional<Integer> findSumProfitByYear(int year){
 		return orderRepository.findSumProfitByYear(year);
+	}
+	
+	
+	public Page<ProductReport> getAmountProductByDate(LocalDate date, Pageable page){
+		return orderRepository.getAmountProductByDate(date, page);
+	}
+	
+	public Page<ProductReport> getAmountProductByMonth(int year, int month, Pageable page){
+		return orderRepository.getAmountProductByMonth(year, month, page);
+	}
+
+	public Page<ProductReport> getAmountProductByYear(int year, Pageable page){
+		return orderRepository.getAmountProductByYear(year, page);
+	}
+
+	// Thống kê doanh thu
+	public Page<ProfitReportByDay> getProfitByDate(LocalDate date, Pageable page){
+		return orderRepository.getProfitByDate(date, page);
+	}
+	
+	public Page<ProfitReportByMonth> getProfitByMonth(int year, int month, Pageable page){
+		return orderRepository.getProfitByMonth(year,month,page);
+	}
+
+	public Page<ProfitReportByYear> getProfitByYear(int year, Pageable page){
+		return orderRepository.getProfitByYear(year, page);
 	}
     
 
