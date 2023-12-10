@@ -2,9 +2,7 @@ package hcmute.vn.springonetomany.Controller.Admin;
 
 import hcmute.vn.springonetomany.Entities.Category;
 import hcmute.vn.springonetomany.Entities.Product;
-import hcmute.vn.springonetomany.Entities.ProductImages;
 import hcmute.vn.springonetomany.Service.CategoryService;
-import hcmute.vn.springonetomany.Service.ProductImagesService;
 import hcmute.vn.springonetomany.Service.ProductService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +29,13 @@ public class AdminProductController {
     private ProductService productService;
     @Autowired
     private CategoryService categoryService;
-    @Autowired
-    private ProductImagesService productImagesService;
+    //edit
     @GetMapping("")
-    public String showProductsPage(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
+    public String showProductsPage(Model model, @RequestParam(required = false, defaultValue = "1") int page, 
+    		@RequestParam(required = false, defaultValue = "name") String sortField, 
+            @RequestParam(required = false, defaultValue = "asc") String sortDir) {
 //        List<Product> listProduct = productService.findAll();
-        Page<Product> listProduct = productService.findPage(page);
+        Page<Product> listProduct = productService.findPage(page, sortField, sortDir);
         int totalPages = listProduct.getTotalPages();
         long totalItems = listProduct.getTotalElements();
 
@@ -44,6 +43,12 @@ public class AdminProductController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);
+        
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+      
+        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+        model.addAttribute("reverseSortDir", reverseSortDir);
 
         return "product/admin_products";
     }
@@ -57,14 +62,7 @@ public class AdminProductController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") int id) throws Exception {
-    	Product product=productService.findById(id);
-    	for(ProductImages productImage: product.getProductImages())
-    	{
-    		productImagesService.delete(productImage);
-    	}
-    	FileUploadUtil.deleteAllFiles("product_images/"+ product.getId());
-    	FileUploadUtil.deleteAllFiles("product_photos/"+ product.getId());
+    public String deleteProduct(@PathVariable("id") int id) {
         productService.deleteById(id);
         return "redirect:/admin/products";
     }
@@ -86,12 +84,12 @@ public class AdminProductController {
     private String saveProduct(@Valid Product product,
                                BindingResult result,
                                @RequestParam(value = "image") MultipartFile multipartFile,
-                               @RequestParam(value="listImages") List<MultipartFile> multipartFiles,
                                @RequestParam(value = "id", required = false) Integer id) throws Exception {
         if (result.hasErrors()) {
             return "product/product_form";
         }
-        String fileName = id == null || (multipartFile != null && !multipartFile.isEmpty())
+
+    	String fileName = id == null || (multipartFile != null && !multipartFile.isEmpty())
                 ? StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()))
                 : productService.findById(id).getPhotos();
 
@@ -103,28 +101,7 @@ public class AdminProductController {
             FileUploadUtil.deleteAllFiles(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
-
-        if (!(multipartFiles == null || multipartFiles.isEmpty() || multipartFiles.stream().allMatch(MultipartFile::isEmpty))) {
-        	for(ProductImages productImages:  savedProduct.getProductImages())
-        	{
-        		productImagesService.delete(productImages);
-        	}
-        	savedProduct.getProductImages().clear();
-        	String uploadDir="product_images/"+ savedProduct.getId();
-        	FileUploadUtil.deleteAllFiles(uploadDir);
-        	for(MultipartFile productImages: multipartFiles)
-        	{
-        		String filename = StringUtils.cleanPath(Objects.requireNonNull(productImages.getOriginalFilename()));
-        		ProductImages productImage =new ProductImages();
-        		productImage.setImageUrl(filename);
-        		productImage.setProduct(savedProduct);
-        		ProductImages savedProductImages = productImagesService.getNewProductImages(productImage);
-        		String uploadDirs = uploadDir +"/" + savedProductImages.getId();
-        		FileUploadUtil.saveFile(uploadDirs, filename, productImages);
-        		product.getProductImages().add(productImage);
-
-        	}
-        }
+        
         return "redirect:/admin/products";
     }
 }

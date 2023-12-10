@@ -1,99 +1,70 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{layout/main_layout}">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/main_layout}"
+>
 
 <head>
 	<title>Cart page</title>
 </head>
 
 <body layout:fragment="content">
-	<div class="container">
-		<div th:if="${param.error}" class="alert alert-danger">
-			Không đủ số lượng
-		</div>
-		<div th:if="${param.errorQty}" class="alert alert-danger">
-			Số lượng phải lớn hơn hoặc bằng 0
-		</div>
+	<div th:if="${param.error}" class="alert alert-danger">
+		Không đủ số lượng
 	</div>
-
 	<!-- Cart Start -->
 	<div class="container-fluid pt-5">
 		<div class="row px-xl-5">
 			<div class="col-lg-8 table-responsive mb-5">
 				<table class="table table-bordered text-center mb-0">
 					<thead class="bg-secondary text-dark">
-						<tr>
-							<th>Photo</th>
-							<th>Products</th>
-							<th>Price</th>
-							<th>Quantity</th>
-							<th>Total</th>
-							<th>Remove</th>
-						</tr>
+					<tr>
+						<th>Photo</th>
+						<th>Products</th>
+						<th>Price</th>
+						<th>Quantity</th>
+						<th>Total</th>
+						<th>Remove</th>
+					</tr>
 					</thead>
 					<tbody class="align-middle">
-						<tr th:block th:each="cartItem : ${cartItemList}">
-							<td class="align-middle">
-								<img th:src="@{${cartItem.getProduct().getPhotosImagePath()}}" alt=""
-									style="width: 70px;">
-							</td>
-							<td class="align-middle" th:text="${cartItem.product.getName()}"></td>
-							<td class="align-middle" th:text="${cartItem.getProduct().getPriceFormatted()}"></td>
-							<td class="align-middle">
-								<form th:action="@{/cart/update}" method="post" class="d-flex">
-									<input type="hidden" name="cartItemId" th:value="${cartItem.getId()}">
-									<input type="text" class="form-control bg-secondary text-center"
-										th:value="${cartItem.getQuantity()}" name="quantity">
-									<button type="submit" class="btn btn-outline-primary ml-2">Sửa</button>
-								</form>
+					<tr th:block th:each="cartItem : ${cartItemList}">
+						<td class="align-middle">
+							<img th:src="@{${cartItem.getProduct().getPhotosImagePath()}}" alt="" style="width: 70px;">
+						</td>
+						<td class="align-middle" th:text="${cartItem.product.getName()}"></td>
+						<td class="align-middle" th:text="${cartItem.getProduct().getPriceFormatted()}"></td>
+						<td class="align-middle">
+							<form th:action="@{/cart/update}" method="post" class="d-flex">
+								<input type="hidden" name="cartItemId" th:value="${cartItem.getId()}">
+								<input type="text" class="form-control bg-secondary text-center"
+								       th:value="${cartItem.getQuantity()}" name="quantity">
+								<button type="submit" class="btn btn-outline-primary ml-2">Sửa</button>
+							</form>
 
-							</td>
-							<td class="align-middle">
-								<p class="total-item-price" th:text="${cartItem.getPriceFormatted()}"></p>
-							</td>
-							<td class="align-middle">
-								<a th:href="@{/cart/delete/{id}(id=${cartItem.getId()})}"
-									class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a>
-							</td>
-						</tr>
+						</td>
+						<td class="align-middle">
+							<p class="total-item-price" th:text="${cartItem.getPriceFormatted()}"></p>
+						</td>
+						<td class="align-middle">
+							<a th:href="@{/cart/delete/{id}(id=${cartItem.getId()})}" class="btn btn-sm btn-primary"><i
+									class="fa fa-times"></i></a>
+						</td>
+					</tr>
 					</tbody>
 				</table>
 			</div>
-			
 			<div class="col-lg-4">
-				<!--<form class="mb-5" action="">
+				<form class="mb-5" action="">
 					<div class="input-group">
 						<input type="text" class="form-control p-4" placeholder="Coupon Code">
 						<div class="input-group-append">
 							<button class="btn btn-primary">Apply Coupon</button>
 						</div>
-						<select name="voucher" class="form-control" required>
-							<th:block th:each="voucher : ${session.user.getVouchers()}">
-								<option th:value="${voucher.getId()}" th:text="${voucher.name}"></option>
-							</th:block>
-						</select>
-						<div class="input-group-append">
-							<button class="btn btn-primary">Apply Coupon</button>
-						</div>
 					</div>
-				</form>-->
-				<div class="mb-5">
-				<a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100 collapsed"
-				   data-toggle="collapse" href="#navbar-vertical"
-				   style="height: 65px; margin-top: -1px; padding: 0 30px;">
-					<h6 class="m-0">Voucher</h6>
-					<i class="fa fa-angle-down text-dark"></i>
-				</a>
-				<nav class="navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 collapse"
-				     id="navbar-vertical">
-					<div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-						<th:block th:each="voucher : ${session.user.getVouchers()}">
-							<a th:href="@{'/cart/useVoucher/' + ${voucher.id}}" class="nav-item nav-link"
-							   th:text="${voucher.name}"></a>
-						</th:block>
-					</div>
-				</nav>
-			</div>
+				</form>
 				<div class="card border-secondary mb-5">
 					<div class="card-header bg-secondary border-0">
 						<h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
@@ -103,25 +74,17 @@
 							<h6 class="font-weight-medium">Subtotal</h6>
 							<h6 class="font-weight-medium" th:text="${total}"></h6>
 						</div>
-						<div class="d-flex justify-content-between mb-3">
+						<div class="d-flex justify-content-between">
 							<h6 class="font-weight-medium">Shipping</h6>
 							<h6 class="font-weight-medium">0</h6>
-						</div>
-						<div th:if="${voucher != null}" class="d-flex justify-content-between">
-							<h6 class="font-weight-medium">Voucher</h6>
-							<h6 class="font-weight-medium" th:text="'-' + ${voucher.value} + ' đ'"></h6>
 						</div>
 					</div>
 					<div class="card-footer border-secondary bg-transparent">
 						<div class="d-flex justify-content-between mt-2">
 							<h5 class="font-weight-bold">Total</h5>
-							<h5 class="font-weight-bold" th:if="${voucher == null}" th:text="${total}"></h5>
-							<th:block th:if="${voucher != null}">
-								<h5 class="font-weight-bold" th:if="${cart.total - voucher.value > 0}" th:text="${cart.total - voucher.value} + ' đ'"></h5>						
-								<h5 class="font-weight-bold" th:if="${cart.total - voucher.value <= 0}">0 đ</h5>						
-							</th:block>
+							<h5 class="font-weight-bold" th:text="${total}"></h5>
 						</div>
-						<button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
+						<a th:href="@{/checkout}" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</a>
 					</div>
 				</div>
 			</div>

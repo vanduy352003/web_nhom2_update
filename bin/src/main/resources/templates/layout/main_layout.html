@@ -85,14 +85,6 @@
 					<a th:href="@{/home}" class="nav-item nav-link active">Home</a>
 					<a th:href="@{/products(page=1)}" class="nav-item nav-link">Products</a>
 					<a th:href="@{/vouchers}" class="nav-item nav-link">Vouchers</a>
-					<a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-					<div class="nav-item dropdown" sec:authorize="isAuthenticated()">
-						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
-						<div class="dropdown-menu rounded-0 m-0">
-							<a th:href="@{/cart/{cartId}(cartId=${session.user.cart.id})}" class="dropdown-item">Shopping Cart</a>
-							<a href="checkout.html" class="dropdown-item">Checkout</a>
-						</div>
-					</div>
 					<a th:href="@{/contact}" class="nav-item nav-link">Contact</a>
 					<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-item nav-link">Trang quản trị</a>
 				</div>
@@ -190,7 +182,7 @@
     </style>
  <div class="chat-container">
         <div class="chat-icon" onclick="toggleChatWindow()">
-            <img src="img/image.jpg" alt="Chat Icon">
+            <img th:src="@{/img/messenger.jpg}" alt="Chat Icon">
         </div>
     </div>
 
