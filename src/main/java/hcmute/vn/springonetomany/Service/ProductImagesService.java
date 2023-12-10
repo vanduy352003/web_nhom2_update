@@ -15,4 +15,12 @@ public class ProductImagesService {
 	{
 		return productImagesRepository.save(productImages);
 	}
+	
+	public void deleteById(Integer id) {
+		productImagesRepository.deleteById(id);
+	}
+	public void delete(ProductImages entity) {
+		productImagesRepository.delete(entity);
+	}
+	
 }

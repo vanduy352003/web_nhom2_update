@@ -35,7 +35,7 @@ public class ProductImages {
     private String imageUrl;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rating_id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 	
 	@Transient
