@@ -1,8 +1,10 @@
 package hcmute.vn.springonetomany.Entities;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -42,6 +44,5 @@ public class WishList {
 	
 	@OneToMany(mappedBy = "wishList", cascade = CascadeType.ALL,fetch = FetchType.EAGER )
 	private Set<WishListItem> items = new LinkedHashSet<>();
-	
-	
+
 }
