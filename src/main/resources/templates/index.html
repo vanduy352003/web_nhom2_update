@@ -32,6 +32,9 @@
 				<div class="mt-5" sec:authorize="hasAuthority('ADMIN')">
 					<a th:href="@{/admin/categories/new}"  class="btn-primary p-3 rounded-pill text-decoration-none">Add category</a>
 				</div>
+				<div class="mt-5" sec:authorize="hasAuthority('ADMIN')">
+					<a th:href="@{/admin/report}" class="btn-primary p-3 rounded-pill text-decoration-none">Report</a>
+				</div>
 			</div>
 
 			<div class="col-lg-9">
