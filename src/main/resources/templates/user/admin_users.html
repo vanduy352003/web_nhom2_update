@@ -14,7 +14,8 @@
 		<form th:action="@{/admin/users/search}" method="get" class="w-50">
 			<div class="input-group">
 				<input name="page" th:value="1" type="hidden">
-				<input type="text" class="form-control border border-primary" placeholder="Search for users" name="keyword"
+				<input type="text" class="form-control border border-primary" placeholder="Search for users"
+				       name="keyword"
 				       th:value="${keyword}">
 				<div class="input-group-append border border-primary">
                             <span class="input-group-text bg-transparent text-primary">
@@ -33,9 +34,13 @@
 			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId1">
 				<a class="dropdown-item"
 				   th:href="@{/admin/users(fieldName='createdAt', sortDir=${param.sortDir})}"
-					th:classappend="${(param.fieldName != null && param.fieldName[0] == 'createdAt') ? 'active' : ''}">Latest</a>
-				<a class="dropdown-item" th:href="@{/admin/users(fieldName='firstName', sortDir=${param.sortDir})}" th:classappend="${(param.fieldName != null && param.fieldName[0] == 'firstName') ? 'active' : ''}">Name</a>
-				<a class="dropdown-item" th:href="@{/admin/users(fieldName='email', sortDir=${param.sortDir})}" th:classappend="${(param.fieldName != null && param.fieldName[0] == 'email') ? 'active' : ''}">Email</a>
+				   th:classappend="${(param.fieldName != null && param.fieldName[0] == 'createdAt') ? 'active' : ''}">Latest</a>
+
+				<a class="dropdown-item" th:href="@{/admin/users(fieldName='firstName', sortDir=${param.sortDir})}"
+				   th:classappend="${(param.fieldName != null && param.fieldName[0] == 'firstName') ? 'active' : ''}">Name</a>
+
+				<a class="dropdown-item" th:href="@{/admin/users(fieldName='email', sortDir=${param.sortDir})}"
+				   th:classappend="${(param.fieldName != null && param.fieldName[0] == 'email') ? 'active' : ''}">Email</a>
 			</div>
 		</div>
 
@@ -46,8 +51,11 @@
 				Direction
 			</button>
 			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId2">
-				<a class="dropdown-item" th:href="@{/admin/users(sortDir='asc', fieldName=${param.fieldName})}" th:classappend="${param.sortDir[0] == 'asc' && param.sortDir != null ? 'active' : ''}">Ascending</a>
-				<a class="dropdown-item" th:href="@{/admin/users(sortDir='desc', fieldName=${param.fieldName})}" th:classappend="${param.sortDir[0] == 'desc' && param.sortDir != null ? 'active' : ''}">Descending</a>
+				<a class="dropdown-item" th:href="@{/admin/users(sortDir='asc', fieldName=${param.fieldName})}"
+				   th:classappend="${(param.sortDir != null && param.sortDir[0] == 'asc') ? 'active' : ''}">Ascending</a>
+
+				<a class="dropdown-item" th:href="@{/admin/users(sortDir='desc', fieldName=${param.fieldName})}"
+				   th:classappend="${(param.sortDir != null && param.sortDir[0] == 'desc')   ? 'active' : ''}">Descending</a>
 			</div>
 		</div>
 	</div>
@@ -58,45 +66,47 @@
 			<div class="table-responsive mb-5">
 				<table class="table table-bordered text-center mb-0">
 					<thead class="bg-secondary text-dark">
-						<tr>
-							<th>Photo</th>
-							<th>ID</th>
-							<th>Email</th>
-							<th>Name</th>
-							<th>Birth date</th>
-							<th>Country</th>
-							<th>Gender</th>
-							<th>Phone</th>
-							<th>AuthProvider</th>
-							<th>Roles</th>
-							<th></th>
-						</tr>
+					<tr>
+						<th>Photo</th>
+						<th>ID</th>
+						<th>Email</th>
+						<th>Name</th>
+						<th>Birth date</th>
+						<th>Country</th>
+						<th>Gender</th>
+						<th>Phone</th>
+						<th>AuthProvider</th>
+						<th>Roles</th>
+						<th></th>
+					</tr>
 					</thead>
 					<tbody class="align-middle">
-						<tr th:block th:each="user : ${listUser}">
-							<td class="align-middle">
-								<img th:if="${user.getAuthProvider().name() == 'DATABASE'}" th:src="${user.getPhotosImagePath()}" class="rounded-circle mx-2" alt=""
-								     width="50" height="50">
-								<img th:unless="${user.getAuthProvider().name() == 'DATABASE'}" th:src="@{${user.getPhotos()}}" class="rounded-circle mx-2" alt=""
-								     width="50" height="50">
-							</td>
-							<td class="align-middle" th:text="${user.id}"></td>
-							<td class="align-middle" th:text="${user.getEmail()}"></td>
-							<td class="align-middle" th:text="${user.getFullName()}"></td>
-							<td class="align-middle" th:text="${#dates.format(user.birthDate, 'dd-MM-yyyy')}"></td>
-							<td class="align-middle" th:text="${user.country}"></td>
-							<td class="align-middle" th:text="${user.gender}"></td>
-							<td class="align-middle" th:text="${user.phone}"></td>
-							<td class="align-middle" th:text="${user.authProvider}"></td>
-							<td class="align-middle" th:text="${user.roles}"></td>
+					<tr th:block th:each="user : ${listUser}">
+						<td class="align-middle">
+							<img th:if="${user.getAuthProvider().name() == 'DATABASE'}"
+							     th:src="${user.getPhotosImagePath()}" class="rounded-circle mx-2" alt=""
+							     width="50" height="50">
+							<img th:unless="${user.getAuthProvider().name() == 'DATABASE'}"
+							     th:src="@{${user.getPhotos()}}" class="rounded-circle mx-2" alt=""
+							     width="50" height="50">
+						</td>
+						<td class="align-middle" th:text="${user.id}"></td>
+						<td class="align-middle" th:text="${user.getEmail()}"></td>
+						<td class="align-middle" th:text="${user.getFullName()}"></td>
+						<td class="align-middle" th:text="${#dates.format(user.birthDate, 'dd-MM-yyyy')}"></td>
+						<td class="align-middle" th:text="${user.country}"></td>
+						<td class="align-middle" th:text="${user.gender}"></td>
+						<td class="align-middle" th:text="${user.phone}"></td>
+						<td class="align-middle" th:text="${user.authProvider}"></td>
+						<td class="align-middle" th:text="${user.roles}"></td>
 
-							<td class="align-middle">
-								<a  class="btn btn-sm btn-primary p-2" th:href="@{'/admin/users/edit/' + ${user.id}}"
-								         sec:authorize="hasAuthority('ADMIN')"><i class="fa fa-edit"></i></a>
-								<a class="btn btn-sm btn-primary p-2" th:href="@{'/admin/users/delete/' + ${user.id}}"
-								        sec:authorize="hasAuthority('ADMIN')"><i class="fa fa-times"></i></a>
-							</td>
-						</tr>
+						<td class="align-middle">
+							<a class="btn btn-sm btn-primary p-2" th:href="@{'/admin/users/edit/' + ${user.id}}"
+							   sec:authorize="hasAuthority('ADMIN')"><i class="fa fa-edit"></i></a>
+							<a class="btn btn-sm btn-primary p-2" th:href="@{'/admin/users/delete/' + ${user.id}}"
+							   sec:authorize="hasAuthority('ADMIN')"><i class="fa fa-times"></i></a>
+						</td>
+					</tr>
 					</tbody>
 				</table>
 
