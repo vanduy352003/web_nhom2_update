@@ -56,17 +56,35 @@
 					</th:block>
 				</select>
 			</div>
-
+			<label>Ảnh đại diện sản phẩm:</label>
 			<div class="form-group row">
 <!--				<label class="form-label custom-file-label">Product image: </label>-->
 				<input type="file" name="image" accept="image/**" class="form-control form-control-file"/>
 			</div>
+			<label>Các ảnh phụ kèm theo:</label>
+			<div class="form-group row">
+<!--				<label class="form-label custom-file-label">Product image: </label>-->
+				<input type="file" name="listImages" accept="image/**" class="form-control form-control-file" multiple onchange="limitFiles(this, 3)"/>
+				
+			</div>
+			
 
 			<div class="text-center">
 				<button type="submit" class="btn-primary rounded-pill px-4 py-2 text-uppercase">Save</button>
 			</div>
 		</form>
 	</main>
+	<script>
+		function limitFiles(input, maxFiles) {
+			// Get the selected files
+			var files = input.files;
 
+			// Check if the number of selected files exceeds the limit
+			if (files.length > maxFiles) {
+				alert('Bạn chỉ có thể nhập tối đa ' + maxFiles + ' ảnh phụ!');
+				input.value = '';
+			}
+		}
+	</script>
 </body>
 </html>

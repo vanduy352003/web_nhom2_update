@@ -1,5 +1,6 @@
 package hcmute.vn.springonetomany.Controller;
 
+import hcmute.vn.springonetomany.Entities.Category;
 import hcmute.vn.springonetomany.Entities.Product;
 import hcmute.vn.springonetomany.Entities.ProductImages;
 import hcmute.vn.springonetomany.Entities.User;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -112,6 +114,16 @@ public class ProductController {
             	numberOfRating = product.getRatings().size();
                 ratingPoint = product.getRatingPoint();
             }
+            Optional<Category> optionalCategory  = categoryService.getCategory(product.getCategory().getId());
+			 if (optionalCategory.isPresent()) {
+				 Category currentCategory = optionalCategory.get();
+				 Set<Product> categoryProducts = currentCategory.getProducts();
+				 List<Product> categoryProductList = new ArrayList<>(categoryProducts);
+				 categoryProductList.remove(product);
+				 int maxProductsCount = Math.min(4, categoryProductList.size());
+				 List<Product> relevantProducts = categoryProductList.subList(0, maxProductsCount);
+				 model.addAttribute("relevantProducts", relevantProducts);
+			 }
             model.addAttribute("listRating", listRating);
             model.addAttribute("ratingPoint", ratingPoint);
             model.addAttribute("numberOfRating", numberOfRating);

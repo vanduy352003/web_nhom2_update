@@ -58,4 +58,8 @@ public class CategoryService {
     {
     	return repository.getCategoryExceptsThisCategory(category);
     }
+
+	public Optional<Category> getCategory(Integer id) {
+		return repository.findById(id);
+	}
 }
