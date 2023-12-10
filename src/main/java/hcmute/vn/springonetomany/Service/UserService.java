@@ -1,9 +1,6 @@
 package hcmute.vn.springonetomany.Service;
 
-import hcmute.vn.springonetomany.Entities.Cart;
-import hcmute.vn.springonetomany.Entities.Role;
-import hcmute.vn.springonetomany.Entities.User;
-import hcmute.vn.springonetomany.Entities.WishList;
+import hcmute.vn.springonetomany.Entities.*;
 import hcmute.vn.springonetomany.Enum.AuthProvider;
 import hcmute.vn.springonetomany.Repository.IRoleRepository;
 import hcmute.vn.springonetomany.Repository.IUserRepository;
@@ -154,5 +151,10 @@ public class UserService {
     public void updateAuthenticationType(String username, String oauth2ClientName) {
         AuthProvider authType = AuthProvider.valueOf(oauth2ClientName.toUpperCase());
         userRepo.updateAuthenticationProvider(username, authType);
+    }
+
+    public Page<User> searchUserByKeyword(String keyword, int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, PAGE_SIZE);
+        return userRepo.getUserByKeyword(keyword, pageable);
     }
 }

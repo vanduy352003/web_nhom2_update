@@ -10,9 +10,23 @@
 	<title>Admin products</title>
 </head>
 <body layout:fragment="content">
-	<!-- Cart Start -->
-	<div class="container-fluid pt-5">
+	<div class="container-lg d-flex justify-content-center">
+		<form th:action="@{/admin/users/search}" method="get" class="w-50">
+			<div class="input-group">
+				<input name="page" th:value="1" type="hidden">
+				<input type="text" class="form-control border border-primary" placeholder="Search for users" name="keyword"
+				       th:value="${keyword}">
+				<div class="input-group-append border border-primary">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <i class="fa fa-search"></i>
+                            </span>
+				</div>
+			</div>
+		</form>
+	</div>
 
+	<!-- Cart Start -->
+	<div class="container-fluid pt-5" th:unless="${listUser.isEmpty()}">
 		<div class="row px-xl-5">
 			<div class="table-responsive mb-5">
 				<table class="table table-bordered text-center mb-0">
