@@ -61,7 +61,7 @@ public class VoucherController {
 			voucherService.save(voucher);
 		}
 		
-		return "redirect:/home";
+		return "redirect:/vouchers";
 	}
 	
 	
