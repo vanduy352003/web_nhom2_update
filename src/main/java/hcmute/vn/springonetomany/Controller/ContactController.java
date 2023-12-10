@@ -45,7 +45,7 @@ public class ContactController {
 			@RequestParam("message") String content,
 			@RequestParam("attachment") MultipartFile multipartfile) throws MessagingException, UnsupportedEncodingException {
 		
-		emailService.sendMail(fullname, email, subject, content, multipartfile);
+		emailService.sendContactMail(fullname, email, subject, content, multipartfile);
 		
 		
 		return "redirect:/contact?status=success";
