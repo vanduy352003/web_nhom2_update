@@ -4,6 +4,7 @@ import hcmute.vn.springonetomany.Enum.AuthProvider;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Nationalized;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -67,7 +68,7 @@ public class User {
     @Column(name = "gender", length = 5)
     private String gender;
 
-	@Size(min = 4, max = 12, message = "Số điện thoại phải từ 4 đến 12 kí tự")
+	@Size(min = 10, max = 12, message = "Số điện thoại phải từ 10 đến 12 kí tự")
     @Column(name = "phone", length = 15)
     private String phone;
 

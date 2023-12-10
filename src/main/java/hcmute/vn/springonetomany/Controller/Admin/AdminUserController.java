@@ -100,8 +100,12 @@ public class AdminUserController {
     public String saveUser(@Valid User user,
                            BindingResult result,
                            @RequestParam(value = "id", required = false) Long id,
-                           @RequestParam(value = "image") MultipartFile multipartFile ) throws IOException {
+                           @RequestParam(value = "image") MultipartFile multipartFile,
+                           Model model) throws IOException {
         if (result.hasErrors()) {
+            List<Role> listRole = roleRepository.findAll();
+            model.addAttribute("roles", listRole);
+
             return "user/user_form";
         }
 
