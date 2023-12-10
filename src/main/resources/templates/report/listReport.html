@@ -16,7 +16,13 @@
 		.hidden {
 			display: none;
 		}
+
+		.chart-container {
+			display: none;
+			/* Ẩn container chứa biểu đồ ban đầu */
+		}
 	</style>
+
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -128,6 +134,12 @@
 							<td th:text="${item.getProfit()}"></td>
 						</tr>
 					</tbody>
+					<tfoot>
+						<tr>
+							<td>Total:</td>
+							<td th:text="${sumProfit}"></td>
+						</tr>
+					</tfoot>
 				</table>
 
 				<table id="profitReportByMonth" class="table table-bordered table-responsive-sm" th:case="Monthly">
@@ -144,6 +156,12 @@
 							<td th:text="${item.getProfit()}"></td>
 						</tr>
 					</tbody>
+					<tfoot>
+						<tr>
+							<td>Total:</td>
+							<td th:text="${sumProfit}"></td>
+						</tr>
+					</tfoot>
 				</table>
 
 				<table id="profitReportByYear" class="table table-bordered table-responsive-sm" th:case="Yearly">
@@ -160,19 +178,31 @@
 							<td th:text="${item.getProfit()}"></td>
 						</tr>
 					</tbody>
+					<tfoot>
+						<tr>
+							<td>Total:</td>
+							<td th:text="${sumProfit}"></td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
 	</div>
 
-	<div class="text-center">
-		<!--<h3 style="color:#2C3E50">Financial Reports</h3>-->
-		<h4> <label for="Choose Report" style="color:#E74C3C">Chart</label></h4>
+	<div class="container center-container">		
+		<button id="viewChartBtn" class="btn btn-primary">View Chart</button>
+		<!-- Container chứa các biểu đồ -->
+		<div id="chartContainer" class="chart-container">
+			<br>
+			<div class="text-center">
+				<h4> <label for="Choose Report" style="color:#E74C3C">Chart</label></h4>
+			</div>
+			<canvas id="productChart" width="400" height="200"></canvas>
+			<canvas id="profitChartByDate" width="400" height="200"></canvas>
+			<canvas id="profitChartByMonth" width="400" height="200"></canvas>
+			<canvas id="profitChartByYear" width="400" height="200"></canvas>
+		</div>
 	</div>
-	<canvas id="productChart" width="400" height="200"></canvas>
-	<canvas id="profitChartByDate" width="400" height="200"></canvas>
-	<canvas id="profitChartByMonth" width="400" height="200"></canvas>
-	<canvas id="profitChartByYear" width="400" height="200"></canvas>
 
 	<script>
 		document.getElementById("dailyRadio").addEventListener("click", function () {
@@ -440,6 +470,13 @@
 			});
 		});
 
+	</script>
+	<script>
+		// Lắng nghe sự kiện click trên nút "View Chart"
+		document.getElementById('viewChartBtn').addEventListener('click', function () {
+			// Hiển thị container chứa các biểu đồ khi nút được nhấp
+			document.getElementById('chartContainer').style.display = 'block';
+		});
 	</script>
 
 

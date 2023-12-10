@@ -22,7 +22,7 @@ public interface IOrderRepository extends JpaRepository<Order, Integer> {
 	@Query("SELECT new hcmute.vn.springonetomany.Model.ProductReport(l.product.name, sum(l.quantity)) FROM Order o, OrderLines l WHERE o.create_at = ?1 AND l.order.id=o.id GROUP BY l.product.name, l.product.id")
 	List<ProductReport> getAmountProductByDate(LocalDate date);
 
-	@Query("SELECT new hcmute.vn.springonetomany.Model.ProductReport(l.product.name, sum(l.quantity)) FROM Order o, OrderLines l WHERE YEAR(o.create_at) = ?1 AND MONTH(o.create_at) = ?2 GROUP BY l.product.name, l.product.id")
+	@Query("SELECT new hcmute.vn.springonetomany.Model.ProductReport(l.product.name, sum(l.quantity)) FROM Order o, OrderLines l WHERE YEAR(o.create_at) = ?1 AND MONTH(o.create_at) = ?2 AND l.order.id=o.id GROUP BY l.product.name, l.product.id")
 	List<ProductReport> getAmountProductByMonth(int year, int month);
 
 	@Query("SELECT new hcmute.vn.springonetomany.Model.ProductReport(l.product.name, sum(l.quantity)) FROM Order o, OrderLines l WHERE YEAR(o.create_at) = ?1 AND l.order.id=o.id GROUP BY l.product.name, l.product.id")
@@ -48,24 +48,4 @@ public interface IOrderRepository extends JpaRepository<Order, Integer> {
 	Optional<Integer> findSumProfitByYear(int year);
 
 	// -------------------------------------------
-	// Thống kê số lượng sản phấm bán được
-	@Query("SELECT new hcmute.vn.springonetomany.Model.ProductReport(l.product.name, sum(l.quantity)) FROM Order o, OrderLines l WHERE o.create_at = ?1 AND l.order.id=o.id GROUP BY l.product.name")
-	Page<ProductReport> getAmountProductByDate(LocalDate date, Pageable page);
-
-	@Query("SELECT new hcmute.vn.springonetomany.Model.ProductReport(l.product.name, sum(l.quantity)) FROM Order o, OrderLines l WHERE YEAR(o.create_at) = ?1 AND MONTH(o.create_at) = ?2 GROUP BY l.product.name")
-	Page<ProductReport> getAmountProductByMonth(int year, int month, Pageable page);
-
-	@Query("SELECT new hcmute.vn.springonetomany.Model.ProductReport(l.product.name, sum(l.quantity)) FROM Order o, OrderLines l WHERE YEAR(o.create_at) = ?1 AND l.order.id=o.id GROUP BY l.product.name")
-	Page<ProductReport> getAmountProductByYear(int year, Pageable page);
-
-	// Thống kê doanh thu
-	@Query("SELECT new hcmute.vn.springonetomany.Model.ProfitReportByDay(l.product.name, o.total) FROM Order o, OrderLines l WHERE o.create_at = ?1 AND l.order.id=o.id GROUP BY l.product.name, o.total")
-	Page<ProfitReportByDay> getProfitByDate(LocalDate date, Pageable page);
-	
-	@Query("SELECT new hcmute.vn.springonetomany.Model.ProfitReportByMonth(o.create_at, sum(o.total)) FROM Order o, OrderLines l WHERE YEAR(o.create_at) = ?1 AND MONTH(o.create_at) = ?2 AND l.order.id=o.id GROUP BY o.create_at")
-	Page<ProfitReportByMonth> getProfitByMonth(int year, int month, Pageable page);
-
-	@Query("SELECT new hcmute.vn.springonetomany.Model.ProfitReportByYear(MONTH(o.create_at), sum(o.total)) FROM Order o, OrderLines l WHERE YEAR(o.create_at) = ?1 AND l.order.id=o.id GROUP BY MONTH(o.create_at)")
-	Page<ProfitReportByYear> getProfitByYear(int year, Pageable page);
-
 }

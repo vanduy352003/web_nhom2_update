@@ -82,32 +82,5 @@ public class OrderService {
 	public Optional<Integer> findSumProfitByYear(int year){
 		return orderRepository.findSumProfitByYear(year);
 	}
-	
-	
-	public Page<ProductReport> getAmountProductByDate(LocalDate date, Pageable page){
-		return orderRepository.getAmountProductByDate(date, page);
-	}
-	
-	public Page<ProductReport> getAmountProductByMonth(int year, int month, Pageable page){
-		return orderRepository.getAmountProductByMonth(year, month, page);
-	}
-
-	public Page<ProductReport> getAmountProductByYear(int year, Pageable page){
-		return orderRepository.getAmountProductByYear(year, page);
-	}
-
-	// Thống kê doanh thu
-	public Page<ProfitReportByDay> getProfitByDate(LocalDate date, Pageable page){
-		return orderRepository.getProfitByDate(date, page);
-	}
-	
-	public Page<ProfitReportByMonth> getProfitByMonth(int year, int month, Pageable page){
-		return orderRepository.getProfitByMonth(year,month,page);
-	}
-
-	public Page<ProfitReportByYear> getProfitByYear(int year, Pageable page){
-		return orderRepository.getProfitByYear(year, page);
-	}
-    
 
 }
