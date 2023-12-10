@@ -4,6 +4,7 @@ import hcmute.vn.springonetomany.Enum.AuthProvider;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Nationalized;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -40,6 +41,8 @@ public class User {
 	@NotNull(message = "Không dược bỏ trống")
 	@Column(name = "last_name", nullable = false, length = 50)
 	private String lastName;
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	private WishList wishList;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -47,8 +50,12 @@ public class User {
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
+	
 	private Set<Role> roles = new HashSet<>();
 
+	@ManyToMany(mappedBy = "users")
+    private Set<Voucher> vouchers = new HashSet<>();
+	
     @Column(name = "birth_date")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDate;
@@ -61,12 +68,13 @@ public class User {
     @Column(name = "gender", length = 5)
     private String gender;
 
-	@Size(min = 4, max = 12, message = "Số điện thoại phải từ 4 đến 12 kí tự")
+	@Size(min = 10, max = 12, message = "Số điện thoại phải từ 10 đến 12 kí tự")
     @Column(name = "phone", length = 15)
     private String phone;
 
     @Nationalized
-    @Column(name = "photos", length = 100)
+	@Lob
+    @Column(name = "photos")
     private String photos;
 
 	@Enumerated(EnumType.STRING)
@@ -74,7 +82,6 @@ public class User {
 	private AuthProvider authProvider;
 
 	@CreationTimestamp
-	@Transient
     private Date createdAt;
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
@@ -83,6 +90,9 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Order> order = new LinkedHashSet<>();
 
+	@OneToMany(mappedBy = "user")
+    private Set<Rating> ratings = new LinkedHashSet<>();
+	
 	public void addRole(Role role) {
 		this.roles.add(role);
 	}

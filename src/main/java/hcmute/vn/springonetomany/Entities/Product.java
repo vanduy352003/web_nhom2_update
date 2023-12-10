@@ -68,11 +68,24 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderLines> orderLines = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "product")
+    private Set<Rating> ratings;
+
     @Transient
     public String getPhotosImagePath() {
         if (photos == null || id == null) return null;
 
         return "/product_photos/" + id + "/" + photos;
+    }
+
+    public Integer getRatingPoint() {
+    	if (ratings.isEmpty())
+    		return 0;
+    	Integer totalRatingPoints = 0;
+    	for (Rating rating : ratings) {
+    		totalRatingPoints += rating.getRatingPoint();
+    	}
+    	return Math.round((float)totalRatingPoints/ratings.size());
     }
 
     public Product(Integer id, String name, Double price, Category category) {
@@ -91,4 +104,6 @@ public class Product {
         String formattedPrice = format.format(this.price);
         return formattedPrice.replace(".", ",");
     }
+    @OneToMany(mappedBy = "product")
+    private Set<ProductImages> productImages = new LinkedHashSet<>();
 }

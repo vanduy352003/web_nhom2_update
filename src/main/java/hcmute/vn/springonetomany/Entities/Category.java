@@ -32,7 +32,13 @@ public class Category {
     @Nationalized
     @Column(name = "photos", length = 64)
     private String photos;
+    
+    @Transient
+    public String getPhotosImagePath() {
+        if (photos == null || id == null) return null;
 
+        return "/category_photos/" + id + "/" + photos;
+    }
 
     @Override
     public String toString() {

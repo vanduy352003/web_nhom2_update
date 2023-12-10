@@ -2,7 +2,9 @@ package hcmute.vn.springonetomany.Controller.Admin;
 
 import hcmute.vn.springonetomany.Entities.Category;
 import hcmute.vn.springonetomany.Entities.Product;
+import hcmute.vn.springonetomany.Entities.ProductImages;
 import hcmute.vn.springonetomany.Service.CategoryService;
+import hcmute.vn.springonetomany.Service.ProductImagesService;
 import hcmute.vn.springonetomany.Service.ProductService;
 import hcmute.vn.springonetomany.Ultis.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +31,8 @@ public class AdminProductController {
     private ProductService productService;
     @Autowired
     private CategoryService categoryService;
-
+    @Autowired
+    private ProductImagesService productImagesService;
     @GetMapping("")
     public String showProductsPage(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
 //        List<Product> listProduct = productService.findAll();
@@ -51,7 +57,14 @@ public class AdminProductController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") int id) {
+    public String deleteProduct(@PathVariable("id") int id) throws Exception {
+    	Product product=productService.findById(id);
+    	for(ProductImages productImage: product.getProductImages())
+    	{
+    		productImagesService.delete(productImage);
+    	}
+    	FileUploadUtil.deleteAllFiles("product_images/"+ product.getId());
+    	FileUploadUtil.deleteAllFiles("product_photos/"+ product.getId());
         productService.deleteById(id);
         return "redirect:/admin/products";
     }
@@ -73,11 +86,11 @@ public class AdminProductController {
     private String saveProduct(@Valid Product product,
                                BindingResult result,
                                @RequestParam(value = "image") MultipartFile multipartFile,
+                               @RequestParam(value="listImages") List<MultipartFile> multipartFiles,
                                @RequestParam(value = "id", required = false) Integer id) throws Exception {
         if (result.hasErrors()) {
             return "product/product_form";
         }
-
         String fileName = id == null || (multipartFile != null && !multipartFile.isEmpty())
                 ? StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()))
                 : productService.findById(id).getPhotos();
@@ -89,6 +102,28 @@ public class AdminProductController {
             String uploadDir = "product_photos/" + savedProduct.getId();
             FileUploadUtil.deleteAllFiles(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        }
+
+        if (!(multipartFiles == null || multipartFiles.isEmpty() || multipartFiles.stream().allMatch(MultipartFile::isEmpty))) {
+        	for(ProductImages productImages:  savedProduct.getProductImages())
+        	{
+        		productImagesService.delete(productImages);
+        	}
+        	savedProduct.getProductImages().clear();
+        	String uploadDir="product_images/"+ savedProduct.getId();
+        	FileUploadUtil.deleteAllFiles(uploadDir);
+        	for(MultipartFile productImages: multipartFiles)
+        	{
+        		String filename = StringUtils.cleanPath(Objects.requireNonNull(productImages.getOriginalFilename()));
+        		ProductImages productImage =new ProductImages();
+        		productImage.setImageUrl(filename);
+        		productImage.setProduct(savedProduct);
+        		ProductImages savedProductImages = productImagesService.getNewProductImages(productImage);
+        		String uploadDirs = uploadDir +"/" + savedProductImages.getId();
+        		FileUploadUtil.saveFile(uploadDirs, filename, productImages);
+        		product.getProductImages().add(productImage);
+
+        	}
         }
         return "redirect:/admin/products";
     }

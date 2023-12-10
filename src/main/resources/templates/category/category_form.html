@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/admin_layout}"
+>
+<head>
+	<title>Category form</title>
+</head>
+<body layout:fragment="content">
+	
+	<!-- Page Header Start -->
+	<div class="container-fluid bg-secondary mb-5">
+		<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+			<h1 th:if="${category.id == null}" class="font-weight-semi-bold text-uppercase mb-3">Create new category</h1>
+			<h1 th:unless="${category.id == null}" class="font-weight-semi-bold text-uppercase mb-3">Edit category</h1>
+			<div class="d-inline-flex">
+				<p class="m-0"><a th:href="@{/home}">Home</a></p>
+			</div>
+		</div>
+	</div>
+	<!-- Page Header End -->
+	
+	<main class="container-md">
+		<form th:action="@{/admin/categories/save}" th:object="${category}" method="post" enctype="multipart/form-data">
+			<div class="form-group row">
+				<input type="hidden" th:value="${category.id}" th:field="*{id}">
+				<label class="form-label">Name: </label>
+				<input type="text" th:field="*{name}" class="form-control"/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+			</div>
+
+			<div class="form-group row">
+            	<label class="form-label custom-file-label">Photos: </label>
+				<input type="file" name="image" accept="image/**" class="form-control form-control-file"/>
+			</div>
+
+			<div class="text-center">
+				<button type="submit" class="btn-primary rounded-pill px-4 py-2 text-uppercase">Save</button>
+			</div>
+		</form>
+	</main>
+	
+</body>
+</html>

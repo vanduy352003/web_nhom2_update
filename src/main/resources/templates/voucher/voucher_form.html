@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{layout/admin_layout}">
+
+<head>
+	<title>voucher form</title>
+</head>
+
+<body layout:fragment="content">
+
+	<!-- Page Header Start -->
+	<div class="container-fluid bg-secondary mb-5">
+		<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+			<h1 th:if="${voucher.id == null}" class="font-weight-semi-bold text-uppercase mb-3">Create new voucher</h1>
+			<h1 th:unless="${voucher.id == null}" class="font-weight-semi-bold text-uppercase mb-3">Edit voucher</h1>
+			<div class="d-inline-flex">
+				<p class="m-0"><a th:href="@{/home}">Home</a></p>
+			</div>
+		</div>
+	</div>
+	<!-- Page Header End -->
+	<main class="container-md">
+		<form th:action="@{/admin/vouchers/save}" onsubmit="return validateDateRange()" th:object="${voucher}" method="post" enctype="multipart/form-data">
+			<div class="form-group row">
+				<input type="hidden" th:value="${voucher.id}" th:field="*{id}">
+				<label class="form-label">Name: </label>
+				<input type="text" th:field="*{name}" class="form-control" required />
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Amount: </label>
+				<input type="number" th:field="*{amount}" class="form-control" required min="0"/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></div>
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Value: </label>
+				<input type="number" th:field="*{value}" class="form-control" required min="1"/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('value')}" th:errors="*{value}"></div>
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">From date: </label>
+				<input type="date" th:field="*{fromDate}" class="form-control" required />
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">To date: </label>
+				<input type="date" th:field="*{toDate}" class="form-control" required />
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Status: </label>
+				<input type="text" th:field="*{status}" class="form-control" required />
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Type: </label>
+				<input type="text" th:field="*{type}" class="form-control" required />
+			</div>
+
+			<div class="form-group row">
+				<!--<label class="form-label custom-file-label">voucher image: </label>-->
+				<input type="file" name="image" accept="image/**" class="form-control form-control-file" />
+			</div>
+
+			<div class="text-center">
+				<button type="submit" class="btn-primary rounded-pill px-4 py-2 text-uppercase">Save</button>
+			</div>
+		</form>
+	</main>
+	<script>
+        function validateDateRange() {
+            var fromDate = document.getElementById("fromDate").value;
+            var toDate = document.getElementById("toDate").value;
+
+            if (new Date(fromDate) >= new Date(toDate)) {
+                alert("From date phải diễn ra trước to date");
+                return false; // Prevent form submission
+            }
+
+            return true; // Allow form submission
+        }
+    </script>
+</body>
+
+</html>

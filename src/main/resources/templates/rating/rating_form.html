@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{layout/admin_layout}">
+
+<head>
+	<title>rating form</title>
+</head>
+
+<body layout:fragment="content">
+
+	<!-- Page Header Start -->
+	<div class="container-fluid bg-secondary mb-5">
+		<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+			<h1 th:if="${rating.id == null}" class="font-weight-semi-bold text-uppercase mb-3">Create new rating</h1>
+			<h1 th:unless="${rating.id == null}" class="font-weight-semi-bold text-uppercase mb-3">Edit rating</h1>
+			<div class="d-inline-flex">
+				<p class="m-0"><a th:href="@{/home}">Home</a></p>
+			</div>
+		</div>
+	</div>
+	<!-- Page Header End -->
+	<main class="container-md">
+		<form th:action="@{/admin/ratings/save}" th:object="${rating}" method="post" enctype="multipart/form-data">
+			<div class="form-group row">
+				<input type="hidden" th:value="${rating.id}" th:field="*{id}">
+				<label class="form-label">Product: </label>
+				<input type="text" th:value="${rating.getProduct().name}" class="form-control" disabled />
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">By user: </label>
+				<input type="text" th:value="${rating.getUser().getFullName()}" class="form-control" disabled />
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Message: </label>
+				<textarea th:field="*{message}" th:value="${rating.message}" class="form-control" required></textarea>
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Rating point: </label>
+				<input type="number" th:field="*{ratingPoint}" th:value="${rating.ratingPoint}" min="0" max="5"
+					class="form-control" required />
+			</div>
+			
+				<div class="form-group row">
+					<label class="form-label">Xóa ảnh?: </label>
+					<input type="checkbox" name="isXoaAnh" class="mx-2" />
+				</div>
+				<div class="form-group row">
+					<input type="file" name="ratingImage" accept="image/**" class="form-control form-control-file"
+						multiple onchange="limitFiles(this, 3)">
+				</div>
+
+				<div class="text-center">
+					<button type="submit" class="btn-primary rounded-pill px-4 py-2 text-uppercase">Save</button>
+				</div>
+		</form>
+	</main>
+
+	<script>
+		function limitFiles(input, maxFiles) {
+			// Get the selected files
+			var files = input.files;
+
+			// Check if the number of selected files exceeds the limit
+			if (files.length > maxFiles) {
+				alert('You can only select up to ' + maxFiles + ' files.');
+				input.value = ''; // Clear the selected files
+			}
+		}
+	</script>
+
+</body>
+
+</html>

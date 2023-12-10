@@ -41,7 +41,7 @@
 				</a>
 			</div>
 			<div class="col-lg-6 col-6 text-left">
-				<form th:action="@{/search}" method="get">
+				<form th:action="@{products/search}" method="get">
 					<div class="input-group">
 						<input name="page" th:value="1" type="hidden">
 						<input type="text" class="form-control" placeholder="Search for products" name="keyword"
@@ -54,10 +54,12 @@
 					</div>
 				</form>
 			</div>
+
 			<div class="col-lg-3 col-6 text-right" sec:authorize="isAuthenticated()">
-				<a href="" class="btn border">
+				<a href="/wishlist" class="btn border">
 					<i class="fas fa-heart text-primary"></i>
-					<span class="badge">0</span>
+					<span class="badge" th:text="${session.user.getWishList().getItems().size()}"></span>
+
 				</a>
 				<a th:href="@{/cart}" class="btn border">
 					<i class="fas fa-shopping-cart text-primary"></i>
@@ -82,23 +84,16 @@
 				<div class="navbar-nav py-0">
 					<a th:href="@{/home}" class="nav-item nav-link active">Home</a>
 					<a th:href="@{/products(page=1)}" class="nav-item nav-link">Products</a>
-					<a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-					<div class="nav-item dropdown" sec:authorize="isAuthenticated()">
-						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
-						<div class="dropdown-menu rounded-0 m-0">
-							<a th:href="@{/cart/{cartId}(cartId=${session.user.cart.id})}" class="dropdown-item">Shopping Cart</a>
-							<a href="checkout.html" class="dropdown-item">Checkout</a>
-						</div>
-					</div>
-					<a href="contact.html" class="nav-item nav-link">Contact</a>
+					<a th:href="@{/vouchers}" class="nav-item nav-link">Vouchers</a>
+					<a th:href="@{/contact}" class="nav-item nav-link">Contact</a>
 					<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-item nav-link">Trang quản trị</a>
 				</div>
 				<div class="navbar-nav py-0 px-3 mr-5">
 					<div class="d-flex align-items-center" sec:authorize="isAuthenticated()">
 						<div class="nav-item dropdown d-flex justify-content-center align-items-center">
-							<img th:if="${session.user.getAuthProvider().name() == 'GOOGLE'}" th:src="${session.user.getPhotos()}" class="rounded-circle mx-2" alt=""
+							<img th:if="${session.user.getAuthProvider().name() == 'DATABASE'}" th:src="${session.user.getPhotosImagePath()}" class="rounded-circle mx-2" alt=""
 							     width="50" height="50">
-							<img th:unless="${session.user.getAuthProvider().name() == 'GOOGLE'}" th:src="@{${session.user.getPhotosImagePath()}}" class="rounded-circle mx-2" alt=""
+							<img th:unless="${session.user.getAuthProvider().name() == 'DATABASE'}" th:src="@{${session.user.getPhotos()}}" class="rounded-circle mx-2" alt=""
 							     width="50" height="50">
 
 							<a class="nav-link dropdown-toggle" data-toggle="dropdown"
@@ -131,6 +126,93 @@
 	<section layout:fragment="content">
 		<p>This is filled by the content template.</p>
 	</section>
+
+
+<!-- trong -->
+<style>
+        .chat-container {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 9990;
+
+        }
+
+        .chat-icon {
+            width: auto;
+            height: auto;
+            cursor: pointer; /* Chuyển đổi con trỏ khi rê chuột qua biểu tượng chat */
+        }
+
+       .chat-window {
+            display: none;
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+            width: auto;
+            max-width: 300px; /* Giới hạn chiều rộng tối đa của cửa sổ chat */
+            height: auto;
+            max-height: 400px; /* Giới hạn chiều cao tối đa của cửa sổ chat */
+            border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: auto;
+             z-index: 9999; /* Đặt z-index lớn để cửa sổ chat nằm phía trên tất cả */
+        }
+
+        .chat-content {
+            padding: 10px;
+            text-align: center; /* Canh giữa nội dung cửa sổ chat */
+        }
+
+
+        .bold-text {
+            font-weight: bold;
+            font-size: larger;
+        }
+
+       .start-chat-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px; /* Khoảng trống giữa dòng chào mừng và nút "Bắt đầu chat" */
+        }
+    </style>
+ <div class="chat-container">
+        <div class="chat-icon" onclick="toggleChatWindow()">
+            <img th:src="@{/img/messenger.jpg}" alt="Chat Icon">
+        </div>
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+        <!-- Nội dung cửa sổ chat sẽ được thêm vào đây -->
+        <div id="chatContent" class="chat-content">
+            <p class="bold-text">Chat với Shopper</p>
+            <div>
+                <strong>Shopper Support:</strong> Xin chào! Chúng tôi có thể giúp gì cho bạn?
+            </div>
+            <div style="margin-top: 10px;"> <!-- Khoảng trống giữa dòng chào mừng và nút "Bắt đầu chat" -->
+                <button class="start-chat-button" onclick="startChat()">Bắt đầu chat</button>
+            </div>
+            <!-- Các tin nhắn và nội dung chat khác sẽ được thêm vào đây -->
+        </div>
+    </div>
+
+    <script>
+        function toggleChatWindow() {
+            var chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = (chatWindow.style.display === 'none' || chatWindow.style.display === '') ? 'block' : 'none';
+        }
+
+       function startChat() {
+            // Chuyển hướng người dùng đến đường link m.me/182061121658935
+            window.location.href = 'https://m.me/182061121658935';
+        }
+    </script>
+
+	<!-- trong -->
 
 	<!-- Footer Start -->
 	<div class="container-fluid bg-secondary text-dark mt-5 pt-5">
@@ -189,6 +271,18 @@
 								<input type="email" class="form-control border-0 py-4" placeholder="Your Email"
 								       required="required"/>
 							</div>
+
+							<!-- trong -->
+
+							<style>
+								.btn-primary {
+
+									  bottom: 60px;
+									  right: 20px;
+									}
+							</style>
+
+							<!-- trong -->
 							<div>
 								<button class="btn btn-primary btn-block border-0 py-3" type="submit">Subscribe Now
 								</button>

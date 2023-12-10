@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/admin_layout}"
+>
+
+<head>
+	<title>Product form</title>
+</head>
+<body layout:fragment="content">
+
+	<!-- Page Header Start -->
+	<div class="container-fluid bg-secondary mb-5">
+		<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+<!--			<h1 th:if="${user.id == null}" class="font-weight-semi-bold text-uppercase mb-3">Create new product</h1>-->
+			<h1 th:unless="${user.id == null}" class="font-weight-semi-bold text-uppercase mb-3">Edit user</h1>
+			<div class="d-inline-flex">
+				<p class="m-0"><a th:href="@{/home}">Home</a></p>
+			</div>
+		</div>
+	</div>
+
+	<!-- Page Header End -->
+	<main class="container-md">
+		<div th:if="${message}" class="alert alert-success" role="alert">
+			<p th:text="${message}"></p>
+		</div>
+		<form th:action="${url}" th:object="${user}" method="post" enctype="multipart/form-data">
+			<div class="form-group row">
+				<input type="hidden" th:value="${user.id}" th:field="*{id}">
+				<label class="form-label">Email: </label>
+				<input type="email" th:field="*{email}" class="form-control" required readonly/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Last name: </label>
+				<input type="text" th:field="*{lastName}" class="form-control"/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">First name: </label>
+				<input type="text" th:field="*{firstName}" class="form-control"/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Password: </label>
+				<input type="password" th:field="*{password}" class="form-control" th:readonly="${session.user.getAuthProvider().name() != 'DATABASE'}" />
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Birthdate: </label>
+				<input type="date" th:field="*{birthDate}" class="form-control" />
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Country: </label>
+				<input type="text" th:field="*{country}" class="form-control"/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></div>
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Phone: </label>
+				<input type="tel" th:field="*{phone}" class="form-control"/>
+				<div class="alert alert-warning" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Gender: </label>
+				<div class="custom-control">
+					<input type="radio" id="customRadioInline1" th:field="*{gender}" value="Nam">
+					<label for="customRadioInline1">Nam</label>
+				</div>
+				<div class="custom-control">
+					<input type="radio" id="customRadioInline2" th:field="*{gender}" value="Nữ">
+					<label for="customRadioInline2">Nữ</label>
+				</div>
+			</div>
+
+			<div sec:authorize="hasAuthority('ADMIN')" class="form-group row">
+				<label class="form-label">Roles: </label>
+				<label class="form-control">
+					<input type="checkbox" name="roles"
+					       th:each="role : ${roles}"
+					       th:text="${role.name}"
+					       th:value="${role.id}"
+					       th:field="*{roles}"
+					       class="mx-2"
+					/>
+				</label>
+			</div>
+
+			<div class="form-group row">
+				<label class="form-label">Image: </label>
+				<input type="file" name="image" accept="image/**" class="form-control form-control-file"/>
+			</div>
+
+			<div class="text-center">
+				<button type="submit" class="btn-primary rounded-pill px-4 py-2 text-uppercase">Save</button>
+			</div>
+		</form>
+	</main>
+</body>
+</html>
