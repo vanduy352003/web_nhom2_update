@@ -33,7 +33,7 @@ public class UserService {
     @Autowired
     CartService cartService;
 
-    int PAGE_SIZE = 5;
+    int PAGE_SIZE = 1;
 
     public void registerDefaultUser(User user) {
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
