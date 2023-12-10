@@ -23,6 +23,33 @@
 				</div>
 			</div>
 		</form>
+
+		<div class="dropdown ml-4">
+			<button class="btn border dropdown-toggle" type="button" id="triggerId1"
+			        data-toggle="dropdown" aria-haspopup="true"
+			        aria-expanded="false">
+				Sort by
+			</button>
+			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId1">
+				<a class="dropdown-item"
+				   th:href="@{/admin/users(fieldName='createdAt', sortDir=${param.sortDir})}"
+					th:classappend="${(param.fieldName != null && param.fieldName[0] == 'createdAt') ? 'active' : ''}">Latest</a>
+				<a class="dropdown-item" th:href="@{/admin/users(fieldName='firstName', sortDir=${param.sortDir})}" th:classappend="${(param.fieldName != null && param.fieldName[0] == 'firstName') ? 'active' : ''}">Name</a>
+				<a class="dropdown-item" th:href="@{/admin/users(fieldName='email', sortDir=${param.sortDir})}" th:classappend="${(param.fieldName != null && param.fieldName[0] == 'email') ? 'active' : ''}">Email</a>
+			</div>
+		</div>
+
+		<div class="dropdown ml-4">
+			<button class="btn border dropdown-toggle" type="button" id="triggerId2"
+			        data-toggle="dropdown" aria-haspopup="true"
+			        aria-expanded="false">
+				Direction
+			</button>
+			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId2">
+				<a class="dropdown-item" th:href="@{/admin/users(sortDir='asc', fieldName=${param.fieldName})}" th:classappend="${param.sortDir[0] == 'asc' && param.sortDir != null ? 'active' : ''}">Ascending</a>
+				<a class="dropdown-item" th:href="@{/admin/users(sortDir='desc', fieldName=${param.fieldName})}" th:classappend="${param.sortDir[0] == 'desc' && param.sortDir != null ? 'active' : ''}">Descending</a>
+			</div>
+		</div>
 	</div>
 
 	<!-- Cart Start -->
@@ -80,19 +107,19 @@
 					<ul class="pagination justify-content-center mb-3">
 						<li class="page-item" th:classappend="${currentPage - 1 == 0 ? 'disabled' : ''}">
 							<a class="page-link"
-							   th:href="@{{baseUrl}(baseUrl=${baseUrl}, page=${#numbers.formatInteger(currentPage - 1, 0)}, keyword=${param.keyword})}">
+							   th:href="@{{baseUrl}(baseUrl=${baseUrl}, page=${#numbers.formatInteger(currentPage - 1, 0)}, keyword=${param.keyword}, fieldName=${param.fieldName}, sortDir=${param.sortDir})}">
 								<span aria-hidden="true">&laquo;</span>
 								<span class="sr-only">Previous</span>
 							</a>
 						</li>
 						<li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item"
 						    th:classappend="${i == currentPage ? 'active' : ''}">
-							<a th:href="@{{baseUrl}(baseUrl=${baseUrl}, page=${i}, keyword=${param.keyword})}"
+							<a th:href="@{{baseUrl}(baseUrl=${baseUrl}, page=${i}, keyword=${param.keyword}, fieldName=${param.fieldName}, sortDir=${param.sortDir})}"
 							   th:text="${i}" class="page-link"></a>
 						</li>
 						<li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
 							<a class="page-link"
-							   th:href="@{{baseUrl}(baseUrl=${baseUrl}, page=${#numbers.formatInteger(currentPage + 1, 0)}, keyword=${param.keyword})}">
+							   th:href="@{{baseUrl}(baseUrl=${baseUrl}, page=${#numbers.formatInteger(currentPage + 1, 0)}, keyword=${param.keyword}, fieldName=${param.fieldName}, sortDir=${param.sortDir})}">
 								<span aria-hidden="true">&raquo;</span>
 								<span class="sr-only">Next</span>
 							</a>

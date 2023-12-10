@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class UserService {
     @Autowired
     CartService cartService;
 
-    int PAGE_SIZE = 1;
+    int PAGE_SIZE = 2;
 
     public void registerDefaultUser(User user) {
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -59,8 +60,10 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public Page<User> findPage(int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, PAGE_SIZE);
+    public Page<User> findPage(int pageNumber, String fieldName, String sortDir) {
+        Sort sort = Sort.by(fieldName).descending();
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNumber - 1, PAGE_SIZE, sort);
         return userRepo.findAll(pageable);
     }
 

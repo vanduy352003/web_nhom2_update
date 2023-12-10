@@ -41,9 +41,12 @@ public class AdminUserController {
     IRoleRepository roleRepository;
 
     @GetMapping("")
-    public String showUsersPage(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
+    public String showUsersPage(Model model,
+                                @RequestParam(required = false, defaultValue = "1") int page,
+                                @RequestParam(required = false, defaultValue = "createdAt") String fieldName,
+                                @RequestParam(required = false, defaultValue = "asc") String sortDir) {
 //        List<User> listUser = userService.listAll();
-        Page<User> listUser = userService.findPage(page);
+        Page<User> listUser = userService.findPage(page, fieldName, sortDir);
         int totalPages = listUser.getTotalPages();
         long totalItems = listUser.getTotalElements();
 
