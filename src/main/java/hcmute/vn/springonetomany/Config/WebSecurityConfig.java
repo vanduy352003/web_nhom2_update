@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/lib/**", "/mail/**", "/scss/**", "/product_photos/**", "/product_images/**");
+                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/lib/**", "/mail/**", "/scss/**", "/product_photos/**", "/product_images/**", "/category_photos/**");
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
