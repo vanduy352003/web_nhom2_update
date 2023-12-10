@@ -41,33 +41,48 @@ public class AdminReportController {
 
 	@PostMapping("")
 	public String listProductByDate(Model model,
-			@RequestParam(name = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-			@RequestParam(name = "type") String type,
-			@RequestParam(name = "month") String monthString,
-			@RequestParam(name = "year", required = false) String yearString,
-			@RequestParam(name = "reportCategory") String reportCategory) {
-		System.out.println(type);
-		System.out.println("Month: " + monthString);
-		if (type == null) {
-			date = LocalDate.now();
-			List<ProductReport> listProductReport = orderService.getAmountProductByDate(date);
-			model.addAttribute("listProductReport", listProductReport);
+			@RequestParam(name = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dateOptional,
+			@RequestParam(name = "type", required = false) Optional<String> typeOptional,
+			@RequestParam(name = "month", required = false) Optional<String> monthStringOptional,
+			@RequestParam(name = "year", required = false) Optional<String> yearStringOptional,
+			@RequestParam(name = "reportCategory", required = false) Optional<String> reportCategoryOptional) {
+		LocalDate date = dateOptional.orElse(LocalDate.now());
+		String type = typeOptional.orElse("Daily");
+		String monthString = monthStringOptional.orElse("2023-12"); 
+		String yearString = yearStringOptional.orElse("1900");
+		String reportCategory = reportCategoryOptional.orElse("Product");
+		if (monthString == "") {
+			monthString = "1900-01";
 		}
-		if (type.contains("Daily")) {
-			List<ProductReport> listProductReport = orderService.getAmountProductByDate(date);
-			model.addAttribute("listProductReport", listProductReport);
-		} else {
-			if (type.contains("Monthly")) {
-				YearMonth yearMonth = YearMonth.parse(monthString);
-				int yearFromYearMonth = yearMonth.getYear();
-				int month = yearMonth.getMonthValue();
-				List<ProductReport> listProductReport = orderService.getAmountProductByMonth(yearFromYearMonth,month);
+		if (yearString == "") {
+			yearString = "1900";
+		}
+		if (date == null) {
+			date = LocalDate.now();
+		}
+		System.out.println(type);
+		System.out.println(reportCategory);
+		System.out.println("Month: " + monthString);
+
+		
+		if (reportCategory.contains("Product")) {
+			if (type.contains("Daily")) {
+				List<ProductReport> listProductReport = orderService.getAmountProductByDate(date);
 				model.addAttribute("listProductReport", listProductReport);
 			} else {
-				if (type.contains("Yearly")) {
-					int year = Integer.parseInt(yearString);
-					List<ProductReport> listProductReport = orderService.getAmountProductByYear(year);
+				if (type.contains("Monthly")) {
+					YearMonth yearMonth = YearMonth.parse(monthString,DateTimeFormatter.ofPattern("yyyy-MM"));
+					int yearFromYearMonth = yearMonth.getYear();
+					int month = yearMonth.getMonthValue();
+					List<ProductReport> listProductReport = orderService.getAmountProductByMonth(yearFromYearMonth,
+							month);
 					model.addAttribute("listProductReport", listProductReport);
+				} else {
+					if (type.contains("Yearly")) {
+						int year = Integer.parseInt(yearString);
+						List<ProductReport> listProductReport = orderService.getAmountProductByYear(year);
+						model.addAttribute("listProductReport", listProductReport);
+					}
 				}
 			}
 		}
@@ -83,12 +98,14 @@ public class AdminReportController {
 				}
 			} else {
 				if (type.contains("Monthly")) {
-					YearMonth yearMonth = YearMonth.parse(monthString);
+					YearMonth yearMonth = YearMonth.parse(monthString,DateTimeFormatter.ofPattern("yyyy-MM"));
 					int yearFromYearMonth = yearMonth.getYear();
 					int month = yearMonth.getMonthValue();
-					List<ProfitReportByMonth> listProfitReportByMonth = orderService.getProfitByMonth(yearFromYearMonth,month);
+					List<ProfitReportByMonth> listProfitReportByMonth = orderService.getProfitByMonth(yearFromYearMonth,
+							month);
 					model.addAttribute("listProfitReport", listProfitReportByMonth);
-					Optional<Integer> findSumProfitByMonth = orderService.findSumProfitByMonth(yearFromYearMonth,month);
+					Optional<Integer> findSumProfitByMonth = orderService.findSumProfitByMonth(yearFromYearMonth,
+							month);
 					if (findSumProfitByMonth.isPresent()) {
 						sumProfit = findSumProfitByMonth.get();
 						model.addAttribute("sumProfit", sumProfit);
