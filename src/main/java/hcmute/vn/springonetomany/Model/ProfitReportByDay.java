@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class ProfitReportByDay {
 	private String productName;
-	private Integer profit;
+	private Double profit;
 	
 	
 

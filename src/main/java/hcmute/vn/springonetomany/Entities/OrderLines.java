@@ -23,26 +23,21 @@ import lombok.Setter;
 @Table(name = "order_lines")
 public class OrderLines {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-	private Integer id;
-	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="order_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "order_id")
 	private Order order;
-	
-	//Khóa ngoại
-	@Column(name="attribute_detail_id")
-	private Integer attribute_detail_id;
-	
-	@Column(name="quantity")
-	private Integer quantity;
-	
-	@Column(name="price")
-	private Integer price;
-	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="product_id")
+
+	@ManyToOne
+	@JoinColumn(name = "product_id", referencedColumnName = "id")
 	private Product product;
+
+	@Column(name = "price")
+	private Double price;
+
+	@Column(name = "quantity")
+	private Integer quantity;
 
 }

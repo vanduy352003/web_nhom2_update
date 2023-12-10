@@ -24,6 +24,9 @@
 	</style>
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<!-- Thư viện html2canvas -->
+	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -189,13 +192,16 @@
 		</div>
 	</div>
 
-	<div class="container center-container">		
+	<div class="container center-container">
 		<button id="viewChartBtn" class="btn btn-primary">View Chart</button>
 		<!-- Container chứa các biểu đồ -->
 		<div id="chartContainer" class="chart-container">
 			<br>
 			<div class="text-center">
 				<h4> <label for="Choose Report" style="color:#E74C3C">Chart</label></h4>
+			</div>
+			<div class="container center-container">
+				<button id="exportChartBtn" class="btn btn-primary">Export Chart</button>
 			</div>
 			<canvas id="productChart" width="400" height="200"></canvas>
 			<canvas id="profitChartByDate" width="400" height="200"></canvas>
@@ -469,6 +475,21 @@
 				}
 			});
 		});
+		document.getElementById('exportChartBtn').addEventListener('click', function () {
+			// Sử dụng html2canvas để chuyển canvas thành hình ảnh
+			html2canvas(document.getElementById('profitChartByYear')).then(function (canvas) {
+				// Chuyển canvas thành URL hình ảnh
+				var chartDataURL = canvas.toDataURL('image/png');
+
+				// Tạo một đối tượng a để tải về hình ảnh
+				var a = document.createElement('a');
+				a.href = chartDataURL;
+				a.download = 'chart.png';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			});
+		});
 
 	</script>
 	<script>
@@ -479,7 +500,23 @@
 		});
 	</script>
 
+	<script>
+		document.getElementById('exportChartBtn').addEventListener('click', function () {
+			// Sử dụng html2canvas để chuyển canvas thành hình ảnh
+			html2canvas(document.getElementById('myChart')).then(function (canvas) {
+				// Chuyển canvas thành URL hình ảnh
+				var chartDataURL = canvas.toDataURL('image/png');
 
+				// Tạo một đối tượng a để tải về hình ảnh
+				var a = document.createElement('a');
+				a.href = chartDataURL;
+				a.download = 'chart.png';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			});
+		});
+	</script>
 
 </body>
 

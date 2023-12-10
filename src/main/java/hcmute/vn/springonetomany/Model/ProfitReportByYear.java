@@ -13,6 +13,6 @@ import lombok.Setter;
 @Setter
 public class ProfitReportByYear {
 	private Integer month;
-	private Long profit;
+	private Double profit;
 
 }

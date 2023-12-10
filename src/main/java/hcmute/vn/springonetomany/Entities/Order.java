@@ -3,6 +3,7 @@ package hcmute.vn.springonetomany.Entities;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -26,51 +27,44 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="orders")
+@Table(name = "orders")
 public class Order {
+	/*
+	 * @Id
+	 * 
+	 * @GeneratedValue(strategy = GenerationType.IDENTITY)
+	 * 
+	 * @Column(name = "id", nullable = false) private Integer id;
+	 * 
+	 * @Column(name = "create_at")
+	 * 
+	 * @DateTimeFormat(pattern = "yyyy-MM-dd") private LocalDate create_at;
+	 * 
+	 * @ManyToOne
+	 * 
+	 * @JoinColumn(name = "user_id") private User user;
+	 * 
+	 * @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch =
+	 * FetchType.EAGER) private Set<OrderLines> orderLines = new LinkedHashSet<>();
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
-	private Integer id;
-	
-	@Column(name = "create_at")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate create_at;
-
-	@Column(name = "name", columnDefinition = "nvarchar(40)")
-	private String name;
-
-	@Column(name = "status_payment", columnDefinition = "nvarchar(40)")
-	private String status_payment;
-
-	@Column(name = "total")
-	private Integer total;
-
-	@Column(name = "user_address", columnDefinition = "nvarchar(40)")
-	private String user_address;
-
-	// Khóa ngoại
-	@Column(name = "payment_type_id")
-	private Integer payment_type_id;
-
-	@Column(name = "voucher_order", columnDefinition = "nvarchar(40)")
-	private String voucher_order;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	// Khóa ngoại
-	@Column(name = "ship_id")
-	private Integer ship_id;
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+	private List<OrderLines> orderLines;
 
-	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<OrderLines> orderLines = new LinkedHashSet<>();
+	@Column(name = "create_at")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate create_at;
 
 }

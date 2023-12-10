@@ -15,6 +15,6 @@ import lombok.Setter;
 @Setter
 public class ProfitReportByMonth {
 	private LocalDate date;
-	private Long profit;
+	private Double profit;
 
 }
