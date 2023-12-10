@@ -83,14 +83,5 @@ public class RatingController {
         ratingService.delete(rating);
 		return "redirect:/products/detail/" + productId;
 	}
-//	@GetMapping("/rating/loadAjax")
-//	public String loadMoreRating(Model model, @RequestParam(name = "exits", defaultValue = "0") int amount, @RequestParam("productId") int productId) {
-//		
-//		//int count = ratingService.getRatingsByProduct_Id(productId, productId).getSize();
-//		List<Rating> newRatingList = ratingService.getRatingsByProduct_Id(productId, amount).getContent();
-//		model.addAttribute("listRating", newRatingList);
-//		
-//		return "redirect:/products/detail/" + productId + " :: ratingFragment";
-//		
-//	}
+
 }

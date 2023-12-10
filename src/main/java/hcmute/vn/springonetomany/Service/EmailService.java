@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import hcmute.vn.springonetomany.Entities.User;
+
 @Service
 public class EmailService {
 	@Autowired
 	private JavaMailSender mailSender;
-	public void sendMail(String fullname, String email, String subject, String content, MultipartFile multipartfile) throws MessagingException, UnsupportedEncodingException {
+	public void sendContactMail(String fullname, String email, String subject, String content, MultipartFile multipartfile) throws MessagingException, UnsupportedEncodingException {
 		
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -56,4 +58,55 @@ public class EmailService {
 		
 		mailSender.send(message);
 	}
+	
+	public void sendRegisterMail(User user) throws MessagingException, UnsupportedEncodingException {
+		
+		
+		  MimeMessage message = mailSender.createMimeMessage(); 
+		  MimeMessageHelper helper = new MimeMessageHelper(message, true);
+		  
+		  String mailSubject = "EShopper kính chào quý khách " + user.getFullName(); 
+		  String mailContent = "<p>Xin chào bạn,</p>"; 
+		  mailContent += "<p>Chúc mừng bạn đã đăng ký tài khoản thành công trên của hàng của chúng tôi</p>"; 
+		  mailContent += "<p>Chúng tôi hy vọng sẽ đáp ứng được các nhu cầu của bạn trong tương lai</p>"; 
+		  mailContent += "<p>Trân trọng,</p>"; 
+		  mailContent += "<p>EShopper.</p>"; 
+
+		  mailContent += "<hr><img width='100px' src='cid:logoImage'/>";
+		  
+		  helper.setFrom("ltweb2023nhom2@gmail.com", "Shop contact");
+		  helper.setTo(user.getEmail()); 
+		  helper.setSubject(mailSubject);
+		  helper.setText(mailContent, true);
+		  
+		  //Chèn logo shop vào cuối mail 
+		  ClassPathResource resource = new ClassPathResource("/static/img/EShopper.png"); 
+		  helper.addInline("logoImage", resource);
+		  mailSender.send(message);
+		 
+	}
+	
+//	public void sendOrderMail(Orders order) throws MessagingException, UnsupportedEncodingException {
+//		
+//		
+//		  MimeMessage message = mailSender.createMimeMessage(); 
+//		  MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//		  
+//		  String mailSubject = "Đơn hàng hoàn thành"; 
+//		  String mailContent = "<p>Cảm ơn bạn đã đặt tại cửa hàng của chúng tôi.</p>"; 
+//		  mailContent += "<p>Trân trọng,</p>"; 
+//		  mailContent += "<p>EShopper.</p>"; 
+//		  mailContent += "<hr><img width='100px' src='cid:logoImage'/>";
+//		  
+//		  helper.setFrom("ltweb2023nhom2@gmail.com", "Shop contact");
+//		  helper.setTo(user.getEmail()); 
+//		  helper.setSubject(mailSubject);
+//		  helper.setText(mailContent, true);
+//		  
+//		  //Chèn logo shop vào cuối mail 
+//		  ClassPathResource resource = new ClassPathResource("/static/img/EShopper.png"); 
+//		  helper.addInline("logoImage", resource);
+//		  mailSender.send(message);
+//		 
+//	}
 }
