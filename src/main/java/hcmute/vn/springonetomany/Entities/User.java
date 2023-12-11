@@ -86,6 +86,9 @@ public class User {
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Cart cart;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Order> order = new LinkedHashSet<>();
 
 	@OneToMany(mappedBy = "user")
     private Set<Rating> ratings = new LinkedHashSet<>();

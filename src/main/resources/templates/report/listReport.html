@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{layout/admin_layout}">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Report</title>
+	<style>
+		/* Thêm CSS để căn giữa container */
+		.center-container {
+			margin: auto;
+			text-align: center;
+		}
+
+		/* Thêm CSS để hiển thị hoặc ẩn input theo radio được chọn */
+		.hidden {
+			display: none;
+		}
+
+		.chart-container {
+			display: none;
+			/* Ẩn container chứa biểu đồ ban đầu */
+		}
+	</style>
+
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<!-- Thư viện html2canvas -->
+	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+
+<body layout:fragment="content">
+	<div id="fullscreen_bg" class="fullscreen_bg" />
+	<form class="form-signin" method="post">
+		<div class="container center-container">
+			<div class="row">
+				<div class="col-md-12 col-md-offset-2">
+
+					<div class="panel panel-default">
+
+						<div class="panel panel-primary">
+
+
+							<div class="text-center">
+								<!--<h3 style="color:#2C3E50">Financial Reports</h3>-->
+								<h4> <label for="Choose Report" style="color:#E74C3C">Choose Report</label></h4>
+								<div class="input-group"><span class="input-group-addon"><span
+											class="glyphicon glyphicon-tasks"></span></span>
+									<select class="form-control" name="reportCategory" onchange="this.form.submit()">
+										<option th:selected="${reportCategory == 'Product'}" value="Product">Product
+										</option>
+										<option th:selected="${reportCategory == 'Profit'}" value="Profit">Profit
+										</option>
+									</select>
+								</div>
+								<h5><label for="Choose Report" style="color:#E74C3C"> Time :</label>
+									<input id="dailyRadio" type="radio" name="type" value="Daily"
+										th:checked="${type == 'Daily'}">By date
+									<input id="monthlyRadio" type="radio" name="type" value="Monthly"
+										th:checked="${type == 'Monthly'}">By month
+									<input id="yearlyRadio" type="radio" name="type" value="Yearly"
+										th:checked="${type == 'Yearly'}">By year
+								</h5>
+
+								<div class="customer">
+									<div id="dailyInputContainer"
+										th:class="${type == 'Daily'? 'input-group' : 'input-group hidden'}">
+										<span class=" input-group-addon"><span
+												class="glyphicon glyphicon-calendar"></span></span>
+										<input type="date" id="dailyInput" class="form-control" placeholder="date"
+											name="date" />
+									</div>
+
+									<div id="monthlyInputContainer"
+										th:class="${type == 'Monthly'? 'input-group' : 'input-group hidden'}">
+										<input type="month" id="monthlyInput" name="month" class="form-control center">
+									</div>
+
+									<div id="yearlyInputContainer"
+										th:class="${type == 'Yearly'? 'input-group' : 'input-group hidden'}">
+										<input type="number" id="yearlyInput" name="year" min="1900" max="2100"
+											class="form-control center">
+									</div>
+								</div>
+								</br><button type="submit" class="btn btn-primary btn-lg btn3d"><span
+										class="glyphicon glyphicon-search"></span> View</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<div id="productContainer" class="container center-container"
+		th:if="${reportCategory}=='Product' or ${reportCategory}==null">
+		<div class="row">
+			<div class="col-lg-10 mt-5 mb-5">
+				<table id="dataTable" class="table table-bordered table-responsive-sm">
+					<thead>
+						<tr>
+							<th>Product Name</th>
+							<th>Product Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:block th:each="item, iterStat : ${listProductReport}"
+							th:class="${iterStat.even == true ? 'text-primary' : 'text-success'}">
+							<td th:text="${item.getProductName()}"></td>
+							<td th:text="${item.getCount()}"></td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+	<div id="profitContainer" class="container center-container" th:if="${reportCategory}=='Profit'">
+		<div class="row">
+			<div class="col-lg-10 mt-5 mb-5" th:switch="${type}">
+				<table id="profitReportByDate" class="table table-bordered table-responsive-sm" th:case="Daily">
+					<thead>
+						<tr>
+							<th>Product Name</th>
+							<th>Profit</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:block th:each="item, iterStat : ${listProfitReport}"
+							th:class="${iterStat.even == true ? 'text-primary' : 'text-success'}">
+							<td th:text="${item.getProductName()}"></td>
+							<td th:text="${item.getProfit()}"></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td>Total:</td>
+							<td th:text="${sumProfit}"></td>
+						</tr>
+					</tfoot>
+				</table>
+
+				<table id="profitReportByMonth" class="table table-bordered table-responsive-sm" th:case="Monthly">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Profit</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:block th:each="item, iterStat : ${listProfitReport}"
+							th:class="${iterStat.even == true ? 'text-primary' : 'text-success'}">
+							<td th:text="${item.getDate()}"></td>
+							<td th:text="${item.getProfit()}"></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td>Total:</td>
+							<td th:text="${sumProfit}"></td>
+						</tr>
+					</tfoot>
+				</table>
+
+				<table id="profitReportByYear" class="table table-bordered table-responsive-sm" th:case="Yearly">
+					<thead>
+						<tr>
+							<th>Month</th>
+							<th>Profit</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:block th:each="item, iterStat : ${listProfitReport}"
+							th:class="${iterStat.even == true ? 'text-primary' : 'text-success'}">
+							<td th:text="${item.getMonth()}"></td>
+							<td th:text="${item.getProfit()}"></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td>Total:</td>
+							<td th:text="${sumProfit}"></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="container center-container">
+		<button id="viewChartBtn" class="btn btn-primary">View Chart</button>
+		<!-- Container chứa các biểu đồ -->
+		<div id="chartContainer" class="chart-container">
+			<br>
+			<div class="text-center">
+				<h4> <label for="Choose Report" style="color:#E74C3C">Chart</label></h4>
+			</div>
+			<div class="container center-container">
+				<button id="exportChartBtn" class="btn btn-primary">Export Chart</button>
+			</div>
+			<canvas id="productChart" width="400" height="200"></canvas>
+			<canvas id="profitChartByDate" width="400" height="200"></canvas>
+			<canvas id="profitChartByMonth" width="400" height="200"></canvas>
+			<canvas id="profitChartByYear" width="400" height="200"></canvas>
+		</div>
+	</div>
+
+	<script>
+		document.getElementById("dailyRadio").addEventListener("click", function () {
+			showInput("dailyInputContainer");
+		});
+
+		document.getElementById("monthlyRadio").addEventListener("click", function () {
+			showInput("monthlyInputContainer");
+		});
+
+		document.getElementById("yearlyRadio").addEventListener("click", function () {
+			showInput("yearlyInputContainer");
+		});
+
+		function showInput(containerId) {
+			// Hide all containers before showing the selected one
+			document.getElementById("dailyInputContainer").classList.add("hidden");
+			document.getElementById("monthlyInputContainer").classList.add("hidden");
+			document.getElementById("yearlyInputContainer").classList.add("hidden");
+
+			// Show the selected container
+			document.getElementById(containerId).classList.remove("hidden");
+		}
+	</script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			// Lấy dữ liệu từ bảng
+			var table = document.getElementById('dataTable');
+			var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+			var labels = [];
+			var data = [];
+			var backgroundColors = []; // Mảng màu cho từng cột
+
+			// Mảng màu sử dụng cho các cột
+			var colors = [
+				'rgba(75, 192, 192, 0.2)',
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(255, 206, 86, 0.2)',
+				'rgba(54, 162, 235, 0.2)',
+				// Thêm các màu khác nếu cần
+			];
+
+			for (var i = 0; i < rows.length; i++) {
+				var cells = rows[i].getElementsByTagName('td');
+				labels.push(cells[0].innerText); // Dữ liệu từ cột Product Name
+				data.push(Number(cells[1].innerText)); // Dữ liệu từ cột Product Amount
+				backgroundColors.push(colors[i % colors.length]);
+			}
+
+			// Tạo biểu đồ cột
+			var ctx = document.getElementById('productChart').getContext('2d');
+			var productChart = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [{
+						label: 'Product Amount',
+						data: data,
+						backgroundColor: backgroundColors,
+						borderColor: 'rgba(75, 192, 192, 1)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					},
+					plugins: {
+						legend: {
+							display: true,
+							position: 'bottom', // Đặt chú thích ở dưới:bottom, ở trên:top
+						},
+						title: {
+							display: true,
+							text: 'Product Chart' // Tên biểu đồ
+						}
+					}
+				}
+			});
+		});
+
+	</script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			// Lấy dữ liệu từ bảng
+			var table = document.getElementById('profitReportByDate');
+			var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+			var labels = [];
+			var data = [];
+			var backgroundColors = []; // Mảng màu cho từng cột
+
+			// Mảng màu sử dụng cho các cột
+			var colors = [
+				'rgba(75, 192, 192, 0.2)',
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(255, 206, 86, 0.2)',
+				'rgba(54, 162, 235, 0.2)',
+				// Thêm các màu khác nếu cần
+			];
+
+			for (var i = 0; i < rows.length; i++) {
+				var cells = rows[i].getElementsByTagName('td');
+				labels.push(cells[0].innerText); // Dữ liệu từ cột Product Name
+				data.push(Number(cells[1].innerText)); // Dữ liệu từ cột Profit
+				backgroundColors.push(colors[i % colors.length]);
+			}
+
+			// Tạo biểu đồ cột
+			var ctx = document.getElementById('profitChartByDate').getContext('2d');
+			var profitChart = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [{
+						label: 'Profit',
+						data: data,
+						backgroundColor: backgroundColors,
+						borderColor: 'rgba(75, 192, 192, 1)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					},
+					plugins: {
+						legend: {
+							display: true,
+							position: 'bottom', // Đặt chú thích ở dưới:bottom, ở trên:top
+						},
+						title: {
+							display: true,
+							text: 'Profit Chart By Date' // Tên biểu đồ
+						}
+					}
+				}
+			});
+		});
+	</script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			// Lấy dữ liệu từ bảng
+			var table = document.getElementById('profitReportByMonth');
+			var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+			var labels = [];
+			var data = [];
+			var backgroundColors = []; // Mảng màu cho từng cột
+
+			// Mảng màu sử dụng cho các cột
+			var colors = [
+				'rgba(75, 192, 192, 0.2)',
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(255, 206, 86, 0.2)',
+				'rgba(54, 162, 235, 0.2)',
+				// Thêm các màu khác nếu cần
+			];
+
+			for (var i = 0; i < rows.length; i++) {
+				var cells = rows[i].getElementsByTagName('td');
+				labels.push(cells[0].innerText); // Dữ liệu từ cột Date
+				data.push(Number(cells[1].innerText)); // Dữ liệu từ cột Profit
+				backgroundColors.push(colors[i % colors.length]);
+			}
+
+			// Tạo biểu đồ đường
+			var ctx = document.getElementById('profitChartByMonth').getContext('2d');
+			var profitChartByMonth = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [{
+						label: 'Profit',
+						data: data,
+						fill: false,
+						backgroundColor: backgroundColors,
+						borderColor: 'rgba(75, 192, 192, 1)',
+						borderWidth: 2
+					}]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					},
+					plugins: {
+						legend: {
+							display: true,
+							position: 'bottom', // Đặt chú thích ở dưới:bottom, ở trên:top
+						},
+						title: {
+							display: true,
+							text: 'Profit Chart By Month' // Tên biểu đồ
+						}
+					}
+				}
+			});
+		});
+	</script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			// Lấy dữ liệu từ bảng
+			var table = document.getElementById('profitReportByYear');
+			var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+			var labels = [];
+			var data = [];
+			var backgroundColors = []; // Mảng màu cho từng cột
+
+			// Mảng màu sử dụng cho các cột
+			var colors = [
+				'rgba(75, 192, 192, 0.2)',
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(255, 206, 86, 0.2)',
+				'rgba(54, 162, 235, 0.2)',
+				// Thêm các màu khác nếu cần
+			];
+
+			for (var i = 0; i < rows.length; i++) {
+				var cells = rows[i].getElementsByTagName('td');
+				labels.push(cells[0].innerText); // Dữ liệu từ cột Month
+				data.push(Number(cells[1].innerText)); // Dữ liệu từ cột Profit
+				// Gán màu cho từng cột sử dụng mảng màu
+				backgroundColors.push(colors[i % colors.length]);
+			}
+
+			// Tạo biểu đồ cột
+			var ctx = document.getElementById('profitChartByYear').getContext('2d');
+			var profitChartByYear = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [{
+						label: 'Profit',
+						data: data,
+						backgroundColor: backgroundColors,
+						borderColor: 'rgba(75, 192, 192, 1)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					}
+				},
+				plugins: {
+					legend: {
+						display: true,
+						position: 'bottom', // Đặt chú thích ở dưới:bottom, ở trên:top
+					},
+					title: {
+						display: true,
+						text: 'Profit Chart By Year' // Tên biểu đồ
+					}
+				}
+			});
+		});
+		document.getElementById('exportChartBtn').addEventListener('click', function () {
+			// Sử dụng html2canvas để chuyển canvas thành hình ảnh
+			html2canvas(document.getElementById('profitChartByYear')).then(function (canvas) {
+				// Chuyển canvas thành URL hình ảnh
+				var chartDataURL = canvas.toDataURL('image/png');
+
+				// Tạo một đối tượng a để tải về hình ảnh
+				var a = document.createElement('a');
+				a.href = chartDataURL;
+				a.download = 'chart.png';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			});
+		});
+
+	</script>
+	<script>
+		// Lắng nghe sự kiện click trên nút "View Chart"
+		document.getElementById('viewChartBtn').addEventListener('click', function () {
+			// Hiển thị container chứa các biểu đồ khi nút được nhấp
+			document.getElementById('chartContainer').style.display = 'block';
+		});
+	</script>
+
+	<script>
+		document.getElementById('exportChartBtn').addEventListener('click', function () {
+			// Sử dụng html2canvas để chuyển canvas thành hình ảnh
+			html2canvas(document.getElementById('myChart')).then(function (canvas) {
+				// Chuyển canvas thành URL hình ảnh
+				var chartDataURL = canvas.toDataURL('image/png');
+
+				// Tạo một đối tượng a để tải về hình ảnh
+				var a = document.createElement('a');
+				a.href = chartDataURL;
+				a.download = 'chart.png';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			});
+		});
+	</script>
+
+</body>
+
+</html>

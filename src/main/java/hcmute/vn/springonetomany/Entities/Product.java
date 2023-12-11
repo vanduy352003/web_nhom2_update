@@ -64,6 +64,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems = new LinkedHashSet<>();
+    
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrderLines> orderLines = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "product")
     private Set<Rating> ratings;
