@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Service
 public class ProductService {
-    int PAGE_SIZE = 2;
+    int PAGE_SIZE = 3;
 
     @Autowired
     private IProductRepository productRepository;
