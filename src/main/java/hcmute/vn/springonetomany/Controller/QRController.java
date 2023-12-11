@@ -38,7 +38,7 @@ public class QRController {
 	public String genrateQRCode(@ModelAttribute("qr") QRDetailsPOJO qrDetailsPOJO,Model model) {
 		try {
 		BufferedImage bufferedImage = generateQRCodeImage(qrDetailsPOJO);
-		File outputfile = new File("D:\\Code\\workspace-spring\\web\\src\\main\\resources\\static\\img\\image_"+qrDetailsPOJO.getName()+".jpg");
+		File outputfile = new File("D:\\java\\Spring boot\\springOneToMany\\src\\main\\resources\\static\\img\\image_"+qrDetailsPOJO.getName()+".jpg");
 		ImageIO.write(bufferedImage, "jpg", outputfile);
 		
 		model.addAttribute("qr", qrDetailsPOJO);
