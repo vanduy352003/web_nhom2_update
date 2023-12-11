@@ -166,9 +166,9 @@
             </div>
         </div>
     </div>
-    <!-- Page Header End -->
+    <!-- Page Header End th:each="order : ${orders}"-->
 
-
+<form  th:action="@{/save}" th:object="${orders}" method="post">
     <!-- Checkout Start -->
     <div class="container-fluid pt-5">
         <div class="row px-xl-5">
@@ -177,50 +177,131 @@
                     <h4 class="font-weight-semi-bold mb-4">Billing Address</h4>
                     <div class="row">
                         <div class="col-md-6 form-group">
-                            <label>First Name</label>
-                            <input class="form-control" type="text" placeholder="Name">
+							<!-- id orders -->
+						<!--<input type="hidden" th:field="*{orders.user.cart.cartItem.getId()}">-->					
+                            <label> Full Name</label><!--th:field="*{name}"--> 
+                            <input class="form-control" type="text" placeholder="Name"  th:value="${session.user.getFullName()}">
+                            <!--<input type="text" th:field="*{total}" -->>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Last Name</label>
-                            <input class="form-control" type="text" placeholder="Doe">
+                            <label> id Name</label>
+                            
+                            <!--value = "user.getFullName()"  th:value="${User.getFullName(Id)}"
+                            <input type="text" name="firstName" th:value="${session.user.getFullName()}" class="form-control">-->
+                            <input class="form-control" type="text" placeholder="Name"  th:value="${session.user.getId()}">
                         </div>
+                        
                         <div class="col-md-6 form-group">
                             <label>E-mail</label>
-                            <input class="form-control" type="text" placeholder="example@email.com">
+                            <input class="form-control" type="text" placeholder="example@email.com" th:value="${session.user.getEmail()}">
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Mobile No</label>
-                            <input class="form-control" type="text" placeholder="+123 456 789">
+                            <label>Phone number *</label>
+                            <input class="form-control" type="text" placeholder="Phone Number" th:value="${session.user.getPhone()}">
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Address Line 1</label>
+                            <label>Street number</label>
+                            <input class="form-control" type="text" placeholder="1 Vo Van Ngan"> 
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Ward</label>
+                            <input class="form-control" type="text" placeholder=" Linh Chieu Ward"> 
+                        </div>
+                        <!--<div class="col-md-6 form-group">
+                            <label>Disstrict</label>
                             <input class="form-control" type="text" placeholder="123 Street">
+                        </div>-->
+                        <div class="col-md-6 form-group">
+                            <label>Disstrict</label>
+                            <input class="form-control" type="text" placeholder="Thu Duc Disstrict">
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Address Line 2</label>
-                            <input class="form-control" type="text" placeholder="123 Street">
+                            <label>Province</label>
+                            <input class="form-control" type="text" placeholder="Ho Chi Minh City">
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Country</label>
                             <select class="custom-select">
-                                <option selected>United States</option>
-                                <option>Afghanistan</option>
-                                <option>Albania</option>
-                                <option>Algeria</option>
+                                <option selected>Viet Nam</option>
+                                 <option value="AF">Afghanistan</option>
+							    <option value="AL">Albania</option>
+							    <option value="DZ">Algeria</option>
+							    <option value="AD">Andorra</option>
+							    <option value="AO">Angola</option>
+							    <option value="AI">Anguilla</option>
+							    <option value="AG">Antigua and Barbuda</option>
+							    <option value="AR">Argentina</option>
+							    <option value="AM">Armenia</option>
+							    <option value="AW">Aruba</option>
+							    <option value="AU">Australia</option>
+							    <option value="AT">Austria</option>
+							    <option value="AZ">Azerbaijan</option>
+							    <option value="BS">Bahamas</option>
+							    <option value="BH">Bahrain</option>
+							    <option value="BD">Bangladesh</option>
+							    <option value="BB">Barbados</option>
+							    <option value="BY">Belarus</option>
+							    <option value="BE">Belgium</option>
+							    <option value="BZ">Belize</option>
+							    <option value="BJ">Benin</option>
+							    <option value="BM">Bermuda</option>
+							    <option value="BT">Bhutan</option>
+							    <option value="BO">Bolivia</option>
+							    <option value="BA">Bosnia and Herzegovina</option>
+							    <option value="BW">Botswana</option>
+							    <option value="BR">Brazil</option>
+							    <option value="VG">British Virgin Islands</option>
+							    <option value="BN">Brunei</option>
+							    <option value="BG">Bulgaria</option>
+							    <option value="BF">Burkina Faso</option>
+							    <option value="BI">Burundi</option>
+							    <option value="KH">Cambodia</option>
+							    <option value="CM">Cameroon</option>
+							    <option value="CA">Canada</option>
+							    <option value="CV">Cape Verde</option>
+							    <option value="KY">Cayman Islands</option>
+							    <option value="CF">Central African Republic</option>
+							    <option value="TD">Chad</option>
+							    <option value="CL">Chile</option>
+							    <option value="CN">China</option>
+							    <option value="CO">Colombia</option>
+							    <option value="KM">Comoros</option>
+							    <option value="CG">Congo - Brazzaville</option>
+							    <option value="CD">Congo - Kinshasa</option>
+							    <option value="CK">Cook Islands</option>
+							    <option value="CR">Costa Rica</option>
+							    <option value="HR">Croatia</option>
+							    <option value="CU">Cuba</option>
+							    <option value="CY">Cyprus</option>
+							    <option value="CZ">Czech Republic</option>
+							    <option value="DK">Denmark</option>
+							    <option value="DJ">Djibouti</option>
+							    <option value="DM">Dominica</option>
+							    <option value="DO">Dominican Republic</option>
+							    <option value="EC">Ecuador</option>
+							    <option value="EG">Egypt</option>
+							    <option value="SV">El Salvador</option>
+							    <option value="GQ">Equatorial Guinea</option>
+							    <option value="ER">Eritrea</option>
+							    <option value="EE">Estonia</option>
+							    <option value="ET">Ethiopia</option>
+							    <option value="FK">Falkland Islands</option>
+							    <option value="FO">Faroe Islands</option>
+							    <option value="FJ">Fiji</option>
+							    <option value="FI">Finland</option>
+							    <option value="FR">France</option>
+							    <option value="GF">French Guiana</option>
+							    <option value="PF">French Polynesia</option>
+							    <option value="GA">Gabon</option>
+							    <option value="GM">Gambia</option>
+							    <option value="GE">Georgia</option>
+							    <option value="DE">Germany</option>
+							    <option value="GH">Ghana</option>
+							    <option value="GI">Gibraltar</option>
                             </select>
                         </div>
-                        <div class="col-md-6 form-group">
-                            <label>City</label>
-                            <input class="form-control" type="text" placeholder="New York">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label>State</label>
-                            <input class="form-control" type="text" placeholder="New York">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label>ZIP Code</label>
-                            <input class="form-control" type="text" placeholder="123">
-                        </div>
+                        
+						
                         <div class="col-md-12 form-group">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="newaccount">
@@ -286,6 +367,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Start Form Order Total Checkout-->
            <div class="col-lg-8">
 		    <div class="card border-secondary mb-5">
 		        <div class="card-header bg-secondary border-0">
@@ -318,6 +400,7 @@
 					    <br/> 
 					</div>
 				</div>
+				
 					<div class="d-flex justify-content-between mb-3 pt-1">
 		                <h6 class="font-weight-medium">Subtotal</h6>
 		                <h6 class="font-weight-medium" th:text="${total}"></h6>
@@ -335,8 +418,10 @@
 		        </div>
 		    </div>
 		</div>
+		            <!-- End Form Order Total Checkout-->
+
                 <div class="card border-secondary mb-5">
-				    <div class="card-header bg-secondary border-0">
+<div class="card-header bg-secondary border-0">
 				        <h4 class="font-weight-semi-bold m-0">Payment</h4>
 				    </div>
 				    <div class="card-body">
@@ -359,15 +444,18 @@
 				            </div>
 				        </div>
 				    </div>
-				    <div class="card-footer border-secondary bg-transparent">
-				        <a href="#" id="placeOrderBtn" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Place Order</a>
-				    </div>
-				</div>
+                    <div class="card-footer border-secondary bg-transparent">
+<!--                        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Place Order</button>
+-->          
+                  <a href="#" id="placeOrderBtn"  class ="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Place Order</a>
+<a th:href="@{/placeorder}" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">View Bill</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <!-- Checkout End -->
-
+</form>
 
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
@@ -456,8 +544,7 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    
-    <script>
+     <script>
 	    document.getElementById('placeOrderBtn').addEventListener('click', function () {
 	        var paymentMethod = document.querySelector('input[name="payment"]:checked');
 	
@@ -472,7 +559,6 @@
 	        }
 	    });
 	</script>
-    
 </body>
 
 </html>

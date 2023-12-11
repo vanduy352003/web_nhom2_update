@@ -17,7 +17,7 @@ import com.paypal.base.rest.PayPalRESTException;
 
 import hcmute.vn.springonetomany.Entities.Cart;
 import hcmute.vn.springonetomany.Entities.CartItem;
-import hcmute.vn.springonetomany.Entities.Order;
+import hcmute.vn.springonetomany.Entities.Orders;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Repository.IProductRepository;
 import hcmute.vn.springonetomany.Repository.IUserRepository;
@@ -68,7 +68,7 @@ public class PaypalController {
 
 
 	@PostMapping("/pay")
-	public String payment(@ModelAttribute("order") Order order) {
+	public String payment(@ModelAttribute("order") Orders order) {
 		try {
 			Payment payment = service.createPayment(order.getPrice(), order.getCurrency(), order.getMethod(),
 					order.getIntent(), order.getDescription(), "http://localhost:8080/" + CANCEL_URL,
