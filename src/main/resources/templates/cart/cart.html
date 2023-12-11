@@ -57,14 +57,23 @@
 				</table>
 			</div>
 			<div class="col-lg-4">
-				<form class="mb-5" action="">
-					<div class="input-group">
-						<input type="text" class="form-control p-4" placeholder="Coupon Code">
-						<div class="input-group-append">
-							<button class="btn btn-primary">Apply Coupon</button>
+				<div class="mb-5">
+					<a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100 collapsed"
+					   data-toggle="collapse" href="#navbar-vertical"
+					   style="height: 65px; margin-top: -1px; padding: 0 30px;">
+						<h6 class="m-0">Voucher</h6>
+						<i class="fa fa-angle-down text-dark"></i>
+					</a>
+					<nav class="navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 collapse"
+					     id="navbar-vertical">
+						<div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+							<th:block th:each="voucher : ${session.user.getVouchers()}">
+								<a th:href="@{'/cart/useVoucher/' + ${voucher.id}}" class="nav-item nav-link"
+								   th:text="${voucher.name}"></a>
+							</th:block>
 						</div>
-					</div>
-				</form>
+					</nav>
+				</div>
 				<div class="card border-secondary mb-5">
 					<div class="card-header bg-secondary border-0">
 						<h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
