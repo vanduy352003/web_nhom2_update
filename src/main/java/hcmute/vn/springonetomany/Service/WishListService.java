@@ -83,4 +83,14 @@ public class WishListService {
 		wishListRepository.deleteAll();
 		
 	}
+	public boolean isProductInWishList(Integer id, Integer productId) {
+		Optional<WishList> optionalWishList = wishListRepository.findById(id);
+
+        // Nếu danh sách yêu thích tồn tại
+        if (optionalWishList.isPresent()) {
+        	return optionalWishList.get().getItems().stream()
+                    .anyMatch(wishListItem -> wishListItem.getProduct().getId().equals(productId));
+        }
+        return false;
+	}
 }
