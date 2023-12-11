@@ -33,10 +33,13 @@ public class AdminProductController {
     private CategoryService categoryService;
     @Autowired
     private ProductImagesService productImagesService;
+    //edit
     @GetMapping("")
-    public String showProductsPage(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
+    public String showProductsPage(Model model, @RequestParam(required = false, defaultValue = "1") int page, 
+    		@RequestParam(required = false, defaultValue = "name") String sortField, 
+            @RequestParam(required = false, defaultValue = "asc") String sortDir) {
 //        List<Product> listProduct = productService.findAll();
-        Page<Product> listProduct = productService.findPage(page);
+        Page<Product> listProduct = productService.findPage(page, sortField, sortDir);
         int totalPages = listProduct.getTotalPages();
         long totalItems = listProduct.getTotalElements();
 
@@ -44,6 +47,12 @@ public class AdminProductController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalItems", totalItems);
+        
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+      
+        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+        model.addAttribute("reverseSortDir", reverseSortDir);
 
         return "product/admin_products";
     }
@@ -57,14 +66,7 @@ public class AdminProductController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") int id) throws Exception {
-    	Product product=productService.findById(id);
-    	for(ProductImages productImage: product.getProductImages())
-    	{
-    		productImagesService.delete(productImage);
-    	}
-    	FileUploadUtil.deleteAllFiles("product_images/"+ product.getId());
-    	FileUploadUtil.deleteAllFiles("product_photos/"+ product.getId());
+    public String deleteProduct(@PathVariable("id") int id) {
         productService.deleteById(id);
         return "redirect:/admin/products";
     }
@@ -105,25 +107,25 @@ public class AdminProductController {
         }
 
         if (!(multipartFiles == null || multipartFiles.isEmpty() || multipartFiles.stream().allMatch(MultipartFile::isEmpty))) {
-        	for(ProductImages productImages:  savedProduct.getProductImages())
-        	{
-        		productImagesService.delete(productImages);
-        	}
-        	savedProduct.getProductImages().clear();
-        	String uploadDir="product_images/"+ savedProduct.getId();
-        	FileUploadUtil.deleteAllFiles(uploadDir);
-        	for(MultipartFile productImages: multipartFiles)
-        	{
-        		String filename = StringUtils.cleanPath(Objects.requireNonNull(productImages.getOriginalFilename()));
-        		ProductImages productImage =new ProductImages();
-        		productImage.setImageUrl(filename);
-        		productImage.setProduct(savedProduct);
-        		ProductImages savedProductImages = productImagesService.getNewProductImages(productImage);
-        		String uploadDirs = uploadDir +"/" + savedProductImages.getId();
-        		FileUploadUtil.saveFile(uploadDirs, filename, productImages);
-        		product.getProductImages().add(productImage);
+            for(ProductImages productImages:  savedProduct.getProductImages())
+            {
+                productImagesService.delete(productImages);
+            }
+            savedProduct.getProductImages().clear();
+            String uploadDir="product_images/"+ savedProduct.getId();
+            FileUploadUtil.deleteAllFiles(uploadDir);
+            for(MultipartFile productImages: multipartFiles)
+            {
+                String filename = StringUtils.cleanPath(Objects.requireNonNull(productImages.getOriginalFilename()));
+                ProductImages productImage =new ProductImages();
+                productImage.setImageUrl(filename);
+                productImage.setProduct(savedProduct);
+                ProductImages savedProductImages = productImagesService.getNewProductImages(productImage);
+                String uploadDirs = uploadDir +"/" + savedProductImages.getId();
+                FileUploadUtil.saveFile(uploadDirs, filename, productImages);
+                product.getProductImages().add(productImage);
 
-        	}
+            }
         }
         return "redirect:/admin/products";
     }

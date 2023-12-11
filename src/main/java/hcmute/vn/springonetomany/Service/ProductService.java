@@ -28,9 +28,12 @@ public class ProductService {
 
         return productRepository.findAll();
     }
-
-    public Page<Product> findPage(int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, PAGE_SIZE);
+    //edit
+    public Page<Product> findPage(int pageNumber, String sortField, String sortDir) {
+    	Sort sort = Sort.by(sortField).ascending();
+    	sort = sortDir.equals("asc")? sort.ascending() : sort.descending();
+    	
+        Pageable pageable = PageRequest.of(pageNumber - 1, PAGE_SIZE, sort);
         return productRepository.findAll(pageable);
     }
 

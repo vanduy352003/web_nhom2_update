@@ -23,9 +23,21 @@
 					<thead class="bg-secondary text-dark">
 						<tr>
 							<th>Photo</th>
-							<th>ID</th>
-							<th>Name</th>
-							<th>Amount</th>
+							<th>
+								<a th:href="@{{baseUrl}(baseUrl=${baseUrl}, page=${#numbers.formatInteger(currentPage, 0)}, sortField='id', sortDir=${reverseSortDir})}">
+									ID
+								</a>
+							</th>
+							<th>
+								<a th:href="@{{baseUrl}(baseUrl=${baseUrl}, page=${#numbers.formatInteger(currentPage, 0)}, sortField='name', sortDir=${reverseSortDir})}">
+									Name
+								</a>
+							</th>
+							<th>
+								<a th:href="@{{baseUrl}(baseUrl=${baseUrl}, page=${#numbers.formatInteger(currentPage, 0)}, sortField='amount', sortDir=${reverseSortDir})}">
+									Amount
+								</a>
+							</th>
 							<th>Value</th>
 							<th>Created at</th>
 							<th>From at</th>

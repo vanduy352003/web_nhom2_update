@@ -1,28 +1,39 @@
-package hcmute.vn.springonetomany.Service;
-
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import hcmute.vn.springonetomany.Entities.*;
+import hcmute.vn.springonetomany.Repository.*;
+import hcmute.vn.springonetomany.Service.CartItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import hcmute.vn.springonetomany.Entities.Order;
 import hcmute.vn.springonetomany.Model.ProductReport;
 import hcmute.vn.springonetomany.Model.ProfitReportByDay;
 import hcmute.vn.springonetomany.Model.ProfitReportByMonth;
 import hcmute.vn.springonetomany.Model.ProfitReportByYear;
-import hcmute.vn.springonetomany.Repository.IOrderRepository;
+
 @Service
 public class OrderService {
     @Autowired
-    IOrderRepository orderRepository;
-	public <S extends Order> S save(S entity) {
-		return orderRepository.save(entity);
-	}
+    private IOrderRepository orderRepository;
+    @Autowired
+    ICartRepository cartRepository;
+    @Autowired
+    IUserRepository userRepository;
+    @Autowired
+    IProductRepository productRepository;
+    @Autowired
+    ICartItemRepository cartItemRepository;
+    @Autowired
+    CartItemService cartItemService;
+    @Autowired
+    IOrderLinesRepository OderLinesRepository;
+
 	public List<Order> findAll() {
 		return orderRepository.findAll();
 	}
@@ -82,5 +93,34 @@ public class OrderService {
 	public Optional<Integer> findSumProfitByYear(int year){
 		return orderRepository.findSumProfitByYear(year);
 	}
+    public void save(Order order) {
+        orderRepository.save(order);
+    }
 
+    public Order getNewOrder(Order order) {
+        return orderRepository.save(order);}
+
+    public Order createOrderFromCart(User user, Cart cart) {
+        Order order = new Order();
+        order.setUser(user);
+
+        List<OrderLines> orderLines = new ArrayList<>();
+        for (CartItem item : cart.getCartItems())
+        {
+            OrderLines line = new OrderLines();
+            line.setOrder(order);
+            line.setProduct(item.getProduct());
+            line.setPrice(item.getTotal());
+            line.setQuantity(item.getQuantity());
+            orderLines.add(line);
+        }
+        order.setOrderLines(orderLines);
+        orderRepository.save(order);
+        return order;
+    }
+
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
 }
+
