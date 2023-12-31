@@ -7,6 +7,7 @@ import hcmute.vn.springonetomany.Entities.Cart;
 import hcmute.vn.springonetomany.Entities.CartItem;
 import hcmute.vn.springonetomany.Entities.Category;
 import hcmute.vn.springonetomany.Entities.Order;
+import hcmute.vn.springonetomany.Entities.OrderLines;
 import hcmute.vn.springonetomany.Entities.Product;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Repository.IOrderRepository;
@@ -39,7 +40,9 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -85,6 +88,25 @@ public class OrderController {
         }
         Cart cart = cartService.findCartById(id);
         return "redirect:/checkout";
-        
     }   
+    
+    @GetMapping("/cod")
+	public String completeOrdersCOD(Model model, HttpSession session) {
+    	User user = (User) session.getAttribute("user");
+        Cart cart = cartService.getCartByUserId(user.getId());
+        
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderLines(new ArrayList<>());
+        for (CartItem cartItem : cart.getCartItems()) {
+        	OrderLines orderLine = new OrderLines();
+        	orderLine.setPrice(cartItem.getTotal());
+        	orderLine.setProduct(cartItem.getProduct());
+        	orderLine.setQuantity(cartItem.getQuantity());
+        	orderLine.setOrder(order);
+        	order.getOrderLines().add(orderLine);
+        }
+        orderService.save(order);
+    	return "redirect:/home?status_success='success'";
+    }
 }

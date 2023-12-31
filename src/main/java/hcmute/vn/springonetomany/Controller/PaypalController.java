@@ -1,5 +1,6 @@
 package hcmute.vn.springonetomany.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 
@@ -17,12 +18,15 @@ import com.paypal.base.rest.PayPalRESTException;
 
 import hcmute.vn.springonetomany.Entities.Cart;
 import hcmute.vn.springonetomany.Entities.CartItem;
+import hcmute.vn.springonetomany.Entities.Order;
+import hcmute.vn.springonetomany.Entities.OrderLines;
 import hcmute.vn.springonetomany.Entities.Orders;
 import hcmute.vn.springonetomany.Entities.User;
 import hcmute.vn.springonetomany.Repository.IProductRepository;
 import hcmute.vn.springonetomany.Repository.IUserRepository;
 import hcmute.vn.springonetomany.Service.CartItemService;
 import hcmute.vn.springonetomany.Service.CartService;
+import hcmute.vn.springonetomany.Service.OrderService;
 import hcmute.vn.springonetomany.Service.PaypalService;
 
 @Controller
@@ -38,6 +42,8 @@ public class PaypalController {
     CartItemService cartItemService;
     @Autowired
     IProductRepository productRepository;
+    @Autowired
+	private OrderService orderService;
 
 	public static final String SUCCESS_URL = "pay/success";
 	public static final String CANCEL_URL = "pay/cancel";
@@ -73,6 +79,7 @@ public class PaypalController {
 			Payment payment = service.createPayment(order.getPrice(), order.getCurrency(), order.getMethod(),
 					order.getIntent(), order.getDescription(), "http://localhost:8080/" + CANCEL_URL,
 					"http://localhost:8080/" + SUCCESS_URL);
+
 			for(Links link:payment.getLinks()) {
 				if(link.getRel().equals("approval_url")) {
 					return "redirect:"+link.getHref();
@@ -92,8 +99,23 @@ public class PaypalController {
 	    }
 
 	    @GetMapping(value = SUCCESS_URL)
-	    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+	    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, HttpSession session) {
 	        try {
+	        	User user = (User) session.getAttribute("user");
+		        Cart cart = cartService.getCartByUserId(user.getId());
+				Order newOrder = new Order();
+		        newOrder.setUser(user);
+		        newOrder.setOrderLines(new ArrayList<>());
+		        for (CartItem cartItem : cart.getCartItems()) {
+		        	OrderLines orderLine = new OrderLines();
+		        	orderLine.setPrice(cartItem.getTotal());
+		        	orderLine.setProduct(cartItem.getProduct());
+		        	orderLine.setQuantity(cartItem.getQuantity());
+		        	orderLine.setOrder(newOrder);
+		        	newOrder.getOrderLines().add(orderLine);
+		        }
+		        orderService.save(newOrder);
+
 	            Payment payment = service.executePayment(paymentId, payerId);
 	            System.out.println(payment.toJSON());
 	            if (payment.getState().equals("approved")) {

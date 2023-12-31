@@ -284,7 +284,7 @@
 					<div class="form-group">
 						<div class="custom-control custom-radio">
 							<input type="radio" class="custom-control-input" name="payment" id="directcheck">
-							<label class="custom-control-label" for="directcheck">Momo</label>
+							<label class="custom-control-label" for="directcheck">Cash on Delivery</label>
 						</div>
 					</div>
 					<div class="">
@@ -321,7 +321,9 @@
                     window.location.href = '/paypal';
                 } else if (paymentMethod.id === 'banktransfer') {
                     window.location.href = '/qr';
-                }
+                } else if (paymentMethod.id === 'directcheck') {
+					window.location.href = '/cod';
+				}
             } else {
                 alert('Please select a payment method before placing the order.');
             }

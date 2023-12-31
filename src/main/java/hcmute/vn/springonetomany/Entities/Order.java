@@ -1,5 +1,6 @@
 package hcmute.vn.springonetomany.Entities;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,4 +41,8 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderLines> orderLines;	
     
+    @Column(name = "create_at")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+    @CreationTimestamp
+	private LocalDate create_at;
 }
